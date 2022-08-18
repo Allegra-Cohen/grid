@@ -1,0 +1,6 @@
+li {
+    background: #F0F0F0;
+    padding: .3em;
+    font-family: "InaiMathi";
+}
+li:nth-child(odd) { background: #F8F8F8; }

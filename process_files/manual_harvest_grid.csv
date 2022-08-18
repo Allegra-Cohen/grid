@@ -1,0 +1,57 @@
+﻿sentence,conditions,decisions,processes,proportions,other,equipment,labor,bird,weather,cost,time,seeding,credit,land,otherr
+"During harvest, there’s a few factors to consider.",0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+"For the majority, you have to ask if you have equipment ready to harvest.",1,0,1,0,0,1,0,0,0,0,0,0,0,0,0
+"This choice depends on different factors: Are you willing to harvest very rapidly because you’re having bird attacks or other damages that speed up your timeline; is it wet or dry, because the humidity of the paddy means some might be lost by machinery; and labor is cheaper than equipment.",0,1,1,1,0,1,1,1,1,1,1,0,0,0,0
+"Also it depends on what kind of harvest you expect — will you be able to pay for machinery, or not?",1,0,0,0,0,1,0,0,0,1,0,0,0,0,0
+Not harvesting when there’s birds costs you time and money in terms of labor to let go (?) the birds.,0,0,0,1,0,0,1,1,0,1,1,0,0,0,0
+"A final factor is that you need to repay your loans before you can get new credit, so you want to harvest faster so you can repay faster. ",1,0,1,0,0,0,0,0,0,0,1,0,1,0,0
+"Dr. Fall believes that if you have a small plot, it’s best to use manual labor if you harvest on time.",1,0,0,0,0,0,1,0,0,0,1,0,0,1,0
+"If you have a big plot, there’s no way you can harvest it all on time by labor!",1,0,0,0,0,0,1,0,0,0,1,0,0,1,0
+"Unfortunately, everybody wants to harvest at the last moment, and then there’s no service providers available. ",0,1,0,0,0,1,0,0,0,0,1,0,0,0,0
+Another factor is that labor gets more expensive when there’s crops being harvested for export markets that compete.,0,0,1,1,0,0,1,0,0,1,0,0,0,0,0
+"But for seeding and harvesting, it mostly comes from hired labor. ",0,0,0,0,1,0,1,0,0,0,0,1,0,0,0
+"There’s seeding periods, harvest periods, where labor is needed in various industries and there’s a competition.",0,0,1,0,0,0,1,0,0,0,0,1,0,0,0
+" But during harvest time for rice, harvest for rice corresponds to seeding period for horticulture croppings.",0,0,1,0,0,0,0,0,0,0,1,1,0,0,0
+"So if those farms need labor for horticulture, they may compete with farms that need harvest labor.",1,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+"They’ll hire temporary labor for periods like seeding and harvesting, but there’s still room for small farmers. ",0,0,1,0,0,0,1,0,0,0,1,1,0,0,0
+"Farmers really need hired labor for harvesting; for the seeding period, they may be able to rely on family labor.",1,0,1,0,0,0,1,0,0,0,1,1,0,0,0
+"But if you go for manual labor, it might take three people three days (8/hr a day) to harvest one hectare.",1,0,1,0,0,0,1,0,0,0,1,0,0,1,0
+Service providers need to check before they agree to harvest.,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0
+It’s because they harvest late and they don’t have time to go for labor.,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0
+Dr. Fall says there can be positive or negative effects of climate change on harvest time.,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0
+"You have to make sure to harvest on time, clean up the plot, that you have the money to get the inputs you need on time (you have your own money or you go to another lender), etc",0,0,0,0,1,0,0,0,0,0,1,0,1,1,0
+ We could see horticulture harvests around January and early February (we would see a lot of farms doing onions and tomatoes).,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0
+Harvest delays due to restricted access to labor and equipment.,0,0,1,1,0,1,1,0,0,0,1,0,0,0,0
+" Since people harvest in June or late July, it takes roughly 3 months to collect debts.",0,0,1,0,0,0,0,0,0,0,1,0,1,0,0
+"The bulletin says the remaining credit comes from credit loaned on onions, which is supposed to be paid by June — six months between onion harvest and full credit reimbursement!",0,0,1,0,0,0,0,0,0,0,1,0,1,0,0
+"At harvest time, the cooperative has to collect ALL the yield from farmers and store in headquarters; then they take all the corresponding credit from each farmer’s production and leave the remaining to each farmer. e.g. you might keep two bags, but you must pay back credit first. ",1,0,0,1,0,0,0,0,0,0,1,0,1,0,0
+"Another issue is the access to mechanization services, e.g. for harvest; service providers are not always ready on time to provide the services farmers need.",0,0,0,0,1,1,0,0,0,0,1,0,0,0,0
+There aren’t enough service providers with enough equipment; some equipment sometimes isn’t adapted to the land (e.g. the big harvesters won’t be able to handle small parcels).,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0
+"For labor, you pay 1/10th of your production for a harvester.",0,0,0,1,0,1,1,0,0,1,0,0,0,0,0
+"It’s very fixed information for a changing climate, and the farmer knows this, but he can’t transfer that knowledge to SAED because he doesn’t actually know if it’s important — that is, you can’t tell if something weird is consequential until you see if the harvest is bad or not.",1,1,0,0,0,0,0,0,1,0,0,0,0,0,0
+"Buyers will ask if a farmer has access to a harvester, to ensure they can get help harvesting their land.",1,0,0,0,0,1,0,0,0,0,0,0,0,1,0
+Plant short duration seeds in dry season because there’s a short window for harvest.,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0
+"The timing of harvest is linked to CC — because the start of the rainy season is coming earlier and earlier each year, they have to harvest before it arrives or the soil will be wet and the harvesters won’t be able to pass over the soil.",1,0,1,0,0,1,0,0,1,0,1,0,0,1,0
+They harvest early to protect themselves from the consequences of CC.,0,1,0,0,0,0,0,0,1,0,1,0,0,0,0
+ But it is better to harvest early because you don’t want the birds to come at the end of the season and eat your harvest. ,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0
+SAED doesn’t provide information about whether they should harvest early or not — they just make the judgment themselves.,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0
+Farmers that harvest earlier tend to have better yields: 2 - 3 tons earlier.,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0
+"There’s a window for harvest in rice and if you harvest later, the yields decrease.",1,0,1,1,0,0,0,0,0,0,1,0,0,0,0
+"If you sow earlier and harvest at the ideal time, you also are more likely to get access to harvesting equipment.",1,0,1,1,0,1,0,0,0,0,1,1,0,0,0
+"Even if they sow early, they might not have access to a harvester, so they might be waiting for a month to get access.",0,0,0,0,1,1,0,0,0,0,1,1,0,0,0
+The harvesters are also too big and if the soil is wet then they can’t easily move through.,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0
+Investors are now starting to shift to the mini harvester.,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0
+Farmers that plant early and harvest early in one season can double crop.,1,0,1,0,0,0,0,0,0,0,1,1,0,0,0
+Access to harvesters is a financial problem.,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0
+"Pape has seen this year some harvesters that are being financed by banks, but the one who owns the harvester has to pay back the loan.",0,0,0,0,1,1,0,0,0,0,0,0,1,0,0
+"If the farmer has a little area, the people who own the harvester won’t feel like going from plot to plot because transportation costs a lot (need a big car, need to pay for the gas).",1,1,0,0,0,1,0,0,0,1,0,0,0,1,0
+"Harvesters will start in the North of the valley and do little plots, and then they go to Mauritania to work on 50 ha plots because they have to pay back loans quickly.",0,1,1,0,0,1,0,0,0,0,0,0,1,1,0
+"At the start of June there’s plenty available, but by July all the harvesters have gone.",0,0,0,0,1,1,0,0,0,0,1,0,0,0,0
+"Small coops and farmers lose out, but they can also do manual harvesting (very slow) or try to get a mini harvester.",0,1,0,1,0,1,1,0,0,0,0,0,0,0,0
+They are specialized in this kind of work and have the reputation of doing it very fast; farmers prefer to hire migrants if they can’t get access to a big harvester.,1,1,0,0,0,1,1,0,0,0,1,0,0,0,0
+"When the rice matures, if the soil is water-saturated and the rice has started to go yellow, they know it’s ready to harvest. ",1,1,1,0,0,0,0,0,0,0,0,0,0,1,0
+"They will only harvest if they have the tools available, but they do know when they should harvest. ",1,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+Big shortage in migrant labor due to COVID — most farmers were 30 to 40 days late in harvesting and lost a lot of yields.,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0
+"He knows of two coops who got paid back 50% and thinks this is fair since they harvested, after all.",0,0,0,0,1,0,0,0,0,0,0,0,1,0,0
+Farmers will harvest at night to sell on the side.,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0
+"The farmer wants to pay back if he knows if he’ll get another loan, or if there are other advantages, e.g. getting a harvester loan, etc.",0,1,0,0,0,1,0,0,0,0,0,0,1,0,0
