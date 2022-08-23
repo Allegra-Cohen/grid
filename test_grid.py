@@ -1,7 +1,7 @@
 import unittest
 
 from backend import Backend
-from grid import Grid
+from grid2 import Grid
 
 class GridTest(unittest.TestCase):
 

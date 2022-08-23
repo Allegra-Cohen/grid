@@ -1,5 +1,5 @@
 from corpus import Corpus
-from grid import Grid
+from grid2 import Grid
 from linguist import Linguist
 from row import Row
 
