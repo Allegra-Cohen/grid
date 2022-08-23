@@ -7,6 +7,8 @@ import './CopyButton.css'
 import './RegenerateButton.css'
 import InputBox from './InputBox'
 import './InputBox.css'
+import KButton from './KButton'
+import './KButton.css'
 import Trash from './Trash'
 import {useEffect, useState} from "react";
 import { DndProvider } from 'react-dnd'
@@ -16,6 +18,8 @@ function App({apiUrl}) {
     const [corpus, setCorpus] = useState([]);
     const [gridRows, setGridRows] = useState({})
     const [colNumToName, setColNumToName] = useState({})
+    const [frozenColumns, setFrozenColumns] = useState([])
+    const [rowContents, setRowContents] = useState({})
 
     useEffect(() => {
         fetch(`${apiUrl}/data/`)
@@ -24,6 +28,8 @@ function App({apiUrl}) {
                 setCorpus(data.clicked_sentences);
                 setGridRows(data.grid);
                 setColNumToName(data.col_num_to_name);
+                setFrozenColumns(data.frozen_columns);
+                setRowContents(data.row_contents);
             });
     }, [])
 
@@ -39,7 +45,7 @@ function App({apiUrl}) {
         flexDirection: "column"
     }}>
 
-    <Grid data={gridRows} col_num_to_name={colNumToName} onChange={
+    <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
       (evt) => {console.log(evt);
                 console.log('app!');
                 setCorpus(evt)}
@@ -66,18 +72,25 @@ function App({apiUrl}) {
           console.log(evt);
           setCorpus(evt.clicked_sentences);
           setGridRows(evt.grid);
-          setColNumToName(evt.col_num_to_name)}
+          setColNumToName(evt.col_num_to_name);
+          setFrozenColumns(evt.frozen_columns)}
       }
       apiUrl={apiUrl}/>
+
+      <div style={{display:"flex", flexDirection:"row"}}>
 
       <RegenerateButton className="RegenerateButton" onClick={(evt) => {
           console.log(evt);
           setCorpus(evt.clicked_sentences);
           setGridRows(evt.grid);
-          setColNumToName(evt.col_num_to_name)}
+          setColNumToName(evt.col_num_to_name);
+          setFrozenColumns(evt.frozen_columns)}
       }
       apiUrl={apiUrl}/>
 
+      <KButton className="KButton" apiUrl={apiUrl}/>
+
+      </div>
       </div>
       </div>
 

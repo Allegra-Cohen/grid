@@ -40,17 +40,24 @@ def show_grid():
     # I will compute each cell's value as the ratio of row/col co-occurrence by the number of rows in the table
     heat_map = {r:{c:0. for c in col_numbers} for r in row_names}
     col_num_to_name = {}
+    frozen_columns, row_contents = [], {}
     for i, readable_doc in enumerate(sentences):
         for ci, cluster in enumerate(grid.all_clusters):
+            if cluster.type == 'frozen':
+                frozen_columns.append(ci)
             if cluster.doc_list != []:
                 for row_name in row_names:
                     stripped_doc = grid.docs[i]
-                    if stripped_doc in cluster.doc_list and readable_doc in cleaned_labels: # There's a disconnect between row labels and new interview material
+                    if stripped_doc in cluster.doc_list and readable_doc in cleaned_labels:
                         doc_index = cleaned_labels.index(readable_doc)
                         labels = data.loc[doc_index, :]
                         if labels[row_name] == 1:
                             heat_map[row_name][ci] += 1
                             col_num_to_name[ci] = cluster.name
+                            if row_name in row_contents.keys():
+                                row_contents[row_name].append(readable_doc)
+                            else:
+                                row_contents[row_name] = [readable_doc]
                     # else:
                         # print(data_sentence, " not in csv")
 
@@ -63,7 +70,9 @@ def show_grid():
         "sentences": sentences,
         "clicked_sentences": grid.clicked_sentences,
         "grid": heat_map,
-        "col_num_to_name": col_num_to_name
+        "col_num_to_name": col_num_to_name,
+        "frozen_columns": frozen_columns,
+        "row_contents": row_contents
     }
 
 
@@ -121,8 +130,6 @@ async def click(row: str, col: str):
 
 @app.get("/editName/{ix}/{newName}")
 async def editName(ix: int, newName: str):
-    print("IX", ix)
-    print("NN", newName)
     cluster = [ c for c in grid.all_clusters if c.ID == int(ix)][0]
     cluster.name = newName
     grid.freeze_cluster(ix) # Naming a cluster should freeze it. This also freezes its name.
@@ -135,19 +142,20 @@ async def textInput(text: str):
     grid.create_frozen_cluster(text) # Zero error handling here
     grid.reconsecutivize_clusters()
     grid.update_clicked_sentences()
+    return show_grid()
 
+
+@app.get("/setK/{k}")
+async def setK(k: int):
+    grid.k = k
     return show_grid()
 
 
 @app.get("/regenerate/")
 async def regenerate():
-
-    # t = time.time()
-    grid.generate_grid(0.1, 6) # Past the first generation, should we ask for k or does that cause overlap?
+    grid.generate_grid(0.1, grid.k) # Past the first generation, should we ask for k or does that cause overlap?
     grid.reconsecutivize_clusters()
     grid.update_clicked_sentences()
-    # print((t - time.time())*1000)
-
     return show_grid()
 
 
@@ -155,6 +163,7 @@ async def regenerate():
 async def copyToggle():
     grid.copy_on = not grid.copy_on
     return grid.copy_on
+
 
 @app.get("/trash/{text}")
 async def trash(text:str):
