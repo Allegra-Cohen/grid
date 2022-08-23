@@ -102,4 +102,4 @@ class ControlPanel(Frontend):
 		return user_input
 
 if __name__ == '__main__':
-	ControlPanel('./process_files/', 6).run()
+	ControlPanel('../../process_files/', 6).run()
