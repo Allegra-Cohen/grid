@@ -107,16 +107,18 @@ class Grid():
 			cluster_list.append(labels)
 		pd.DataFrame({'docs': document_list, 'cluster': cluster_list}).to_csv(filename)
 
-	def copy_document(self, text, cluster_from_index, cluster_to_index):
+	def copy_document(self, document, cluster_from_index, cluster_to_index):
 		cluster_from = self.clusters[cluster_from_index]
 		cluster_to = self.clusters[cluster_to_index]
-		document = [d for d in cluster_from.documents if d.readable == text][0]
+		if type(document) == str: # If the GUI is sending you this, it's going to be the text, not the object
+			document = [d for d in cluster_from.documents if d.readable == text][0]
 		cluster_to.insert(document)
 	
-	def move_document(self, text, cluster_from_index, cluster_to_index):
+	def move_document(self, document, cluster_from_index, cluster_to_index):
 		cluster_from = self.clusters[cluster_from_index]
 		cluster_to = self.clusters[cluster_to_index]
-		document = [d for d in cluster_from.documents if d.readable == text][0]
+		if type(document) == str: # If the GUI is sending you this, it's going to be the text, not the object
+			document = [d for d in cluster_from.documents if d.readable == text][0]
 		cluster_to.insert(document)
 		cluster_from.remove(document)
 		if not cluster_from:
