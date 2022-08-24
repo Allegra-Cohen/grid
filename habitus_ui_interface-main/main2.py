@@ -52,30 +52,18 @@ class UvicornFrontend(Frontend):
         frozen_columns = [index for index, cluster in enumerate(clusters) if cluster.is_frozen()]
 
         # If documents are in multiple columns, they will show up multiple times here.
-        # The order will not be the 
-        row_contents = {}
-        for row_index, row in enumerate(rows):
-            # row_documents = [document.readable for document in self.grid.documents if document.is_member(row_index)]
-            # row_contents[row.name] = row_documents
-            row_contents[row.name] = []
-            for col_index, cluster in enumerate(clusters):
-                row_col_documents = [document.readable for document in cluster.documents if document.is_member(row_index)]
-                row_contents[row.name] += row_col_documents
-
-        # map of row name to map of col index to number of sentences in that row and col
+        # The order will not be the same as with main.py.
         delta = 1.0 / len(sentences)
+        row_contents = {}
+        # map of row name to map of col index to number of sentences in that row and col
         heat_map: dict[str, dict[int, float]] = {row.name: {} for row in rows}
         for row_index, row in enumerate(rows):
+            row_contents[row.name] = []
             for col_index, cluster in enumerate(clusters):
-                count = sum([document.is_member(row_index) for document in cluster.documents])
+                cell_documents = self.grid.get_clicked_documents(col_index, row_index)
+                row_contents[row.name] += cell_documents
+                count = len(cell_documents)
                 heat_map[row.name][col_index] = delta * count
-
-        print(heat_map)
-
-        print()
-        print("Keith says row contents are")
-        print(row_contents)
-        print()
 
         return {
             "sentences": sentences,
