@@ -56,3 +56,4 @@ class Cluster():
 
 	def set_name(self, name: str):
 		self.name = name
+		self.frozen = True
