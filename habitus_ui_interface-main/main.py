@@ -5,7 +5,7 @@ from pandas import DataFrame
 from starlette.middleware.cors import CORSMiddleware
 
 import sys
-sys.path.append("/Users/allegracohen/Documents/Postdoc/habitus/odin_project/grid/")
+sys.path.append("/home/kwa/Projects/kwalcock/grid-allegra-project/grid-allegra/")
 from grid import *
 from grid_functions import *
 import time
@@ -64,7 +64,14 @@ def show_grid():
     for row in heat_map.values():
         for c in row:
             row[c] /= len(sentences)
+    print()
+    print("Keith says row contents are")
+    print(row_contents)
+    print()
+
+    print("Keith says heat map is")
     print(heat_map)
+    print()
 
     return {
         "sentences": sentences,

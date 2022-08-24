@@ -17,7 +17,7 @@ class Document():
 		return self.stripped < other.stripped
 
 	def is_member(self, index: int) -> bool:
-		index in range(len(self.memberships)) and self.memberships[index]
+		return index in range(len(self.memberships)) and self.memberships[index]
 
 	def get_vector_text(self) -> str:
 		return self.stripped

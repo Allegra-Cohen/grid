@@ -4,9 +4,27 @@ class ControlPanel(Frontend):
 	def __init__(self, path: str, k: int):
 		super().__init__(path)
 		self.grid = self.backend.get_grid(k)
-		self.grid.show_clusters()
 		self.copy_on = False
- 
+		self.show_clusters()
+
+	def show_clusters(self):
+		clusters = self.grid.clusters
+		print("\n\n                F r o z e n    c l u s t e r s             *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
+		for index, cluster in enumerate(clusters):
+			if cluster.is_frozen():
+				cluster.print_yourself(index)
+		print("\n\n                S e e d e d    c l u s t e r s             *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
+		for index, cluster in enumerate(clusters):
+			if cluster.is_seeded():
+				cluster.print_yourself(index)
+		print("\n\n                M a c h i n e   c l u s t e r s            *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
+		for index, cluster in enumerate(clusters):
+			if not cluster.is_frozen() and not cluster.is_seeded():
+				cluster.print_yourself(index)
+		print("\n\n                T r a s h                                  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
+		for document in self.grid.trash:
+			print(document.readable)
+
 	def run(self):
 		user_input = None
 		while user_input != 'q':
@@ -20,7 +38,7 @@ class ControlPanel(Frontend):
 				else:
 					user_input = self.modify_mode()
 			elif user_input == 's':
-				self.grid.show_clusters()
+				self.show_clusters()
 			elif user_input == 'q':
 				print("Thanks, goodbye. \n\n\n")
 			else:
@@ -67,7 +85,7 @@ class ControlPanel(Frontend):
 				return user_input
 
 			elif user_input == 's':
-				self.grid.show_clusters()
+				self.show_clusters()
 				print("\n")
 				self.modify_mode_instructions()
 				print("\n")
@@ -76,7 +94,7 @@ class ControlPanel(Frontend):
 				_, sentence_num, from_cluster, to_cluster = user_input.split(' ')
 				sentence_num, from_cluster, to_cluster = int(sentence_num), int(from_cluster), int(to_cluster)
 				if to_cluster < 0:
-					self.grid.delete_document(sentence_num, from_cluster)
+					self.grid.delete_document_by_index(sentence_num, from_cluster)
 				elif from_cluster == to_cluster:
 					# What does freezing an individual document mean?
 					self.grid.freeze_document(sentence_num, from_cluster)
