@@ -35,25 +35,11 @@ class Grid():
 	def __bool__(self) -> bool:
 		return not not self.clusters
 
+	def set_k(self, k: int):
+		self.k = k
+
 	def regenerate(self):
 		self.generate_clusters()
-
-	def show_clusters(self):
-		print("\n\n                F r o z e n    c l u s t e r s             *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
-		for index, cluster in enumerate(self.clusters):
-			if cluster.is_frozen():
-				cluster.print_yourself(index)
-		print("\n\n                S e e d e d    c l u s t e r s             *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
-		for index, cluster in enumerate(self.clusters):
-			if cluster.is_seeded():
-				cluster.print_yourself(index)
-		print("\n\n                M a c h i n e   c l u s t e r s            *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
-		for index, cluster in enumerate(self.clusters):
-			if not cluster.is_frozen() and not cluster.is_seeded():
-				cluster.print_yourself(index)
-		print("\n\n                T r a s h                                  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
-		for document in self.trash:
-			print(document.readable)
 
 	def create_machine_clusters(self, documents, labels, num_clusters):
 		# Skip the seeded clusters in the labels.
@@ -137,8 +123,7 @@ class Grid():
 			print(cluster_from.name, " will be removed.")
 			self.clusters.pop(cluster_from_index)
 
-	def delete_document(self, doc_num, cluster_index):
-		document = self.clusters[cluster_index].documents[doc_num]
+	def delete_document(self, document: Document):
 		for cluster in self.clusters:
 			cluster.remove(document)
 			if not cluster:
@@ -146,6 +131,10 @@ class Grid():
 		self.clusters = [cluster for cluster in self.clusters if cluster]
 		self.trash.append(document)
 		self.documents.remove(document)
+
+	def delete_document_by_index(self, doc_num, cluster_index):
+		document = self.clusters[cluster_index].documents[doc_num]
+		self.delete_document(document)
 
 	def freeze_document(self, doc_num, cluster_index):
 		cluster = self.clusters[cluster_index]
@@ -162,9 +151,11 @@ class Grid():
 	def freeze_cluster(self, cluster_index):
 		self.clusters[cluster_index].freeze()
 
-	def get_clicked_documents(self, column_index, row_index):
-		if column_index == None or row_index == None:
+	def get_clicked_documents(self, column_index, row_index) -> list[Document]:
+		if column_index == None or row_index == None or \
+				column_index not in range(len(self.clusters)) or \
+				row_index not in range(len(self.rows)):
 			return []
 		else:
 			clicked_cluster = self.clusters[column_index]
-			return [document for document in clicked_cluster.machine_documents if document.is_member(row_index)]
+			return [document for document in clicked_cluster.documents if document.is_member(row_index)]

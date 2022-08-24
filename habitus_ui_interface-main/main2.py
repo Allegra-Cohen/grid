@@ -2,18 +2,15 @@
 print("This is main2.py")
 
 import sys
-sys.path.append("..")
-sys.path.append("./backend")
-
 import pandas as pd
 
+sys.path.append("./backend")
+
+from document import Document
 from fastapi import FastAPI, Depends
 from frontend import Frontend
-from grid import *
-from grid_functions import *
 from pandas import DataFrame
 from starlette.middleware.cors import CORSMiddleware
-import time
 
 app = FastAPI()
 
@@ -29,174 +26,165 @@ class UvicornFrontend(Frontend):
     def __init__(self, path: str, k: int):
         super().__init__(path)
         self.grid = self.backend.get_grid(k)
-        self.grid.show_clusters()
         self.copy_on = False
+        self.clicked_col = None
+        self.clicked_row = None
+        self.show_grid()
+
+    def find_document(self, text: str) -> Document:
+        return next(document for document in self.grid.documents if document.readable == text)
+
+    def get_clicked_documents(self) -> list[Document]:
+        if self.clicked_col == None and self.clicked_row == None:
+            documents = self.grid.documents
+        else:
+            documents = self.grid.get_clicked_documents(self.clicked_col, self.clicked_row)
+        return documents
+
+    def show_grid(self) -> dict:
+        clusters = self.grid.clusters
+        rows = self.grid.rows
+
+        # This doesn't include the trashed sentences.
+        sentences = [document.readable for document in self.grid.documents]
+        clicked_sentences = [document.readable for document in self.get_clicked_documents()]
+        col_num_to_name = {index: cluster.name for index, cluster in enumerate(clusters)}
+        frozen_columns = [index for index, cluster in enumerate(clusters) if cluster.is_frozen()]
+
+        # If documents are in multiple columns, they will show up multiple times here.
+        # The order will not be the 
+        row_contents = {}
+        for row_index, row in enumerate(rows):
+            # row_documents = [document.readable for document in self.grid.documents if document.is_member(row_index)]
+            # row_contents[row.name] = row_documents
+            row_contents[row.name] = []
+            for col_index, cluster in enumerate(clusters):
+                row_col_documents = [document.readable for document in cluster.documents if document.is_member(row_index)]
+                row_contents[row.name] += row_col_documents
+
+        # map of row name to map of col index to number of sentences in that row and col
+        delta = 1.0 / len(sentences)
+        heat_map: dict[str, dict[int, float]] = {row.name: {} for row in rows}
+        for row_index, row in enumerate(rows):
+            for col_index, cluster in enumerate(clusters):
+                count = sum([document.is_member(row_index) for document in cluster.documents])
+                heat_map[row.name][col_index] = delta * count
+
+        print(heat_map)
+
+        print()
+        print("Keith says row contents are")
+        print(row_contents)
+        print()
+
+        return {
+            "sentences": sentences,
+            "clicked_sentences": clicked_sentences,
+            "grid": heat_map,
+            "col_num_to_name": col_num_to_name,
+            "frozen_columns": frozen_columns,
+            "row_contents": row_contents
+        }
+
+    def toggle_copy(self) -> bool:
+        self.grid.copy_on = not self.grid.copy_on
+        return self.grid.copy_on
+
+    def trash(self, text: str) -> dict:
+        document = self.find_document(text)
+        print("deleting document ",document)
+        self.grid.delete_document(document)
+        return self.show_grid()
+
+    def regenerate(self) -> dict:
+        self.grid.regenerate()
+        self.clicked_col = None
+        self.clicked_row = None
+        self.clicked_documents = self.get_clicked_documents()
+        return self.show_grid()
+
+    def set_name(self, col_index: int, name: str) -> dict:
+        cluster = self.grid.cluster[col_index]
+        cluster.set_name(name)
+        return self.show_grid()
+
+    def set_k(self, k: int) -> dict:
+        self.grid.set_k(k)
+        return self.show_grid()
+
+    def create_cluster(self, text: str) -> dict:
+        self.grid.create_human_cluster(True, text)
+        return self.show_grid()
+
+    def click(self, row_name: str, col_index: int) -> list[str]:
+        row_index = next(index for index, row in enumerate(self.grid.rows) if row.name == row_name)
+        self.clicked_row = row_index
+        self.clicked_col = col_index
+        documents = self.get_clicked_documents()
+        texts = [document.readable for document in documents]
+        return texts
+
+    # This moves the sentence from the currently clicked_col and clicked_row to
+    # the new row and column.
+    def move(self, row_index: int, col_index: int, text_index: str) -> dict:
+        assert col_index >= 0 # We're not deleting sentences in this way.
+        if self.copy_on:
+            self.grid.copy_document(text_index, self.clicked_col, col_index)
+        else:
+            self.grid.move_document(text_index, self.clicked_col, col_index)
+        return self.show_grid()
 
 frontend = UvicornFrontend('../process_files/', 6)
 
-# nlp = en_core_web_sm.load()
-nlp = spacy.load("en_core_web_sm")
-
-# grid = Grid('harvest', 8, corpus, False, False, synonym_book, too_common)
-grid = Grid('horticulture', 6, corpus, False, False, synonym_book, too_common)
-grid.generate_grid(0.2, 6, verbal = True)
-
-def show_grid():
-
-    data: DataFrame = pd.read_csv(path + "row_labels_horticulture.csv") # Need this to get the row classifications for each sentence
-    cleaned_labels = list(data['readable'])
-
-    sentences = grid.readable_docs
-
-    row_names = "other proportions processes decisions conditions causes".split()
-    col_numbers = list(range(len([c for c in grid.all_clusters if c.doc_list != []])))
-
-    # I will compute each cell's value as the ratio of row/col co-occurrence by the number of rows in the table
-    heat_map = {r:{c:0. for c in col_numbers} for r in row_names}
-    col_num_to_name = {}
-    frozen_columns, row_contents = [], {}
-    for i, readable_doc in enumerate(sentences):
-        for ci, cluster in enumerate(grid.all_clusters):
-            if cluster.type == 'frozen':
-                frozen_columns.append(ci)
-            if cluster.doc_list != []:
-                for row_name in row_names:
-                    stripped_doc = grid.docs[i]
-                    if stripped_doc in cluster.doc_list and readable_doc in cleaned_labels:
-                        doc_index = cleaned_labels.index(readable_doc)
-                        labels = data.loc[doc_index, :]
-                        if labels[row_name] == 1:
-                            heat_map[row_name][ci] += 1
-                            col_num_to_name[ci] = cluster.name
-                            if row_name in row_contents.keys():
-                                row_contents[row_name].append(readable_doc)
-                            else:
-                                row_contents[row_name] = [readable_doc]
-                    # else:
-                        # print(data_sentence, " not in csv")
-
-    for row in heat_map.values():
-        for c in row:
-            row[c] /= len(sentences)
-    print(heat_map)
-
-    return {
-        "sentences": sentences,
-        "clicked_sentences": grid.clicked_sentences,
-        "grid": heat_map,
-        "col_num_to_name": col_num_to_name,
-        "frozen_columns": frozen_columns,
-        "row_contents": row_contents
-    }
-
-
+# The purpose of the functions below is to
+# - provide the entrypoint with @app.get
+# - log the event for debugging and bookkeeping purposes
+# - perform any necessary conversion on the parameters
+# - call into the frontend to perform the action
+# - return the right kind of result, probably forwarded from the frontend
 
 @app.get("/data")
-def root(data: DataFrame = Depends(show_grid)): # Depends( my function that changes data for front end )
+def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
     return data # returns to front end
-
 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):
-    message = f"Row: {row}\tCol: {col}\tText: {sent}"
-    print(message)
-
-    print("Clicked cluster ID pre-drag: ", grid.clicked_cluster)
-    print("Clicked cluster doc_list pre-drag:", [ c for c in grid.all_clusters if c.ID == int(grid.clicked_cluster)][0].doc_list)
-
-    cluster = [c for c in grid.all_clusters if c.ID == int(col)][0]
-    print("Sentence: ",sent)
-    # print("Readable: ",grid.readable_docs)
-    stripped_sentence = grid.docs[grid.readable_docs.index(sent)]
-    print(sent)
-    print(stripped_sentence)
-    print(grid.all_clusters[grid.clicked_cluster].doc_list)
-    si = grid.all_clusters[grid.clicked_cluster].doc_list.index(stripped_sentence)
-    grid.move_document('move ' + str(si) + ',' + str(grid.clicked_cluster) + ',' + str(col))
-    grid.reconsecutivize_clusters()
-    grid.update_clicked_sentences()
-
-    print("Clicked cluster ID post-drag: ", grid.clicked_cluster)
-    postdrags = [ c for c in grid.all_clusters if c.ID == int(grid.clicked_cluster)]
-    if len(postdrags) > 0:
-        print("Clicked cluster doc_list post-drag: ", [ c for c in grid.all_clusters if c.ID == int(grid.clicked_cluster)][0].doc_list)
-    else:
-        print("Clicked cluster doc_list post-drag: cluster doesn't exist")
-
-    return show_grid()
-
+    print(f"Row: {row}\tCol: {col}\tText: {sent}")
+    row, col, sent = int(row), int(col), int(sent)
+    return frontend.move(row, col, sent)
 
 @app.get("/click/{row}/{col}")
 async def click(row: str, col: str):
-    grid.reconsecutivize_clusters()
-    column_docs = [ c for c in grid.all_clusters if c.ID == int(col)][0].doc_list
-    readable_column = [grid.readable_docs[grid.doc_index_dict[d]] for i, d in enumerate(column_docs)]
-    print(len(column_docs))
-    print(len(readable_column))
-    grid.clicked_sentences = [d for d in readable_column if d in grid.row_to_docs[row]] # intersection w/ row
-    print(len(grid.clicked_sentences))
-    grid.clicked_cluster = int(col)
-    print("Clicked cluster ID: ", col)
-    print("Clicked cluster doc_list: ", [ c for c in grid.all_clusters if c.ID == int(col)][0].doc_list)
-    grid.clicked_row = row
-
-    return grid.clicked_sentences
+    print("click", row, col)
+    row, col = row, int(col)
+    return frontend.click(row, col)
 
 @app.get("/editName/{ix}/{newName}")
 async def editName(ix: int, newName: str):
-    cluster = [ c for c in grid.all_clusters if c.ID == int(ix)][0]
-    cluster.name = newName
-    grid.freeze_cluster(ix) # Naming a cluster should freeze it. This also freezes its name.
-    return show_grid()
-
+    print("editName", ix, newName)
+    return frontend.set_name(int(ix), newName)
 
 @app.get("/textInput/{text}")
 async def textInput(text: str):
-    message = f"Text input: {text}"
-    grid.create_frozen_cluster(text) # Zero error handling here
-    grid.reconsecutivize_clusters()
-    grid.update_clicked_sentences()
-    return show_grid()
-
+    print("textInput", text)
+    return frontend.create_cluster(text)
 
 @app.get("/setK/{k}")
 async def setK(k: int):
-    grid.k = k
-    return show_grid()
-
+    print("setK", k)
+    return frontend.set_k(k)
 
 @app.get("/regenerate/")
 async def regenerate():
-    grid.generate_grid(0.1, grid.k) # Past the first generation, should we ask for k or does that cause overlap?
-    grid.reconsecutivize_clusters()
-    grid.update_clicked_sentences()
-    return show_grid()
-
+    print("regenerate")
+    return frontend.regenerate()
 
 @app.get("/copyToggle/")
 async def copyToggle():
-    grid.copy_on = not grid.copy_on
-    return grid.copy_on
-
+    print("copyToggle")
+    return frontend.toggle_copy()
 
 @app.get("/trash/{text}")
-async def trash(text:str):
+async def trash(text: str):
     print("trash ", text)
-    grid.delete_doc(text)
-    grid.reconsecutivize_clusters()
-    grid.update_clicked_sentences()
-    return show_grid()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return frontend.trash(text)
