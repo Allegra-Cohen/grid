@@ -80,7 +80,6 @@ class UvicornFrontend(Frontend):
 
     def trash(self, text: str) -> dict:
         document = self.find_document(text)
-        print("deleting document ",document)
         self.grid.delete_document(document)
         return self.show_grid()
 
@@ -116,10 +115,11 @@ class UvicornFrontend(Frontend):
     # the new row and column.
     def move(self, row_index: str, col_index: int, text: str) -> dict:
         assert col_index >= 0 # We're not deleting sentences in this way.
+        document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
         if self.copy_on:
-            self.grid.copy_document(text, self.clicked_col, col_index)
+            self.grid.copy_document(document, self.clicked_col, col_index)
         else:
-            self.grid.move_document(text, self.clicked_col, col_index)
+            self.grid.move_document(document, self.clicked_col, col_index)
         return self.show_grid()
 
 frontend = UvicornFrontend('../process_files/', 6)
@@ -137,9 +137,9 @@ def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function 
 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):
-    print(f"Row: {row}\tCol: {col}\tText: {sent}")
-    # row, col, sent = int(row), int(col), int(sent)
-    return frontend.move(row, int(col), sent)
+    print("drag", f"Row: {row}\tCol: {col}\tText: {sent}")
+    row, col, sent = row, int(col), sent
+    return frontend.move(row, col, sent)
 
 @app.get("/click/{row}/{col}")
 async def click(row: str, col: str):

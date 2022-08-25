@@ -124,9 +124,9 @@ class ControlPanel(Frontend):
 					# What does freezing an individual document mean?
 					self.grid.freeze_document(sentence_num, from_cluster)
 				elif self.copy_on:
-					self.grid.copy_document(sentence_num, from_cluster, to_cluster)
+					self.grid.copy_document_by_index(sentence_num, from_cluster, to_cluster)
 				else:
-					self.grid.move_document(sentence_num, from_cluster, to_cluster)
+					self.grid.move_document_by_index(sentence_num, from_cluster, to_cluster)
 
 			elif user_input.startswith(new_command):
 				_, frozen_or_seeded, concept = user_input.split(' ')
