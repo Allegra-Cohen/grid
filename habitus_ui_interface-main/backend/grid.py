@@ -110,20 +110,24 @@ class Grid():
 	def copy_document(self, document, cluster_from_index, cluster_to_index):
 		cluster_from = self.clusters[cluster_from_index]
 		cluster_to = self.clusters[cluster_to_index]
-		if type(document) == str: # If the GUI is sending you this, it's going to be the text, not the object
-			document = [d for d in cluster_from.documents if d.readable == text][0]
 		cluster_to.insert(document)
+
+	def copy_document_by_index(self, doc_num, cluster_from_index, cluster_to_index):
+		document = self.clusters[cluster_from_index].documents[doc_num]
+		self.copy_document(document, cluster_from_index, cluster_to_index)
 	
 	def move_document(self, document, cluster_from_index, cluster_to_index):
 		cluster_from = self.clusters[cluster_from_index]
 		cluster_to = self.clusters[cluster_to_index]
-		if type(document) == str: # If the GUI is sending you this, it's going to be the text, not the object
-			document = [d for d in cluster_from.documents if d.readable == text][0]
 		cluster_to.insert(document)
 		cluster_from.remove(document)
 		if not cluster_from:
 			print(cluster_from.name, " will be removed.")
 			self.clusters.pop(cluster_from_index)
+
+	def move_document_by_index(self, doc_num, cluster_from_index, cluster_to_index):
+		document = self.clusters[cluster_from_index].documents[doc_num]
+		self.move_document(document, cluster_from_index, cluster_to_index)
 
 	def delete_document(self, document: Document):
 		for cluster in self.clusters:

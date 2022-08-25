@@ -52,30 +52,18 @@ class UvicornFrontend(Frontend):
         frozen_columns = [index for index, cluster in enumerate(clusters) if cluster.is_frozen()]
 
         # If documents are in multiple columns, they will show up multiple times here.
-        # The order will not be the 
-        row_contents = {}
-        for row_index, row in enumerate(rows):
-            # row_documents = [document.readable for document in self.grid.documents if document.is_member(row_index)]
-            # row_contents[row.name] = row_documents
-            row_contents[row.name] = []
-            for col_index, cluster in enumerate(clusters):
-                row_col_documents = [document.readable for document in cluster.documents if document.is_member(row_index)]
-                row_contents[row.name] += row_col_documents
-
-        # map of row name to map of col index to number of sentences in that row and col
+        # The order will not be the same as with main.py.
         delta = 1.0 / len(sentences)
+        row_contents = {}
+        # map of row name to map of col index to number of sentences in that row and col
         heat_map: dict[str, dict[int, float]] = {row.name: {} for row in rows}
         for row_index, row in enumerate(rows):
+            row_contents[row.name] = []
             for col_index, cluster in enumerate(clusters):
-                count = sum([document.is_member(row_index) for document in cluster.documents])
+                cell_documents = self.grid.get_clicked_documents(col_index, row_index)
+                row_contents[row.name] += cell_documents
+                count = len(cell_documents)
                 heat_map[row.name][col_index] = delta * count
-
-        print(heat_map)
-
-        print()
-        print("Keith says row contents are")
-        print(row_contents)
-        print()
 
         return {
             "sentences": sentences,
@@ -92,7 +80,6 @@ class UvicornFrontend(Frontend):
 
     def trash(self, text: str) -> dict:
         document = self.find_document(text)
-        print("deleting document ",document)
         self.grid.delete_document(document)
         return self.show_grid()
 
@@ -128,10 +115,11 @@ class UvicornFrontend(Frontend):
     # the new row and column.
     def move(self, row_index: str, col_index: int, text: str) -> dict:
         assert col_index >= 0 # We're not deleting sentences in this way.
+        document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
         if self.copy_on:
-            self.grid.copy_document(text, self.clicked_col, col_index)
+            self.grid.copy_document(document, self.clicked_col, col_index)
         else:
-            self.grid.move_document(text, self.clicked_col, col_index)
+            self.grid.move_document(document, self.clicked_col, col_index)
         return self.show_grid()
 
 frontend = UvicornFrontend('../process_files/', 6)
@@ -149,9 +137,9 @@ def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function 
 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):
-    print(f"Row: {row}\tCol: {col}\tText: {sent}")
-    # row, col, sent = int(row), int(col), int(sent)
-    return frontend.move(row, int(col), sent)
+    print("drag", f"Row: {row}\tCol: {col}\tText: {sent}")
+    row, col, sent = row, int(col), sent
+    return frontend.move(row, col, sent)
 
 @app.get("/click/{row}/{col}")
 async def click(row: str, col: str):
