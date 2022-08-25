@@ -75,8 +75,8 @@ class UvicornFrontend(Frontend):
         }
 
     def toggle_copy(self) -> bool:
-        self.grid.copy_on = not self.grid.copy_on
-        return self.grid.copy_on
+        self.copy_on = not self.copy_on
+        return self.copy_on
 
     def trash(self, text: str) -> dict:
         document = self.find_document(text)
@@ -92,7 +92,7 @@ class UvicornFrontend(Frontend):
         return self.show_grid()
 
     def set_name(self, col_index: int, name: str) -> dict:
-        cluster = self.grid.cluster[col_index]
+        cluster = self.grid.clusters[col_index]
         cluster.set_name(name)
         return self.show_grid()
 
@@ -114,12 +114,12 @@ class UvicornFrontend(Frontend):
 
     # This moves the sentence from the currently clicked_col and clicked_row to
     # the new row and column.
-    def move(self, row_index: int, col_index: int, text_index: str) -> dict:
+    def move(self, row_index: str, col_index: int, text: str) -> dict:
         assert col_index >= 0 # We're not deleting sentences in this way.
         if self.copy_on:
-            self.grid.copy_document(text_index, self.clicked_col, col_index)
+            self.grid.copy_document(text, self.clicked_col, col_index)
         else:
-            self.grid.move_document(text_index, self.clicked_col, col_index)
+            self.grid.move_document(text, self.clicked_col, col_index)
         return self.show_grid()
 
 frontend = UvicornFrontend('../process_files/', 6)
@@ -138,8 +138,8 @@ def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):
     print(f"Row: {row}\tCol: {col}\tText: {sent}")
-    row, col, sent = int(row), int(col), int(sent)
-    return frontend.move(row, col, sent)
+    # row, col, sent = int(row), int(col), int(sent)
+    return frontend.move(row, int(col), sent)
 
 @app.get("/click/{row}/{col}")
 async def click(row: str, col: str):
