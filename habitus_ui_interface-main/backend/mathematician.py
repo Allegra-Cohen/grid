@@ -351,10 +351,6 @@ def get_best_initial_model_k(k: int, docs: list[Document], doc_distances, sorted
 			gwb = b*gw
 			new_tuples.append((gwb, cluster))
 		score_tuples = sorted(new_tuples, reverse = True)
-		print("\n\n\n")
-		print("New score tuples:")
-		print(score_tuples)
-		print("\n\n\n")
 	
 	all_included_docs = []
 	allowed_clusters = []

@@ -1,3 +1,5 @@
+import pandas as pd
+
 from frontend import Frontend
 
 class ControlPanel(Frontend):
@@ -25,11 +27,32 @@ class ControlPanel(Frontend):
 		for document in self.grid.trash:
 			print(document.readable)
 
+	def dump_clusters(self):
+		# for document_index, document in enumerate(self.grid.documents):
+		# 	map = {row.name: document.is_member(row_index) for row_index, row in enumerate(self.grid.rows)}
+		#	print(document_index, map, document.readable)
+			
+		records = []
+		for row_index, row in enumerate(self.grid.rows):
+			for col_index, cluster in enumerate(self.grid.clusters):
+				for document in self.grid.get_clicked_documents(col_index, row_index):
+					record = {}
+					record['row'] = row.name
+					record['col'] = cluster.name
+					record['readable'] = document.readable
+					records += [record]
+		data = {
+			'row': [record['row'] for record in records],
+			'col': [record['col'] for record in records],
+			'readable': [record['readable'] for record in records]
+		}
+		pd.DataFrame(data).to_csv('dump.csv')
+
 	def run(self):
 		user_input = None
 		while user_input != 'q':
 			print()
-			user_input = input("Enter (g) to generate grid, (m) for modification mode, (s) to show grid, (q) to quit: ")
+			user_input = input("Enter (g) to generate grid, (m) for modification mode, (s) to show grid, (d) to dump grid, (q) to quit: ")
 			if user_input == 'g':
 				self.grid.regenerate()
 			elif user_input == 'm':
@@ -39,6 +62,8 @@ class ControlPanel(Frontend):
 					user_input = self.modify_mode()
 			elif user_input == 's':
 				self.show_clusters()
+			elif user_input == 'd':
+				self.dump_clusters()
 			elif user_input == 'q':
 				print("Thanks, goodbye. \n\n\n")
 			else:
@@ -99,9 +124,9 @@ class ControlPanel(Frontend):
 					# What does freezing an individual document mean?
 					self.grid.freeze_document(sentence_num, from_cluster)
 				elif self.copy_on:
-					self.grid.copy_document(sentence_num, from_cluster, to_cluster)
+					self.grid.copy_document_by_index(sentence_num, from_cluster, to_cluster)
 				else:
-					self.grid.move_document(sentence_num, from_cluster, to_cluster)
+					self.grid.move_document_by_index(sentence_num, from_cluster, to_cluster)
 
 			elif user_input.startswith(new_command):
 				_, frozen_or_seeded, concept = user_input.split(' ')
