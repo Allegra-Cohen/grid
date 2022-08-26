@@ -324,15 +324,11 @@ def get_best_initial_model(docs, doc_vecs, sorted_qualities, quality_names, modi
 	best_model, best_score = None, 0
 	for i, q in enumerate(sorted_qualities): # There are six quality measures
 		quality = quality_names[i]
-		# print("\n\n Gamma scores for ", quality)
 		model_tuple = gamma_slide(docs, q, doc_vecs, modified_clusters)
-		# print("\n\n")
 		current_score, current_model = model_tuple[2], (quality, model_tuple[0], model_tuple[1])
 
 		if current_score > best_score:
 			best_model, best_score = current_model, current_score
-
-	# print("\n\n BEST INITIAL MODEL: ", best_model, "\n\n")
 
 	return best_model
 
@@ -364,8 +360,7 @@ def get_best_initial_model_k(k: int, docs: list[Document], doc_distances, sorted
 		else:
 			break
 
-	# print("\n\n BEST INITIAL MODEL: ", allowed_clusters + modified_clusters, "\n\n")
-	return 'gw', len(all_included_docs)/len_docs, allowed_clusters + modified_clusters
+	return 'gw', len(all_included_docs)/len_docs, modified_clusters + allowed_clusters
 
 # Expectation maximization ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Expectation maximization
 
