@@ -181,10 +181,16 @@ class Grid():
 			document = self.docs[i]
 			if type(label_set) == list:
 				for label in label_set:
+					# The labels can skip values so that appending just one new list doesn't work.
+					# For [[0], [2]], the document needing to be at [2] requires that [1] be appended first.
 					if label >= len(new_doc_lists): # If you haven't seen this label before
+						while label > len(new_doc_lists):
+							new_doc_lists.append([])
 						new_doc_lists.append([document]) # Make a list for its documents
 					else: # Otherwise add new document to the existing list
 						new_doc_lists[label].append(document)
+		# Since some empty lists may have been added and may still be empty, they are removed here.
+		new_doc_lists = [doc_list for doc_list in new_doc_lists if doc_list]
 		return new_doc_lists
 
 
