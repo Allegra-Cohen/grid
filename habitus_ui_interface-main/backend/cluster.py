@@ -54,6 +54,7 @@ class Cluster():
 	def set_documents(self, documents: list[Document]):
 		self.documents = documents
 
-	def set_name(self, name: str):
+	def set_name(self, name: str, freeze: bool):
 		self.name = name
-		self.frozen = True
+		if freeze:
+			self.frozen = True
