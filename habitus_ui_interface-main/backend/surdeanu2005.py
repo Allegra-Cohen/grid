@@ -29,7 +29,7 @@ class Surdeanu2005(ClusterGenerator):
 			_, _, categories = get_best_initial_model(documents, sorted_qualities, self.quality_names, modified_clusters = modified_clusters)
 		else:
 			if len(modified_clusters) > k:
-				k += 2 # If you have more clusters than k, just add a couple more each time.
+				k = 2 # If you have more clusters than k, just add a couple more each time.
 			else:
 				k -= len(modified_clusters) # Always keep the right number
 			_, _, categories = get_best_initial_model_k(k, documents, self.corpus.doc_distances, sorted_qualities, self.quality_names, allowed_seed_size = self.allowed_seed_size, modified_clusters = modified_clusters)
