@@ -2,8 +2,6 @@
 print("This is main2.py")
 
 import sys
-import pandas as pd
-
 sys.path.append("./backend")
 
 from document import Document
