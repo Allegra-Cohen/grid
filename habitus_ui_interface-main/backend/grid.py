@@ -60,7 +60,7 @@ class Grid():
 		# Before clustering was performed, the seeded_clusters were moved towards zero
 		# so that the labels will refer to them there.
 		# TODO: rearrange this so that loop through labels and send them to the right clusters.
-		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()]
+		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded() and not cluster.is_frozen()]
 		for cluster_index, cluster in enumerate(seeded_clusters):
 			cluster_documents = []
 			for document_index, label in enumerate(labels):
@@ -72,7 +72,7 @@ class Grid():
 						cluster_documents.append(documents[document_index])
 			cluster.set_documents(cluster_documents)
 			name = self.name_cluster(cluster_documents)
-			cluster.set_name(name)
+			cluster.set_name(name, False)
 
 	def name_cluster(self, documents: list[Document]) -> str:
 		names = self.linguist.get_cluster_name(2, documents, self.corpus.tfidf, self.corpus.pmi, self.corpus.anchor,
@@ -85,6 +85,7 @@ class Grid():
 		print("Generating grid ... ")
 		frozen_clusters = [cluster for cluster in self.clusters if cluster.is_frozen()]
 		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded() and not cluster.is_frozen()]
+
 		# This returns cluster labels for each document. The first N category digits will correspond to the seeded_clusters.
 		frozen_document_lists = [cluster.documents for cluster in frozen_clusters]
 		seeded_document_lists = [cluster.human_documents for cluster in seeded_clusters]
@@ -93,6 +94,7 @@ class Grid():
 		labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists)
 		# The frozen ones will not be updated.
 		self.update_seeded_clusters(documents, labels)
+
 		new_machine_clusters = self.create_machine_clusters(documents, labels, num_clusters)
 		# Replace any machine clusters that already exist, remove extraneous, add any extra.
 		# For now, just remove old and put new on the end, but in the future, preserve order if possible.

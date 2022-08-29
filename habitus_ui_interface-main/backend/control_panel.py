@@ -17,7 +17,7 @@ class ControlPanel(Frontend):
 				cluster.print_yourself(index)
 		print("\n\n                S e e d e d    c l u s t e r s             *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
 		for index, cluster in enumerate(clusters):
-			if cluster.is_seeded():
+			if cluster.is_seeded() and not cluster.is_frozen():
 				cluster.print_yourself(index)
 		print("\n\n                M a c h i n e   c l u s t e r s            *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n")
 		for index, cluster in enumerate(clusters):
