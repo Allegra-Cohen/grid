@@ -369,6 +369,7 @@ def get_best_initial_model_k(k: int, docs: list[Document], doc_distances, sorted
 
 # Expectation maximization ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Expectation maximization
 
+# ps = probabilities
 def calculate_ps_cat(doc_indices, categories, ps_cat_given_doc, q, n):
 	ps_cat = []
 	for c, _cat in enumerate(categories):
@@ -377,6 +378,7 @@ def calculate_ps_cat(doc_indices, categories, ps_cat_given_doc, q, n):
 		ps_cat.append(stat)
 	return ps_cat
 
+# tfps = term frequency probabilities
 def calculate_tfps(doc_indices, categories, words, words_in_docs, counts, ps_cat_given_doc, word_vectorizer):
 	tfps = np.zeros(len(categories))
 	for c, _cat in enumerate(categories):
@@ -389,6 +391,7 @@ def calculate_tfps(doc_indices, categories, words, words_in_docs, counts, ps_cat
 		tfps[c] = c_sum
 	return tfps
 
+# ps = probabilities
 def calculate_ps_word_given_cat(doc_indices, categories, words, word_indices, words_in_docs, counts, ps_cat_given_doc, word_vectorizer, v, tfps): # Keys are words, values are lists where each element is the probability given the category at that index
 	ps_word_given_cat = np.zeros((len(categories), len(words)))
 	for w, word in enumerate(words):
