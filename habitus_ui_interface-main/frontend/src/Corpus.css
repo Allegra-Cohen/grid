@@ -2,6 +2,9 @@ li {
     list-style-type: none;
     background: #F0F0F0;
     padding: .3em;
+    margin-right: 0.5em;
     font-family: "InaiMathi";
+    width: 900px;
+    overflow: 'scroll';
 }
 li:nth-child(odd) { background: #F8F8F8; }

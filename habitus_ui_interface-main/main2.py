@@ -21,9 +21,9 @@ app.add_middleware(
 )
 
 class UvicornFrontend(Frontend):
-    def __init__(self, path: str, k: int):
+    def __init__(self, path: str, k: int, anchor: str):
         super().__init__(path)
-        self.grid = self.backend.get_grid(k)
+        self.grid = self.backend.get_grid(k, anchor)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
@@ -64,6 +64,7 @@ class UvicornFrontend(Frontend):
                 heat_map[row.name][col_index] = delta * count
 
         return {
+            "anchor": self.grid.anchor,
             "sentences": sentences,
             "clicked_sentences": clicked_sentences,
             "grid": heat_map,
@@ -120,6 +121,10 @@ class UvicornFrontend(Frontend):
         texts = [document.readable for document in documents]
         return texts
 
+    def sentence_click(self, text: str):
+        document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
+        return document.context
+
     # This moves the sentence from the currently clicked_col and clicked_row to
     # the new row and column.
     def move(self, row_index: str, col_index: int, text: str) -> dict:
@@ -131,7 +136,7 @@ class UvicornFrontend(Frontend):
             self.grid.move_document(document, self.clicked_col, col_index)
         return self.show_grid()
 
-frontend = UvicornFrontend('../process_files/', 6)
+frontend = UvicornFrontend('../process_files/', 6, 'horticulture') # Default grid is harvest
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
@@ -155,6 +160,11 @@ async def click(row: str, col: str):
     print("click", row, col)
     row, col = row, int(col)
     return frontend.click(row, col)
+
+@app.get("/sentenceClick/{text}")
+async def sentenceClick(text: str):
+    print("sentenceClick", text)
+    return frontend.sentence_click(text)
 
 @app.get("/editName/{ix}/{newName}")
 async def editName(ix: int, newName: str):

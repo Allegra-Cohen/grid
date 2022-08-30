@@ -1,6 +1,7 @@
 import {useDrag} from "react-dnd";
+import {useId, useEffect, useState} from "react";
 
-function Sentence({text}) {
+function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'sentence',
         item: { text },
@@ -8,12 +9,26 @@ function Sentence({text}) {
             isDragging: monitor.isDragging()
         })
     })
-    return <li ref={dragRef}>{text} {isDragging}</li>
+    return <li ref={dragRef} 
+                style={{border: isActive ? '2px solid #BE1C06' : null}}
+
+                onClick={(evt) => {
+                        fetch(`${apiUrl}/sentenceClick/${text}`)
+                        .then( response => response.json())
+                        .then( response => {onChange(response)} );
+                        activateSentence(text);
+                    }
+        }
+
+    >{text} {isDragging}</li>
 }
 
-export default function Corpus({sentences}) {
+export default function Corpus({sentences, onChange, apiUrl}) {
 
-    let items = sentences.map((s, ix) => <Sentence key={ix} text={s} />)
+    const [activeSentence, setActiveSentence] = useState();
+    const activateSentence = (item) => activeSentence === item ? setActiveSentence() : setActiveSentence(item);
+
+    let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} />)
     return (
 
             <ul style={{

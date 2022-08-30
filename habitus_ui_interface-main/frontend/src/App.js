@@ -8,7 +8,7 @@ import './RegenerateButton.css'
 import InputBox from './InputBox'
 import './InputBox.css'
 import LoadBox from './LoadBox'
-// import './LoadBox.css'
+import './LoadBox.css'
 import KButton from './KButton'
 import './KButton.css'
 import SaveButton from './SaveButton'
@@ -19,7 +19,9 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 function App({apiUrl}) {
+    const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
+    const [context, setContext] = useState('');
     const [gridRows, setGridRows] = useState({})
     const [colNumToName, setColNumToName] = useState({})
     const [frozenColumns, setFrozenColumns] = useState([])
@@ -29,6 +31,7 @@ function App({apiUrl}) {
         fetch(`${apiUrl}/data/`)
             .then( response => response.json())
             .then( data => {
+                setAnchor(data.anchor);
                 setCorpus(data.clicked_sentences);
                 setGridRows(data.grid);
                 setColNumToName(data.col_num_to_name);
@@ -40,6 +43,7 @@ function App({apiUrl}) {
 
   return (
       <DndProvider backend={HTML5Backend}>
+      <div style={{display:'flex', flexDirection:'row', marginBottom:'0.03em', marginLeft:'25.5em', marginTop:'0.03em', fontFamily:'InaiMathi', fontSize:'20pt'}}> {anchor} </div>
     <div className="App" style={{
         display: "flex",
         flexDirection: "row"
@@ -52,7 +56,8 @@ function App({apiUrl}) {
     <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
       (evt) => {console.log(evt);
                 console.log('app!');
-                setCorpus(evt)}
+                setCorpus(evt);
+                setContext('')}
        }
        onDrop={
         (evt) => {
@@ -129,6 +134,7 @@ function App({apiUrl}) {
       <LoadBox className="LoadBox"
       onKeyPress={(evt) => {
           console.log(evt);
+          setAnchor(evt.anchor);
           setCorpus(evt.clicked_sentences);
           setGridRows(evt.grid);
           setColNumToName(evt.col_num_to_name);
@@ -137,8 +143,18 @@ function App({apiUrl}) {
       apiUrl={apiUrl}/>
 
       </div>
-
-      <Corpus sentences={corpus} />
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        fontFamily: 'InaiMathi'
+      }}>
+      <Corpus sentences={corpus}
+      onChange={(evt) => {console.log(evt);
+                          console.log('sentence click!');
+                          setContext(evt)}}
+       apiUrl={apiUrl} />
+      {context}
+      </div>
       </div>
       </div>
 
