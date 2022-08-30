@@ -25,11 +25,11 @@ class Corpus():
 		vector_texts = [document.get_vector_text() for document in self.documents]
 		self.counts = self.linguist.word_vectorizer.fit_transform(vector_texts).toarray()
 		self.words = self.linguist.word_vectorizer.get_feature_names_out()
+		self.tfidf = self.linguist.tfidf_vectorizer.fit_transform(vector_texts)
 		self.word_indices = {k: i for i, k in enumerate(list(self.words))}
 		words = [word for document in self.documents for word in document.tokens]
 		self.words_in_docs = list(set(words))
 		self.anchor_index = self.word_indices[self.anchor]
-		self.tfidf = self.linguist.tfidf_vectorizer.fit_transform(vector_texts)
 		self.pmi = self.load_pmi('pmi_matrix_lem.npy')
 		self.load_vectors('doc_vecs_lem.json', self.documents)
 		self.doc_distances = self.load_distances('doc_distances_lem.npy')

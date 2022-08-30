@@ -27,26 +27,60 @@ class ControlPanel(Frontend):
 		for document in self.grid.trash:
 			print(document.readable)
 
-	def dump_clusters(self):
-		# for document_index, document in enumerate(self.grid.documents):
-		# 	map = {row.name: document.is_member(row_index) for row_index, row in enumerate(self.grid.rows)}
-		#	print(document_index, map, document.readable)
-			
-		records = []
-		for row_index, row in enumerate(self.grid.rows):
-			for col_index, cluster in enumerate(self.grid.clusters):
-				for document in self.grid.get_clicked_documents(col_index, row_index):
-					record = {}
-					record['row'] = row.name
-					record['col'] = cluster.name
-					record['readable'] = document.readable
-					records += [record]
-		data = {
-			'row': [record['row'] for record in records],
-			'col': [record['col'] for record in records],
-			'readable': [record['readable'] for record in records]
-		}
-		pd.DataFrame(data).to_csv('dump.csv')
+	def dump(self):
+
+		def dump_documents():
+			records = []
+			for document in self.grid.documents:
+				map = {row.name: document.is_member(row_index) for row_index, row in enumerate(self.grid.rows)}
+				record = {
+					'readable': document.readable,
+					'stripped': document.stripped,
+					'map': map
+				}
+				records.append(record)
+			data = {
+				'readable': [record['readable'] for record in records],
+				'stripped': [record['stripped'] for record in records]
+			}
+			for row in self.grid.rows:
+				data[row.name] = [record['map'][row.name] for record in records]
+			pd.DataFrame(data).to_csv('documents2.csv')
+
+		def dump_tokens():
+			tokens = []
+			for document_index, document in enumerate(self.grid.documents):
+				tokens.append(document.tokens)
+			pd.DataFrame({'tokens': tokens}).to_csv('tokens2.csv')
+
+		def dump_vectors():
+			vectors = []
+			for document_index, document in enumerate(self.grid.documents):
+				vectors.append(document.vector)
+			pd.DataFrame({'vectors': vectors}).to_csv('vectors2.csv')
+
+		def dump_cells():
+			records = []
+			for row_index, row in enumerate(self.grid.rows):
+				for col_index, cluster in enumerate(self.grid.clusters):
+					for document in self.grid.get_clicked_documents(col_index, row_index):
+						record = {
+							'row': row.name,
+							'col': cluster.name,
+							'readable': document.readable
+						}
+						records.append(record)
+			data = {
+				'row': [record['row'] for record in records],
+				'col': [record['col'] for record in records],
+				'readable': [record['readable'] for record in records]
+			}
+			pd.DataFrame(data).to_csv('cells2.csv')
+
+		dump_documents()
+		dump_tokens()
+		dump_vectors()
+		dump_cells()
 
 	def run(self):
 		user_input = None
@@ -63,7 +97,7 @@ class ControlPanel(Frontend):
 			elif user_input == 's':
 				self.show_clusters()
 			elif user_input == 'd':
-				self.dump_clusters()
+				self.dump()
 			elif user_input == 'q':
 				print("Thanks, goodbye. \n\n\n")
 			else:
