@@ -60,7 +60,7 @@ class Grid():
 		# Before clustering was performed, the seeded_clusters were moved towards zero
 		# so that the labels will refer to them there.
 		# TODO: rearrange this so that loop through labels and send them to the right clusters.
-		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded() and not cluster.is_frozen()]
+		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()]
 		for cluster_index, cluster in enumerate(seeded_clusters):
 			cluster_documents = []
 			for document_index, label in enumerate(labels):
@@ -84,7 +84,7 @@ class Grid():
 		print("K: ", self.k)
 		print("Generating grid ... ")
 		frozen_clusters = [cluster for cluster in self.clusters if cluster.is_frozen()]
-		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded() and not cluster.is_frozen()]
+		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()]
 
 		# This returns cluster labels for each document. The first N category digits will correspond to the seeded_clusters.
 		frozen_document_lists = [cluster.documents for cluster in frozen_clusters]
@@ -167,3 +167,73 @@ class Grid():
 		else:
 			clicked_cluster = self.clusters[column_index]
 			return [document for document in clicked_cluster.documents if document.is_member(row_index)]
+
+
+	def dump(self):
+
+		def dump_documents():
+			records = []
+			for document in self.documents:
+				map = {row.name: document.is_member(row_index) for row_index, row in enumerate(self.rows)}
+				record = {
+					'readable': document.readable,
+					'stripped': document.stripped,
+					'map': map
+				}
+				records.append(record)
+			data = {
+				'readable': [record['readable'] for record in records],
+				'stripped': [record['stripped'] for record in records]
+			}
+			for row in self.rows:
+				data[row.name] = [record['map'][row.name] for record in records]
+			pd.DataFrame(data).to_csv(self.anchor + '_documents2.csv')
+
+		def dump_tokens():
+			tokens = []
+			for document_index, document in enumerate(self.documents):
+				tokens.append(document.tokens)
+			pd.DataFrame({'tokens': tokens}).to_csv(self.anchor + '_tokens2.csv')
+
+		def dump_vectors():
+			vectors = []
+			for document_index, document in enumerate(self.documents):
+				vectors.append(document.vector)
+			pd.DataFrame({'vectors': vectors}).to_csv(self.anchor + '_vectors2.csv')
+
+		def dump_cells():
+			records = []
+			for row_index, row in enumerate(self.rows):
+				for col_index, cluster in enumerate(self.clusters):
+					for document in self.get_clicked_documents(col_index, row_index):
+						record = {
+							'row': row.name,
+							'col': cluster.name,
+							'frozen_col': cluster.frozen,
+							'readable': document.readable,
+							'seeded_doc': document in cluster.human_documents
+						}
+						records.append(record)
+			data = {
+				'row': [record['row'] for record in records],
+				'col': [record['col'] for record in records],
+				'frozen_col': [record['frozen_col'] for record in records],
+				'readable': [record['readable'] for record in records],
+				'seeded_doc': [record['seeded_doc'] for record in records]
+			}
+			pd.DataFrame(data).to_csv(self.anchor + '_cells2.csv')
+
+		dump_documents()
+		dump_tokens()
+		dump_vectors()
+		dump_cells()
+
+
+
+
+
+
+
+
+
+

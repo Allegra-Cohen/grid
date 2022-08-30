@@ -33,3 +33,7 @@ class Backend():
 		print("New grid -- processing documents ... ")
 		grid = Grid.generate(self.path, self.corpus, k, self.synonym_book, self.too_common)
 		return grid
+
+	def load_grid(self, anchor: str) -> Grid:
+		print("anchor", anchor)
+		return Grid.generate(self.path, self.corpus, 4, self.synonym_book, self.too_common)

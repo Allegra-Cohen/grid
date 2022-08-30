@@ -7,8 +7,12 @@ import './CopyButton.css'
 import './RegenerateButton.css'
 import InputBox from './InputBox'
 import './InputBox.css'
+import LoadBox from './LoadBox'
+// import './LoadBox.css'
 import KButton from './KButton'
 import './KButton.css'
+import SaveButton from './SaveButton'
+import './SaveButton.css'
 import Trash from './Trash'
 import {useEffect, useState} from "react";
 import { DndProvider } from 'react-dnd'
@@ -119,6 +123,18 @@ function App({apiUrl}) {
        }
        apiUrl={apiUrl}/>
 
+      <SaveButton className="SaveButton" onClick={(evt) => {console.log('save button: ', evt)}}
+      apiUrl={apiUrl}/>
+
+      <LoadBox className="LoadBox"
+      onKeyPress={(evt) => {
+          console.log(evt);
+          setCorpus(evt.clicked_sentences);
+          setGridRows(evt.grid);
+          setColNumToName(evt.col_num_to_name);
+          setFrozenColumns(evt.frozen_columns)}
+      }
+      apiUrl={apiUrl}/>
 
       </div>
 

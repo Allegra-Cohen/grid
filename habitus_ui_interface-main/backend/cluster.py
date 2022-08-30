@@ -25,7 +25,7 @@ class Cluster():
 		self.frozen = True
 
 	def is_seeded(self) -> bool:
-		return not not self.human_documents
+		return not not self.human_documents and not self.is_frozen()
 
 	def remove(self, document: Document) -> Document:
 		if document in self.documents:
@@ -38,12 +38,13 @@ class Cluster():
 
 	def insert(self, document: Document):
 		if document not in self.documents:
-			for i, existing_doc in enumerate(self.documents):
-				if document.index < existing_doc.index:
-					self.documents.insert(i, document)
-					if document not in self.human_documents:
-						self.human_documents.insert(i, document)
-					break
+			self.documents.append(document)
+			if document not in self.human_documents:
+				self.human_documents.append(document)
+
+		self.documents.sort(key=lambda x: x.index) # Do this so that the sentences come up in numerical order in the GUI
+		self.human_documents.sort(key=lambda x: x.index)
+		
 
 	def print_yourself(self, index: int):
 		print(str(index) + ". Cluster ", self.name, " : -----------------")

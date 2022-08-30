@@ -33,12 +33,10 @@ class UvicornFrontend(Frontend):
         return next(document for document in self.grid.documents if document.readable == text)
 
     def get_clicked_documents(self) -> list[Document]:
-        print(self.clicked_col, self.clicked_row)
         if self.clicked_col == None and self.clicked_row == None:
             documents = []
         else:
             documents = self.grid.get_clicked_documents(self.clicked_col, self.clicked_row)
-            print(documents)
         return documents
 
     def show_grid(self) -> dict:
@@ -77,6 +75,17 @@ class UvicornFrontend(Frontend):
     def toggle_copy(self) -> bool:
         self.copy_on = not self.copy_on
         return self.copy_on
+
+    def load_grid(self, anchor):
+        self.grid = self.backend.load_grid(anchor)
+        self.copy_on = False
+        self.clicked_col = None
+        self.clicked_row = None
+        return self.show_grid()
+
+    def save_grid(self) -> bool:
+        self.grid.dump()
+        return True
 
     def trash(self, text: str) -> dict:
         document = self.find_document(text)
@@ -171,6 +180,17 @@ async def regenerate():
 async def copyToggle():
     print("copyToggle")
     return frontend.toggle_copy()
+
+@app.get("/saveGrid/")
+async def saveGrid():
+    print("saving grid")
+    return frontend.save_grid()
+
+@app.get("/loadGrid/{text}")
+async def loadGrid(text: str):
+    print("loading grid ", text)
+    grid = frontend.load_grid(text)
+    return grid
 
 @app.get("/trash/{text}")
 async def trash(text: str):
