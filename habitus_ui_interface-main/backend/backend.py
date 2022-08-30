@@ -12,7 +12,7 @@ class Backend():
 		clean_filename = 'cleaned_docs.csv'
 		anchor_filename = 'row_labels_horticulture.csv'
 		anchor = 'horticulture'
-		rows = [Row('other'), Row('proportions'), Row('processes'), Row('decisions'), Row('conditions'), Row('causes')]
+		rows = [Row('other'), Row('proportions'), Row('processes'), Row('decisions'), Row('conditions'), Row('causes'), Row('all')]
 		linguist = Linguist()
 		self.synonym_book = [
 			['harvester', 'thresher', 'machinery', 'equipment'],

@@ -38,9 +38,12 @@ class Cluster():
 
 	def insert(self, document: Document):
 		if document not in self.documents:
-			self.documents.append(document)
-		if document not in self.human_documents:
-			self.human_documents.append(document)
+			for i, existing_doc in enumerate(self.documents):
+				if document.index < existing_doc.index:
+					self.documents.insert(i, document)
+					if document not in self.human_documents:
+						self.human_documents.insert(i, document)
+					break
 
 	def print_yourself(self, index: int):
 		print(str(index) + ". Cluster ", self.name, " : -----------------")

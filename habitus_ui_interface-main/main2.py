@@ -35,10 +35,12 @@ class UvicornFrontend(Frontend):
         return next(document for document in self.grid.documents if document.readable == text)
 
     def get_clicked_documents(self) -> list[Document]:
+        print(self.clicked_col, self.clicked_row)
         if self.clicked_col == None and self.clicked_row == None:
-            documents = self.grid.documents
+            documents = []
         else:
             documents = self.grid.get_clicked_documents(self.clicked_col, self.clicked_row)
+            print(documents)
         return documents
 
     def show_grid(self) -> dict:
@@ -92,7 +94,7 @@ class UvicornFrontend(Frontend):
 
     def set_name(self, col_index: int, name: str) -> dict:
         cluster = self.grid.clusters[col_index]
-        cluster.set_name(name)
+        cluster.set_name(name, True)
         return self.show_grid()
 
     def set_k(self, k: int) -> dict:

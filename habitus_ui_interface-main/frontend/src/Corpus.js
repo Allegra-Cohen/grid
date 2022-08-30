@@ -16,14 +16,14 @@ export default function Corpus({sentences}) {
     let items = sentences.map((s, ix) => <Sentence key={ix} text={s} />)
     return (
 
-            <ol style={{
+            <ul style={{
                 // width:"30em",
                 marginLeft:".5em" //3
                 // height: "50%",
                 // overflow: "scroll"
             }}>
                 {items}
-            </ol>
+            </ul>
 
     )
 }

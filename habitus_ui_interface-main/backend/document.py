@@ -3,7 +3,7 @@ class Document():
 	def __init__(self, index: int, stripped: str, readable: str, tokens: list[str], memberships: list[bool] = []):
 		self.index = index
 		self.stripped = stripped
-		self.readable = readable
+		self.readable = str(self.index) + '. ' + readable
 		# Tokens can be duplicates.  Get to unique words with list(set(tokens)).
 		self.tokens = tokens
 		self.memberships = memberships
