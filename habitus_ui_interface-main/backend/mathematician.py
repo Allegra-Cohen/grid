@@ -324,15 +324,11 @@ def get_best_initial_model(docs, doc_vecs, sorted_qualities, quality_names, modi
 	best_model, best_score = None, 0
 	for i, q in enumerate(sorted_qualities): # There are six quality measures
 		quality = quality_names[i]
-		# print("\n\n Gamma scores for ", quality)
 		model_tuple = gamma_slide(docs, q, doc_vecs, modified_clusters)
-		# print("\n\n")
 		current_score, current_model = model_tuple[2], (quality, model_tuple[0], model_tuple[1])
 
 		if current_score > best_score:
 			best_model, best_score = current_model, current_score
-
-	# print("\n\n BEST INITIAL MODEL: ", best_model, "\n\n")
 
 	return best_model
 
@@ -364,11 +360,11 @@ def get_best_initial_model_k(k: int, docs: list[Document], doc_distances, sorted
 		else:
 			break
 
-	# print("\n\n BEST INITIAL MODEL: ", allowed_clusters + modified_clusters, "\n\n")
-	return 'gw', len(all_included_docs)/len_docs, allowed_clusters + modified_clusters
+	return 'gw', len(all_included_docs)/len_docs, modified_clusters + allowed_clusters
 
 # Expectation maximization ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Expectation maximization
 
+# ps = probabilities
 def calculate_ps_cat(doc_indices, categories, ps_cat_given_doc, q, n):
 	ps_cat = []
 	for c, _cat in enumerate(categories):
@@ -377,6 +373,7 @@ def calculate_ps_cat(doc_indices, categories, ps_cat_given_doc, q, n):
 		ps_cat.append(stat)
 	return ps_cat
 
+# tfps = term frequency probabilities
 def calculate_tfps(doc_indices, categories, words, words_in_docs, counts, ps_cat_given_doc, word_vectorizer):
 	tfps = np.zeros(len(categories))
 	for c, _cat in enumerate(categories):
@@ -389,6 +386,7 @@ def calculate_tfps(doc_indices, categories, words, words_in_docs, counts, ps_cat
 		tfps[c] = c_sum
 	return tfps
 
+# ps = probabilities
 def calculate_ps_word_given_cat(doc_indices, categories, words, word_indices, words_in_docs, counts, ps_cat_given_doc, word_vectorizer, v, tfps): # Keys are words, values are lists where each element is the probability given the category at that index
 	ps_word_given_cat = np.zeros((len(categories), len(words)))
 	for w, word in enumerate(words):
