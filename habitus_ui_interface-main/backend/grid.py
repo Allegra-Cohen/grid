@@ -127,6 +127,8 @@ class Grid():
 		if not cluster_from:
 			print(cluster_from.name, " will be removed.")
 			self.clusters.pop(cluster_from_index)
+		name = self.name_cluster(cluster_to.documents)
+		cluster_to.set_name(name, cluster_to.frozen)
 
 	def move_document_by_index(self, doc_num, cluster_from_index, cluster_to_index):
 		document = self.clusters[cluster_from_index].documents[doc_num]
