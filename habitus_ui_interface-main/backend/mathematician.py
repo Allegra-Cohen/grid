@@ -13,7 +13,7 @@ def calculate_pmi(cooccurrence_matrix, i, j, mi, mj, total, k, n):
 	pmi = np.log(frac)
 	return pmi
 
-def get_pmi(path, documents: list[Document], all_strings, k, file_suffix, window = 1):
+def get_pmi(path, documents: list[Document], all_strings, k, root_filename, window = 1):
 	sentences = [document.get_vector_text() for document in documents]
 	string_idx = np.array(range(len(all_strings)))
 	n = len(all_strings)
@@ -36,8 +36,10 @@ def get_pmi(path, documents: list[Document], all_strings, k, file_suffix, window
 			pmi[i,j] = calculate_pmi(cooccurrence_matrix, i, j, mis[i], mjs[j], total, k, n)
 
 
-	np.save(path + 'pmi_matrix' + file_suffix, pmi)
-	pd.DataFrame({'chunks': all_strings}).to_csv(path + 'pmi_text_in_order' + file_suffix + '.csv')
+	np.save(path + root_filename + '_pmi_matrix_lem', pmi)
+	pd.DataFrame({'chunks': all_strings}).to_csv(path + root_filename + '_pmi_text_in_order.csv')
+
+	return pmi
 
 
 # Vec functions ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ Vec functions

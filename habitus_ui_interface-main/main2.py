@@ -23,7 +23,7 @@ app.add_middleware(
 class UvicornFrontend(Frontend):
     def __init__(self, path: str, k: int, anchor: str):
         super().__init__(path)
-        self.grid = self.backend.get_grid(k, anchor)
+        self.grid = self.backend.get_grid(k, anchor, anchor)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
@@ -78,7 +78,7 @@ class UvicornFrontend(Frontend):
         return self.copy_on
 
     def load_grid(self, anchor):
-        self.grid = self.backend.load_grid(anchor)
+        self.grid = self.backend.load_grid(anchor, anchor)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
