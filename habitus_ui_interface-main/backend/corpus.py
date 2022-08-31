@@ -94,13 +94,13 @@ class Corpus():
 		return documents
 	
 
-	@staticmethod
-	def load_corpus_lines(path: str, filename: str):
-		# It appears that there is a header now.
-		# self.corpus =  pd.read_csv(path + filename, header = None)
-		# self.corpus.columns = ['sentence']
-		lines = pd.read_csv(path + filename, header = 0)
-		return lines
+	# @staticmethod
+	# def load_corpus_lines(path: str, filename: str):
+	# 	# It appears that there is a header now.
+	# 	# self.corpus =  pd.read_csv(path + filename, header = None)
+	# 	# self.corpus.columns = ['sentence']
+	# 	lines = pd.read_csv(path + filename, header = 0)
+	# 	return lines
 
 	@staticmethod
 	def load_corpus_documents(path: str, filename: str) -> list[str]:
