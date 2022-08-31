@@ -78,7 +78,9 @@ class UvicornFrontend(Frontend):
         return self.copy_on
 
     def load_grid(self, anchor):
-        self.grid = self.backend.load_grid(anchor, anchor)
+        grid = self.backend.load_grid(anchor)
+        if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
+            self.grid = grid
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
@@ -110,7 +112,7 @@ class UvicornFrontend(Frontend):
         return self.show_grid()
 
     def create_cluster(self, text: str) -> dict:
-        self.grid.create_human_cluster(True, text)
+        self.grid.create_human_cluster(text)
         return self.show_grid()
 
     def click(self, row_name: str, col_index: int) -> list[str]:
@@ -136,7 +138,7 @@ class UvicornFrontend(Frontend):
             self.grid.move_document(document, self.clicked_col, col_index)
         return self.show_grid()
 
-frontend = UvicornFrontend('../process_files/', 6, 'horticulture') # Default grid is harvest
+frontend = UvicornFrontend('../process_files/', 6, 'harvest') # Default grid is harvest
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get

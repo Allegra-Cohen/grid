@@ -3,16 +3,15 @@ from document import Document
 # These are the columns of the Grid. Documents have membership in one or more clusters.
 class Cluster():
 
-	def __init__(self, name: str, documents: list[Document], human: bool = False):
+	def __init__(self, name: str, documents: list[Document], frozen: bool = False):
 		self.name = name
-		# TODO: Should documents be kept sorted?
-		if human:
+		self.frozen = frozen
+		if self.frozen:
 			self.documents = documents              # A list of all the documents in this cluster
 			self.human_documents = documents.copy() # human_documents is a subset of documents.
 		else:
 			self.documents = documents
 			self.human_documents = []  # A list of documents put here by a human. This is only updated during the modification step.
-		self.frozen = False
 
 	# Say whether there are any documents.
 	def __bool__(self) -> bool:

@@ -7,8 +7,9 @@ from document import Document
 from surdeanu2005 import Surdeanu2005
 
 class Grid():
-	def __init__(self, path: str, corpus, k: int, synonym_book, too_common, clusters: list[Cluster] = []):
+	def __init__(self, path: str, root_filename: str, corpus, k: int, synonym_book, too_common, clusters: list[Cluster] = []):
 		self.path = path
+		self.root_filename = root_filename
 		self.k = k
 		self.corpus = corpus
 		self.synonym_book = synonym_book
@@ -25,8 +26,8 @@ class Grid():
 		self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
 
 	@classmethod
-	def generate(cls, path: str, corpus: Corpus, k: int, synonym_book, too_common):
-		grid = cls(path, corpus, k, synonym_book, too_common)
+	def generate(cls, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book, too_common):
+		grid = cls(path, root_filename, corpus, k, synonym_book, too_common)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		grid.generate_clusters()
 		return grid
@@ -149,11 +150,9 @@ class Grid():
 		document = cluster.documents[doc_num]
 		cluster.insert(document)
 
-	def create_human_cluster(self, frozen_else_seeded, concept):
+	def create_human_cluster(self, concept):
 		documents = self.linguist.find_relevant_docs(self.documents, concept)
-		cluster = Cluster(concept, documents, human = True)
-		if frozen_else_seeded:
-			cluster.freeze()
+		cluster = Cluster(concept, documents, frozen = True)
 		self.clusters.append(cluster)
 
 	def freeze_cluster(self, cluster_index):
@@ -187,19 +186,22 @@ class Grid():
 			}
 			for row in self.rows:
 				data[row.name] = [record['map'][row.name] for record in records]
-			pd.DataFrame(data).to_csv(self.anchor + '_documents2.csv')
+			pd.DataFrame(data).to_csv(self.root_filename + '_documents.csv')
+
+		def dump_anchor(): # This is stupid right now, but we might have complicated anchors in the future (e.g., '(tomatoes OR onions) AND seed')
+			pd.DataFrame({'anchor':[self.anchor]}).to_csv(self.path + self.root_filename + '_anchor.csv')
 
 		def dump_tokens():
 			tokens = []
 			for document_index, document in enumerate(self.documents):
 				tokens.append(document.tokens)
-			pd.DataFrame({'tokens': tokens}).to_csv(self.anchor + '_tokens2.csv')
+			pd.DataFrame({'tokens': tokens}).to_csv(self.path + self.root_filename + '_tokens.csv')
 
 		def dump_vectors():
 			vectors = []
 			for document_index, document in enumerate(self.documents):
 				vectors.append(document.vector)
-			pd.DataFrame({'vectors': vectors}).to_csv(self.anchor + '_vectors2.csv')
+			pd.DataFrame({'vectors': vectors}).to_csv(self.path + self.root_filename + '_vectors.csv')
 
 		def dump_cells():
 			records = []
@@ -221,8 +223,9 @@ class Grid():
 				'readable': [record['readable'] for record in records],
 				'seeded_doc': [record['seeded_doc'] for record in records]
 			}
-			pd.DataFrame(data).to_csv(self.anchor + '_cells2.csv')
+			pd.DataFrame(data).to_csv(self.path + self.root_filename + '_cells.csv')
 
+		dump_anchor()
 		dump_documents()
 		dump_tokens()
 		dump_vectors()
