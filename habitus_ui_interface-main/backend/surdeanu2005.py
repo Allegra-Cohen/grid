@@ -28,14 +28,14 @@ class Surdeanu2005(ClusterGenerator):
 		if k is None:
 			_, _, categories = get_best_initial_model(documents, sorted_qualities, self.quality_names, modified_clusters = modified_clusters)
 		else:
-			k -= len(modified_clusters) # Always keep the right number
+			# k -= len(modified_clusters) # Always keep the right number
+			print(k)
 			_, _, categories = get_best_initial_model_k(k, documents, self.corpus.doc_distances, sorted_qualities, self.quality_names, allowed_seed_size = self.allowed_seed_size, modified_clusters = modified_clusters)
 		# Frozen and seeded clusters are going to be the first N here in this list.
 	  # ... Remove frozen clusters because they shouldn't be added to.
 		categories: list[list[Document]] = categories[len(frozen_document_lists):]
 
-		# I agree this is egregious. Would be better to have a clustering alg class.
-		# Should it be self.corpus.words from entire corpus, or just documents being clustered?
+
 		labels = run_expect_max(documents, seeded_document_lists, categories, self.corpus.words, self.corpus.word_indices, self.corpus.words_in_docs, self.linguist.word_vectorizer,
 				self.corpus.counts, soft = self.soft, num_loops = self.num_loops) # Soft needs to be gap situation
 

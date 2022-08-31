@@ -74,12 +74,21 @@ class Grid():
 			cluster.set_documents(cluster_documents)
 			name = self.name_cluster(cluster_documents)
 			cluster.set_name(name, False)
+		self.clusters = [cluster for cluster in self.clusters if cluster] # Some seeded clusters may have disappeared if they were made up only of documents that are now part of frozen clusters
+		
 
 	def name_cluster(self, documents: list[Document]) -> str:
 		names = self.linguist.get_cluster_name(2, documents, self.corpus.tfidf, self.corpus.pmi, self.corpus.anchor,
 				self.corpus.anchor_index, tfidf_pmi_weight = 0.1) # self.tfidf_pmi_weight)
 		name = ' / '.join([c[1] for c in names])
 		return name
+
+	def flatten_lists(self, lists):
+		biglist = []
+		for sublist in lists:
+			biglist += sublist
+		return biglist
+
 
 	def generate_clusters(self):
 		print("K: ", self.k)
@@ -90,11 +99,17 @@ class Grid():
 		# This returns cluster labels for each document. The first N category digits will correspond to the seeded_clusters.
 		frozen_document_lists = [cluster.documents for cluster in frozen_clusters]
 		seeded_document_lists = [cluster.human_documents for cluster in seeded_clusters]
-		# TODO: The documents to be clustered should not include the frozen ones?
-		documents = self.documents
+
+		# If a document has been put into a frozen cluster, you shouldn't be clustering it any other place.
+		# Note: This scraps seeded clusters that haven't been frozen. The alternative is to keep seeded documents
+		#       in their clusters, but not in any other clusters, which gets really complicated in mathematician.
+		all_frozen_docs = self.flatten_lists(frozen_document_lists)
+		documents = [doc for doc in self.documents if doc not in all_frozen_docs]
 		labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists)
+
 		# The frozen ones will not be updated.
 		self.update_seeded_clusters(documents, labels)
+		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()] # Need to recalculate this list because you may have lost a seeded cluster or two if they were composed of only documents frozen elsewhere
 
 		new_machine_clusters = self.create_machine_clusters(documents, labels, num_clusters)
 		# Replace any machine clusters that already exist, remove extraneous, add any extra.
@@ -127,8 +142,9 @@ class Grid():
 		if not cluster_from:
 			print(cluster_from.name, " will be removed.")
 			self.clusters.pop(cluster_from_index)
-		name = self.name_cluster(cluster_to.documents)
-		cluster_to.set_name(name, cluster_to.frozen)
+		if not cluster_to.frozen:
+			name = self.name_cluster(cluster_to.documents)
+			cluster_to.set_name(name, cluster_to.frozen)
 
 	def move_document_by_index(self, doc_num, cluster_from_index, cluster_to_index):
 		document = self.clusters[cluster_from_index].documents[doc_num]

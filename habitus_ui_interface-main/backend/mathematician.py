@@ -340,7 +340,6 @@ def get_best_initial_model_k(k: int, docs: list[Document], doc_distances, sorted
 		quality_names: list[str], allowed_seed_size: float = 0.05, modified_clusters = None) -> tuple[str, float, list[list[Document]]]:
 	score_tuples: tuple[float, list[Document]] = sorted_qualities[quality_names.index('gw')]
 	len_docs = len(docs)
-
 	# Re-calculate score to include betweenness with modified clusters and re-sort
 	if modified_clusters:
 		new_tuples = []
@@ -407,12 +406,8 @@ def calculate_ps_word_given_cat(doc_indices, categories, words, word_indices, wo
 def calculate_soft_threshold(ps_cat_given_doc):
 	flat = sorted(np.ndarray.flatten(ps_cat_given_doc))
 	diff = np.abs(np.diff(flat))
-	# first_big_gap = np.where(diff > np.quantile(diff, q = 0.75))[0][0]
 	big_gap = np.where(diff == max(diff))[0][0]
 	threshold = flat[big_gap + 1]
-	# print("   ~~~ Soft clustering threshold is now: ", threshold, " ~~~")
-	# plt.hist(np.ndarray.flatten(ps_cat_given_doc), bins = 100)
-	# plt.show()
 	return threshold
 
 def pick_soft_labels(p_cat_given_doc, threshold, categories, doc_to_seeded):
@@ -482,7 +477,6 @@ def run_expect_max(documents: list[Document], seeded_clusters: list[list[Documen
 
 	doc_indices = list(range(len(documents)))
 
-	# last_p_cat = np.zeros(len(categories))
 	for i in range(num_loops):
 		n = len([l for l in ps_cat_given_doc if not (np.array(l) == 0).all()]) # Seeded documents stay zero always
 
@@ -502,5 +496,8 @@ def run_expect_max(documents: list[Document], seeded_clusters: list[list[Documen
 					labels.append(pick_soft_labels(pcd, threshold, categories, doc_to_seeded)) # You need to override the label-picking because if the user puts the doc in too many categories, soft labeling won't preserve the choice.
 				else:
 					labels.append(pick_single_label(pcd, doc_to_seeded))
-		# print(labels)
 	return labels
+
+
+
+
