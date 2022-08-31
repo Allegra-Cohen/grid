@@ -39,12 +39,11 @@ class Cluster():
 	def insert(self, document: Document):
 		if document not in self.documents:
 			self.documents.append(document)
+			self.documents.sort(key=lambda x: x.index) # Do this so that the sentences come up in numerical order in the GUI
 			if document not in self.human_documents:
 				self.human_documents.append(document)
+				self.human_documents.sort(key=lambda x: x.index)
 
-		self.documents.sort(key=lambda x: x.index) # Do this so that the sentences come up in numerical order in the GUI
-		self.human_documents.sort(key=lambda x: x.index)
-		
 
 	def print_yourself(self, index: int):
 		print(str(index) + ". Cluster ", self.name, " : -----------------")

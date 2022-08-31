@@ -123,7 +123,7 @@ class UvicornFrontend(Frontend):
 
     def sentence_click(self, text: str):
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
-        return document.context
+        return [document.pre_context, text.split('.',1)[1], document.post_context]
 
     # This moves the sentence from the currently clicked_col and clicked_row to
     # the new row and column.

@@ -87,49 +87,46 @@ class Corpus():
 				if any(self.anchor in word for word in tokens):
 					label_line = [(i,l) for i,l in labels.iterrows() if l['stripped'] == stripped][0]
 					memberships = [label_line[1][row.name] == 1 for row in self.rows]
-					context = ' '.join(list(lines.loc[index - 4:index + 4, 'readable']))
-					document = Document(label_line[0], stripped, readable, tokens, context, memberships = memberships)
+					pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
+					post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
+					document = Document(label_line[0], stripped, readable, tokens, pre_context, post_context, memberships = memberships)
 					documents.append(document)
 		return documents
 	
 
+	@staticmethod
+	def load_corpus_lines(path: str, filename: str):
+		# It appears that there is a header now.
+		# self.corpus =  pd.read_csv(path + filename, header = None)
+		# self.corpus.columns = ['sentence']
+		lines = pd.read_csv(path + filename, header = 0)
+		return lines
 
+	@staticmethod
+	def load_corpus_documents(path: str, filename: str) -> list[str]:
+		lines = Corpus.readCorpusLines(path, filename)
+		documents = list(lines['sentences'])
+		return documents
 
-# TODO: what do these all do
+	@staticmethod
+	def load_clean_lines(path: str, filename: str):
+		lines = pd.read_csv(path + filename, header = 0)
+		return lines
 
-	# @staticmethod
-	# def load_corpus_lines(path: str, filename: str):
-	# 	# It appears that there is a header now.
-	# 	# self.corpus =  pd.read_csv(path + filename, header = None)
-	# 	# self.corpus.columns = ['sentence']
-	# 	lines = pd.read_csv(path + filename, header = 0)
-	# 	return lines
+	@staticmethod
+	def load_clean_documents(path: str, filename: str) -> list[tuple[str, str]]:
+		lines = Corpus.load_clean_lines(path, filename)
+		stripped_documents = list(lines['stripped']) 
+		readable_documents = list(lines['readable'])
+		documents = zip(stripped_documents, readable_documents)
+		return documents
 
-	# @staticmethod
-	# def load_corpus_documents(path: str, filename: str) -> list[str]:
-	# 	lines = Corpus.readCorpusLines(path, filename)
-	# 	documents = list(lines['sentences'])
-	# 	return documents
-
-	# @staticmethod
-	# def load_clean_lines(path: str, filename: str):
-	# 	lines = pd.read_csv(path + filename, header = 0)
-	# 	return lines
-
-	# @staticmethod
-	# def load_clean_documents(path: str, filename: str) -> list[tuple[str, str]]:
-	# 	lines = Corpus.load_clean_lines(path, filename)
-	# 	stripped_documents = list(lines['stripped']) 
-	# 	readable_documents = list(lines['readable'])
-	# 	documents = zip(stripped_documents, readable_documents)
-	# 	return documents
-
-	# # Load the corpus lines and save the clean lines.
-	# @staticmethod
-	# def clean(path: str, corpus_filename: str, clean_filename: str, synonym_book: list[list[str]], too_common: list[list[str]]):
-	# 	linguist = Linguist()
-	# 	nlp = spacy.load("en_core_web_sm")
-	# 	corpus_lines = Corpus.load_corpus_lines(path, corpus_filename)
-	# 	stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, False, False, True, synonym_book, too_common)).reset_index()['sentence'])
-	# 	readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, True, False, False, None)).reset_index()['sentence'])
-	# 	pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename)
+	# Load the corpus lines and save the clean lines.
+	@staticmethod
+	def clean(path: str, corpus_filename: str, clean_filename: str, synonym_book: list[list[str]], too_common: list[list[str]]):
+		linguist = Linguist()
+		nlp = spacy.load("en_core_web_sm")
+		corpus_lines = Corpus.load_corpus_lines(path, corpus_filename)
+		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, False, False, True, synonym_book, too_common)).reset_index()['sentence'])
+		readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, True, False, False, None)).reset_index()['sentence'])
+		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename)

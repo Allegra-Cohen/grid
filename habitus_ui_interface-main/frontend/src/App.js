@@ -21,7 +21,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 function App({apiUrl}) {
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
-    const [context, setContext] = useState('');
+    const [context, setContext] = useState([]);
     const [gridRows, setGridRows] = useState({})
     const [colNumToName, setColNumToName] = useState({})
     const [frozenColumns, setFrozenColumns] = useState([])
@@ -153,7 +153,9 @@ function App({apiUrl}) {
                           console.log('sentence click!');
                           setContext(evt)}}
        apiUrl={apiUrl} />
-      {context}
+       <div style={{display:'inline'}}>
+      {context[0]} <b>{context[1]}</b> {context[2]}
+      </div>
       </div>
       </div>
       </div>

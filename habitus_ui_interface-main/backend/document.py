@@ -1,12 +1,13 @@
 
 class Document():
-	def __init__(self, index: int, stripped: str, readable: str, tokens: list[str], context: str, memberships: list[bool] = []):
+	def __init__(self, index: int, stripped: str, readable: str, tokens: list[str], pre_context: str, post_context: str, memberships: list[bool] = []):
 		self.index = index
 		self.stripped = stripped
 		self.readable = str(self.index) + '. ' + readable
 		# Tokens can be duplicates.  Get to unique words with list(set(tokens)).
 		self.tokens = tokens
-		self.context = context
+		self.pre_context = pre_context
+		self.post_context = post_context
 		self.memberships = memberships
 		self.vector = None
 
