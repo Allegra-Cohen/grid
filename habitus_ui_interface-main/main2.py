@@ -138,7 +138,7 @@ class UvicornFrontend(Frontend):
             self.grid.move_document(document, self.clicked_col, col_index)
         return self.show_grid()
 
-frontend = UvicornFrontend('../process_files/', 6, 'harvest') # Default grid is harvest
+frontend = UvicornFrontend('../process_files/', 6, 'horticulture') # Default grid is harvest
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get

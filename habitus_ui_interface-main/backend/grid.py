@@ -7,13 +7,12 @@ from document import Document
 from surdeanu2005 import Surdeanu2005
 
 class Grid():
-	def __init__(self, path: str, root_filename: str, corpus, k: int, synonym_book, too_common, clusters: list[Cluster] = []):
+	def __init__(self, path: str, root_filename: str, corpus, k: int, synonym_book, clusters: list[Cluster] = []):
 		self.path = path
 		self.root_filename = root_filename
 		self.k = k
 		self.corpus = corpus
 		self.synonym_book = synonym_book
-		self.too_common = too_common
 		self.clusters = clusters
 
 		self.documents = corpus.documents
@@ -26,8 +25,8 @@ class Grid():
 		self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
 
 	@classmethod
-	def generate(cls, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book, too_common):
-		grid = cls(path, root_filename, corpus, k, synonym_book, too_common)
+	def generate(cls, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book):
+		grid = cls(path, root_filename, corpus, k, synonym_book)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		grid.generate_clusters()
 		return grid
@@ -79,7 +78,7 @@ class Grid():
 
 	def name_cluster(self, documents: list[Document]) -> str:
 		names = self.linguist.get_cluster_name(2, documents, self.corpus.tfidf, self.corpus.pmi, self.corpus.anchor,
-				self.corpus.anchor_index, tfidf_pmi_weight = 0.1) # self.tfidf_pmi_weight)
+				self.corpus.anchor_index, tfidf_pmi_weight = 0.1)
 		name = ' / '.join([c[1] for c in names])
 		return name
 

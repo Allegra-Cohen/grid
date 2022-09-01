@@ -14,23 +14,16 @@ class Backend():
 		self.tfidf_pmi_weight = 0.2
 		self.corpus_filename = 'corpus.csv'
 
-		# TODO: These should get thrown away once GloVe is set up in mathematician
+		# Use the synonym book only for local synonyms, e.g., entity acronyms or non-English words, or abbreviations. Note: ask user to provide these?
 		self.synonym_book = [
-			['harvester', 'thresher', 'machinery', 'equipment'],
-			['planting', 'sowing', 'seeding'],
-			['labor', 'migrant', 'manual'],
-			['horticulture', 'onion', 'tomato', 'cold', 'garden', 'vegetable', 'potato'],
-			['credit', 'repay', 'loan', 'reimburse', 'reimbursement', 'back'], # should have bigrams?
-			['cooperative','coop', 'coops', 'cooperatives'],
+			['cooperative', 'coop'],
 			['extension', 'saed'],
-			['bank', 'banque', 'agricole'],
-			['research', 'isra'],
-			['yield', 'production', 'ton', 'tons', 'kg', 'bags']
+			['bank', 'banque', 'agricole'], # For example, there's no way the embeddings would know that "bank" and "Banque Agricole" are the same word.
+			['research', 'isra']
 		]
-		self.too_common = [['farmer', 'farmers'], ['rice'], ['dr', 'fall']]
 
 		if not os.path.isfile(self.path + 'cleaned_docs.csv'):
-			Corpus.clean_corpus(self.path, self.corpus_filename, 'cleaned_docs.csv', synonym_book, too_common) # TODO: remove synonym_book and too_common from linguist methods
+			Corpus.clean_corpus(self.path, self.corpus_filename, 'cleaned_docs.csv', synonym_book) # TODO: remove synonym_book and too_common from linguist methods
 		
 		self.clean_corpus_filename = 'cleaned_docs.csv'
 
@@ -40,11 +33,10 @@ class Backend():
 	def get_grid(self, k: int, anchor: str, filename: str) -> Grid:
 		print("New grid -- processing documents ... ")
 		self.set_up_corpus(filename, anchor)
-		grid = Grid.generate(self.path, filename, self.corpus, k, self.synonym_book, self.too_common)
+		grid = Grid.generate(self.path, filename, self.corpus, k, self.synonym_book)
 		return grid
 
 
-	# TODO: Right now filename is also the anchor. frontend needs to handle getting a filename from the GUI and passing it here.
 	def load_grid(self, filename: str) -> Grid:
 		print("Loading grid from root filename ", filename)
 		try:

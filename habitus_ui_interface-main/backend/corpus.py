@@ -1,4 +1,5 @@
 import gensim.downloader as api
+from gensim.models import KeyedVectors
 import json
 import numpy as np
 import pandas as pd
@@ -70,7 +71,9 @@ class Corpus():
 
 	def save_vectors(self, documents: list[Document]):
 		print("Calculating vector embeddings ... \n ")
-		model = api.load('word2vec-google-news-300')
+		# model = api.load('word2vec-google-news-300')
+		filename = "/Users/allegracohen/Documents/Postdoc/habitus/odin_project/keith_glove/glove_to_word2vec.habitus1.300d.txt"
+		model = KeyedVectors.load_word2vec_format(filename)
 		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, model, self.tfidf, self.linguist.tfidf_vectorizer, self.pmi, self.anchor, self.tfidf_pmi_weight)
 		np.save(self.path + self.root_filename + '_doc_distances_lem.npy', doc_distances)
 		with open(self.path + self.root_filename + '_doc_vecs_lem.json', 'w') as file:
@@ -107,11 +110,11 @@ class Corpus():
 
 	# Load the corpus lines and save the clean lines.
 	@staticmethod
-	def clean_corpus(path: str, corpus_filename: str, clean_filename: str, synonym_book: list[list[str]], too_common: list[list[str]]):
+	def clean_corpus(path: str, corpus_filename: str, clean_filename: str, synonym_book: list[list[str]]):
 		linguist = Linguist()
 		nlp = spacy.load("en_core_web_sm")
 		corpus_lines = Corpus.load_corpus_lines(path, corpus_filename)
-		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, False, False, True, synonym_book, too_common)).reset_index()['sentence'])
+		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, False, False, True, synonym_book)).reset_index()['sentence'])
 		readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, True, False, False, None)).reset_index()['sentence'])
 		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename)
 

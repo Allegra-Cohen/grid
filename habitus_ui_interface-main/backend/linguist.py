@@ -23,12 +23,12 @@ class Linguist():
 		cleaned = no_digits.lower().translate(str.maketrans(string.punctuation, ' '*len(string.punctuation))).strip()
 		return cleaned
 
-	def clean_text(self, text, nlp, readable = False, allow_stopwords = False, lemmatize = False, synonym_book = None, too_common = []):
+	def clean_text(self, text, nlp, readable = False, allow_stopwords = False, lemmatize = False, synonym_book = None):
 
 		stop = set(stopwords.words('english') + list(string.punctuation) + ['', ' ', '…', 'also'])
 
 		conj = ['didn', ' t ', ' don ', ' won ', 'isn', ' i ', ' d ', ' ll ', 'doesn', 'wasn', 'wouldn', 'hasn', 'couldn']
-		junk = [' pape ', ' dr ', ' fall ', '\x0c', '\n', '\t', 'e', 'g', 'etc'] + too_common
+		junk = [' pape ', ' dr ', ' fall ', '\x0c', '\n', '\t', 'e', 'g', 'etc']
 		# remove_uni =  [''.join(["'" if ord(i) == 8217 else i for i in s]) for s in corpus['sentence']]
 		remove_uni = ''.join([i if ord(i) < 128 else ' ' for i in text])
 		if readable:
