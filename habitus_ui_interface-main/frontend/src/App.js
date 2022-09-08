@@ -43,7 +43,9 @@ function App({apiUrl}) {
 
   return (
       <DndProvider backend={HTML5Backend}>
-      <div style={{display:'flex', flexDirection:'row', marginBottom:'0.03em', marginLeft:'25.5em', marginTop:'0.03em', fontFamily:'InaiMathi', fontSize:'20pt'}}> {anchor} </div>
+
+      <div style={{display:'flex', flexDirection:'row', marginBottom:'0.03em', marginLeft:'5em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}}> {anchor} </div>
+
     <div className="App" style={{
         display: "flex",
         flexDirection: "row"
@@ -76,6 +78,7 @@ function App({apiUrl}) {
        }
     apiUrl={apiUrl} />
     <div style={{display:"flex", flexDirection:"column"}}>
+    <div style={{display:"flex", flexDirection:"row"}}>
     <InputBox data={gridRows} col_num_to_name={colNumToName} 
       onKeyPress={(evt) => {
           console.log(evt);
@@ -85,33 +88,6 @@ function App({apiUrl}) {
           setFrozenColumns(evt.frozen_columns)}
       }
       apiUrl={apiUrl}/>
-
-      <div style={{display:"flex", flexDirection:"row"}}>
-
-      <RegenerateButton className="RegenerateButton" onClick={(evt) => {
-          console.log(evt);
-          setCorpus(evt.clicked_sentences);
-          setGridRows(evt.grid);
-          setColNumToName(evt.col_num_to_name);
-          setFrozenColumns(evt.frozen_columns)}
-      }
-      apiUrl={apiUrl}/>
-
-      <KButton className="KButton" apiUrl={apiUrl}/>
-
-      </div>
-      </div>
-      </div>
-
-      <div style={{
-        display: "flex",
-        flexDirection: "column"
-      }}>
-
-      <div style={{
-        display: "flex",
-        flexDirection: "row"
-      }}>
 
       <CopyButton className="CopyButton" onClick={(evt) => {
           console.log("copy button: ", evt)}
@@ -127,6 +103,20 @@ function App({apiUrl}) {
                   setColNumToName(evt.col_num_to_name)}
        }
        apiUrl={apiUrl}/>
+       </div>
+
+      <div style={{display:"flex", flexDirection:"row"}}>
+
+      <RegenerateButton className="RegenerateButton" onClick={(evt) => {
+          console.log(evt);
+          setCorpus(evt.clicked_sentences);
+          setGridRows(evt.grid);
+          setColNumToName(evt.col_num_to_name);
+          setFrozenColumns(evt.frozen_columns)}
+      }
+      apiUrl={apiUrl}/>
+
+      <KButton className="KButton" apiUrl={apiUrl}/>
 
       <SaveButton className="SaveButton" onClick={(evt) => {console.log('save button: ', evt)}}
       apiUrl={apiUrl}/>
@@ -143,17 +133,26 @@ function App({apiUrl}) {
       apiUrl={apiUrl}/>
 
       </div>
+      </div>
+      </div>
+
+      <div style={{
+        display: "flex",
+        flexDirection: "column"
+      }}>
+
       <div style={{
         display: "flex",
         flexDirection: "row",
         fontFamily: 'InaiMathi'
       }}>
+
       <Corpus sentences={corpus}
       onChange={(evt) => {console.log(evt);
                           console.log('sentence click!');
                           setContext(evt)}}
        apiUrl={apiUrl} />
-       <div style={{display:'inline'}}>
+       <div style={{display:'inline', width:'600px'}}>
       {context[0]} <b>{context[1]}</b> {context[2]}
       </div>
       </div>

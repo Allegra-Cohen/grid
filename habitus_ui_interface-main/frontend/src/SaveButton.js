@@ -9,7 +9,7 @@ export default function SaveButton({onClick, apiUrl}){
     onClick={ (evt) => {fetch(`${apiUrl}/saveGrid/`);
                         console.log("save click!")}
            }
-           >Save</button>
+           >Save Grid</button>
     </div>
     );
 }

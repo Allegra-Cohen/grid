@@ -33,7 +33,7 @@ export default function Corpus({sentences, onChange, apiUrl}) {
 
             <ul style={{
                 // width:"30em",
-                marginLeft:".5em" //3
+                marginLeft:".2em" //3
                 // height: "50%",
                 // overflow: "scroll"
             }}>

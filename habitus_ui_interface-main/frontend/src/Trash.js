@@ -24,7 +24,7 @@ export default function Trash({onChange, onDrop, apiUrl}){
         style={{
             background: isOver ? 'skyblue' : "white",
             marginLeft: '1em',
-            marginTop: '0.05em',
+            marginTop: '0.35em',
             fontSize: '40pt'}}
             >
            🗑

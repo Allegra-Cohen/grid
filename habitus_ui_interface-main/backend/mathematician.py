@@ -351,11 +351,16 @@ def get_best_initial_model_k(k: int, docs: list[Document], doc_distances, sorted
 	
 	all_included_docs = []
 	allowed_clusters = []
+
+	smallest_seed_size = np.min([len(score_tuple[1])/len_docs for score_tuple in score_tuples]) # Go through once to figure out the smallest seed_size
+	if smallest_seed_size > allowed_seed_size:
+		allowed_seed_size = smallest_seed_size + 0.1 # Just to give us some wiggle room
+
 	for score_tuple in score_tuples:
 		_score, cluster = score_tuple[0], score_tuple[1]
 		seed_size = len(cluster)/len_docs
 		if len(allowed_clusters) < k:
-			if seed_size < allowed_seed_size: # K should be number of new clusters generated, ignoring existing modified clusters (because we might want to set k elsewhere or allow the user to set it)
+			if seed_size <= allowed_seed_size: # K should be number of new clusters generated, ignoring existing modified clusters (because we might want to set k elsewhere or allow the user to set it)
 				allowed_clusters.append(cluster)
 				all_included_docs += cluster
 		else:

@@ -1,5 +1,8 @@
 .SaveButton {
-  margin-left:30em;
-  margin-top:0em;
+  color: #e7f5f9;
+  text-decoration: none;
+  display: flex;
+  margin-left:4em;
+  margin-top:1em;
   margin-bottom:0.1em;
 }

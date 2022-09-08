@@ -13,13 +13,14 @@ from mathematician import get_pmi
 from row import Row
 
 class Corpus():
-	def __init__(self, path: str, clean_corpus_filename: str, row_labels_filename: str, root_filename: str, rows: list[Row], anchor: str, linguist: Linguist, tfidf_pmi_weight: float):
+	def __init__(self, path: str, clean_corpus_filename: str, row_labels_filename: str, root_filename: str, rows: list[Row], anchor: str, bool_book: list[list[str]], linguist: Linguist, tfidf_pmi_weight: float):
 		self.path = path
 		self.clean_corpus_filename = clean_corpus_filename
 		self.row_labels_filename = row_labels_filename
 		self.root_filename = root_filename
 		self.rows = rows
 		self.anchor = anchor
+		self.bool_book = bool_book
 		self.linguist = linguist
 		self.tfidf_pmi_weight = tfidf_pmi_weight
 		self.documents: list[Document] = self.load_anchored_documents()
@@ -88,18 +89,30 @@ class Corpus():
 		lines = self.load_corpus_lines(self.path, self.clean_corpus_filename)
 		labels = self.load_row_labels()
 		documents = []
+	
 		for index, line in lines.iterrows():
 			if type(line.stripped) == str:
 				stripped = line['stripped']
 				readable = line['readable']
 				tokens = self.linguist.tokenize(stripped)
-				if any(self.anchor in word for word in tokens):
-					label_line = [(i,l) for i,l in labels.iterrows() if l['stripped'] == stripped][0]
-					memberships = [label_line[1][row.name] == 1 for row in self.rows]
-					pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
-					post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
-					document = Document(label_line[0], stripped, readable, tokens, pre_context, post_context, memberships = memberships)
-					documents.append(document)
+
+				# TODO: This should be replaced by something sensible like getting a boolean from the user OR finding close-enough words via embeddings.
+				bool_list = [l for l in self.bool_book if self.anchor in l][0]
+				if bool_list:
+					relevant = any([any(bool_word in word for word in tokens) for bool_word in bool_list])
+				else:
+					relevant = any(self.anchor in word for word in tokens)
+				if relevant:
+					try:
+						label_line = [(i,l) for i,l in labels.iterrows() if l['stripped'] == stripped][0]
+						memberships = [label_line[1][row.name] == 1 for row in self.rows]
+						pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
+						post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
+						document = Document(label_line[0], stripped, readable, tokens, pre_context, post_context, memberships = memberships)
+						documents.append(document)
+					except IndexError:
+						print("Line not found in row_labels: ", readable)
+
 		return documents
 	
 

@@ -5,7 +5,7 @@ export default function LoadBox({text, onKeyPress, apiUrl}){
 
 	  return (
 	    <div className={"LoadBox"}>
-	      <input style={{height:"2.2em", width:"100%", fontSize:'18px', border: '1.5px solid #90c5e1'}}
+	      <input style={{height:"2.2em", width:"200px", fontSize:'18px', border: '1.5px solid #90c5e1'}}
 	      onKeyPress={
       	     (evt) => {
      	        if (evt.key === "Enter") {
@@ -21,7 +21,7 @@ export default function LoadBox({text, onKeyPress, apiUrl}){
 	               }
 	           }
            } 
-           placeholder=" Load a grid "
+           placeholder=" Load grid "
            />
 	    </div>
 	  );
