@@ -174,11 +174,7 @@ class UvicornFrontend(Frontend):
         pd.DataFrame(self.track_actions).to_csv(self.path + self.tracking_filename) # Just rewrite every time. Slower than appending?
 
 
-frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'allegra_tracking_harvest.csv') # Default grid is here
-# frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'becky_tracking_harvest')
-# frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'becky_tracking_horticulture')
-# frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'nargiza_tracking_harvest')
-# frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'nargiza_tracking_horticulture')
+frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'allegra_tracking_harvest.csv')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
