@@ -101,9 +101,10 @@ class UvicornFrontend(Frontend):
         self.update_track_actions(['load', t, 'grid', self.grid.anchor, None])
         return self.show_grid()
 
-    def save_grid(self) -> bool:
+    def save_grid(self, filename: str) -> bool:
+        print("Saving grid at ", filename)
         t = time.time()
-        self.grid.dump()
+        self.grid.dump(filename)
         self.update_track_actions(['save', t, 'grid', self.grid.anchor, None])
         return True
 
@@ -243,10 +244,10 @@ async def copyToggle():
     print("copyToggle")
     return frontend.toggle_copy()
 
-@app.get("/saveGrid/")
-async def saveGrid():
+@app.get("/saveGrid/{text}")
+async def saveGrid(text: str):
     print("saving grid")
-    return frontend.save_grid()
+    return frontend.save_grid(text)
 
 @app.get("/loadGrid/{text}")
 async def loadGrid(text: str):

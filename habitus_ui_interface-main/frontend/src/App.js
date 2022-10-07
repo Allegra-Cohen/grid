@@ -11,8 +11,8 @@ import LoadBox from './LoadBox'
 import './LoadBox.css'
 import KButton from './KButton'
 import './KButton.css'
-import SaveButton from './SaveButton'
-import './SaveButton.css'
+import SaveBox from './SaveBox'
+import './SaveBox.css'
 import Trash from './Trash'
 import {useEffect, useState} from "react";
 import { DndProvider } from 'react-dnd'
@@ -136,7 +136,7 @@ function App({apiUrl}) {
 
       <KButton className="KButton" apiUrl={apiUrl}/>
 
-      <SaveButton className="SaveButton" onClick={(evt) => {console.log('save button: ', evt)}}
+      <SaveBox className="SaveBox"
       apiUrl={apiUrl}/>
 
       <LoadBox className="LoadBox"

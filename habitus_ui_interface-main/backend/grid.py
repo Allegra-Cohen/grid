@@ -185,7 +185,7 @@ class Grid():
 			return [document for document in clicked_cluster.documents if document.is_member(row_index)]
 
 
-	def dump(self):
+	def dump(self, filename):
 
 		def dump_documents():
 			records = []
@@ -203,22 +203,22 @@ class Grid():
 			}
 			for row in self.rows:
 				data[row.name] = [record['map'][row.name] for record in records]
-			pd.DataFrame(data).to_csv(self.root_filename + '_documents.csv')
+			pd.DataFrame(data).to_csv(filename + '_documents.csv')
 
 		def dump_anchor(): # This is stupid right now, but we might have complicated anchors in the future (e.g., '(tomatoes OR onions) AND seed')
-			pd.DataFrame({'anchor':[self.anchor]}).to_csv(self.path + self.root_filename + '_anchor.csv')
+			pd.DataFrame({'anchor':[self.anchor]}).to_csv(self.path + filename + '_anchor.csv')
 
 		def dump_tokens():
 			tokens = []
 			for document_index, document in enumerate(self.documents):
 				tokens.append(document.tokens)
-			pd.DataFrame({'tokens': tokens}).to_csv(self.path + self.root_filename + '_tokens.csv')
+			pd.DataFrame({'tokens': tokens}).to_csv(self.path + filename + '_tokens.csv')
 
 		def dump_vectors():
 			vectors = []
 			for document_index, document in enumerate(self.documents):
 				vectors.append(document.vector)
-			pd.DataFrame({'vectors': vectors}).to_csv(self.path + self.root_filename + '_vectors.csv')
+			pd.DataFrame({'vectors': vectors}).to_csv(self.path + filename + '_vectors.csv')
 
 		def dump_cells():
 			records = []
@@ -240,7 +240,7 @@ class Grid():
 				'readable': [record['readable'] for record in records],
 				'seeded_doc': [record['seeded_doc'] for record in records]
 			}
-			pd.DataFrame(data).to_csv(self.path + self.root_filename + '_cells.csv')
+			pd.DataFrame(data).to_csv(self.path + filename + '_cells.csv')
 
 		dump_anchor()
 		dump_documents()
