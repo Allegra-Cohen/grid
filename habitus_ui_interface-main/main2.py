@@ -78,6 +78,14 @@ class UvicornFrontend(Frontend):
             "row_contents": row_contents
         }
 
+    def load_new_grid(self, newAnchor: str):
+        k = self.grid.k
+        self.grid = self.backend.get_grid(k, newAnchor, newAnchor)
+        self.clicked_row, self.clicked_col = None, None
+        t = time.time()
+        self.update_track_actions(['new_grid', t, 'grid', newAnchor, None])
+        return self.show_grid()
+
     def toggle_copy(self) -> bool:
         self.copy_on = not self.copy_on
         return self.copy_on
@@ -186,6 +194,12 @@ frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'allegra_tracking_
 @app.get("/data")
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
     return data # returns to front end
+
+
+@app.get("/loadNewGrid/{newAnchor}")
+async def loadNewGrid(newAnchor: str):
+    print("loadNewGrid", newAnchor)
+    return frontend.load_new_grid(newAnchor)
 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):

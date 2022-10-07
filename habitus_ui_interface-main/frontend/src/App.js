@@ -46,7 +46,22 @@ function App({apiUrl}) {
   return (
       <DndProvider backend={HTML5Backend}>
 
-      <div style={{display:'flex', flexDirection:'row', marginBottom:'0.03em', marginLeft:'5em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}}> {anchor} </div>
+      <div style={{display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'5em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
+          contenteditable="true" onInput={
+                (evt) => {
+                    console.log(evt.target.lastChild, evt.target.lastChild.toString());
+                    if (evt.target.lastChild.toString() === "[object HTMLDivElement]") {
+                        let text = evt.target.textContent;
+                        fetch(`${apiUrl}/loadNewGrid/${text}`)
+                        .then( response => response.json());
+                        console.log("!", text);
+                        evt.target.value = '';
+                        evt.target.blur();
+                        window.location.reload();
+                    }
+                }
+
+            }> {anchor} </div>
 
     <div className="App" style={{
         display: "flex",
@@ -56,6 +71,7 @@ function App({apiUrl}) {
         display: "flex",
         flexDirection: "column"
     }}>
+    
 
     <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
       (evt) => {console.log(evt);
