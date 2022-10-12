@@ -13,6 +13,8 @@ import KButton from './KButton'
 import './KButton.css'
 import SaveBox from './SaveBox'
 import './SaveBox.css'
+import AnchorBook from './AnchorBook'
+import SynonymBook from './SynonymBook'
 import Trash from './Trash'
 import {useEffect, useState} from "react";
 import { DndProvider } from 'react-dnd'
@@ -28,6 +30,8 @@ function App({apiUrl}) {
     const [colNumToName, setColNumToName] = useState({})
     const [frozenColumns, setFrozenColumns] = useState([])
     const [rowContents, setRowContents] = useState({})
+    const [anchorBook, setAnchorBook] = useState({})
+    const [synonymBook, setSynonymBook] = useState([])
 
     useEffect(() => {
         fetch(`${apiUrl}/data/`)
@@ -39,6 +43,8 @@ function App({apiUrl}) {
                 setColNumToName(data.col_num_to_name);
                 setFrozenColumns(data.frozen_columns);
                 setRowContents(data.row_contents);
+                setAnchorBook(data.anchor_book);
+                setSynonymBook(data.synonym_book);
             });
     }, [])
 
@@ -136,7 +142,7 @@ function App({apiUrl}) {
 
       <KButton className="KButton" apiUrl={apiUrl}/>
 
-      <SaveBox className="SaveBox"
+      <SaveBox className="SaveBox" onClick={(evt) => {console.log('save box: ', evt)}}
       apiUrl={apiUrl}/>
 
       <LoadBox className="LoadBox"
@@ -151,6 +157,17 @@ function App({apiUrl}) {
       apiUrl={apiUrl}/>
 
       </div>
+
+      <AnchorBook className="anchorBook" anchorBook={anchorBook} onButtonClick={(evt) => {console.log(evt);
+                                                                                  setAnchor(evt.anchor);
+                                                                                  setCorpus(evt.clicked_sentences);
+                                                                                  setGridRows(evt.grid);
+                                                                                  setColNumToName(evt.col_num_to_name);
+                                                                                  setFrozenColumns(evt.frozen_columns)
+                                                                                }} apiUrl={apiUrl}/>
+
+      <SynonymBook className="synonymBook" synonymBook={synonymBook} apiUrl={apiUrl}/>
+
       </div>
       </div>
 

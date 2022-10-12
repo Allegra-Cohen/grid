@@ -13,20 +13,20 @@ from mathematician import get_pmi
 from row import Row
 
 class Corpus():
-	def __init__(self, path: str, clean_corpus_filename: str, row_labels_filename: str, root_filename: str, rows: list[Row], anchor: str, bool_book: list[list[str]], linguist: Linguist, tfidf_pmi_weight: float):
+	def __init__(self, path: str, clean_corpus_filename: str, row_labels_filename: str, root_filename: str, rows: list[Row], anchor: str, anchor_book: dict[list[str]], linguist: Linguist, tfidf_pmi_weight: float, recalculate_pmi = False, recalculate_vectors = False):
 		self.path = path
 		self.clean_corpus_filename = clean_corpus_filename
 		self.row_labels_filename = row_labels_filename
 		self.root_filename = root_filename
 		self.rows = rows
 		self.anchor = anchor
-		self.bool_book = bool_book
+		self.anchor_book = anchor_book
 		self.linguist = linguist
 		self.tfidf_pmi_weight = tfidf_pmi_weight
 		self.documents: list[Document] = self.load_anchored_documents()
-		self.initialize()
+		self.initialize(recalculate_pmi, recalculate_vectors)
 
-	def initialize(self):
+	def initialize(self, recalculate_pmi, recalculate_vectors):
 		vector_texts = [document.get_vector_text() for document in self.documents]
 		self.counts = self.linguist.word_vectorizer.fit_transform(vector_texts).toarray()
 		self.words = self.linguist.word_vectorizer.get_feature_names_out()
@@ -36,15 +36,14 @@ class Corpus():
 		self.words_in_docs = list(set(words))
 		self.anchor_index = self.word_indices[self.anchor]
 
-		self.pmi = self.load_pmi(self.root_filename + '_pmi_matrix_lem.npy')
-		self.load_vectors(self.root_filename + '_doc_vecs_lem.json', self.documents)
+		self.pmi = self.load_pmi(self.root_filename + '_pmi_matrix_lem.npy', recalculate_pmi)
+		self.load_vectors(self.root_filename + '_doc_vecs_lem.json', self.documents, recalculate_vectors)
 		self.doc_distances = self.load_distances(self.root_filename + '_doc_distances_lem.npy')
 
-	def load_pmi(self, filename: str):
-		try:
-			pmi = np.load(self.path + filename)
-		except FileNotFoundError:
+	def load_pmi(self, filename: str, recalculate: bool):
+		if (not os.path.isfile(self.path + filename)) or recalculate:
 			pmi = self.save_pmi(self.documents)
+		pmi = np.load(self.path + filename)
 		pmi[np.isnan(pmi)] = 0
 		pmi[pmi == np.inf] = 0
 		pmi[pmi == -1 * np.inf] = 0
@@ -59,9 +58,8 @@ class Corpus():
 		return doc_distances
 
 	# The loaded vectors are stored directly in the documents.
-	def load_vectors(self, filename: str, documents: list[Document]):
-
-		if not os.path.isfile(self.path + filename):
+	def load_vectors(self, filename: str, documents: list[Document], recalculate: bool):
+		if (not os.path.isfile(self.path + filename)) or recalculate:
 			self.save_vectors(self.documents)
 
 		with open(self.path + filename, 'r') as file:
@@ -81,6 +79,28 @@ class Corpus():
 			json.dump({k: v.tolist() for k, v in doc_vecs.items()}, file) 
 
 
+
+	def adjust_for_anchor(self, key, value, add_or_remove):
+		if add_or_remove == "'add'":
+			if key in self.anchor_book.keys():
+				self.anchor_book[key] = self.anchor_book[key] + [value]
+			else:
+				self.anchor_book[key] = [value]
+
+			self.documents = self.load_anchored_documents() # Using the new anchor book
+			self.initialize(recalculate_pmi = True, recalculate_vectors = False)
+			self.load_vectors(self.root_filename + '_doc_vecs_lem.json', self.documents, recalculate = True) # This is terrible! You shouldn't recalculate everything, you just need embeddings for the new documents.
+
+		else:
+			if key in self.anchor_book.keys() and value in self.anchor_book[key]:
+				self.anchor_book[key] = [v for v in self.anchor_book[key] if v != value]
+				self.documents = [d for d in self.documents if value not in d.tokens]
+				for i, d in enumerate(self.documents):
+					d.index = i
+			self.initialize(recalculate_pmi = True, recalculate_vectors = False) # Need to recalculate TFIDF and PMI regardless.
+		return self.documents
+
+
 	def load_row_labels(self):
 		lines = pd.read_csv(self.path + self.row_labels_filename, header = 0)
 		return lines
@@ -97,9 +117,9 @@ class Corpus():
 				tokens = self.linguist.tokenize(stripped)
 
 				# TODO: This should be replaced by something sensible like getting a boolean from the user OR finding close-enough words via embeddings.
-				bool_list = [l for l in self.bool_book if self.anchor in l][0]
-				if bool_list:
-					relevant = any([any(bool_word in word for word in tokens) for bool_word in bool_list])
+				if self.anchor in list(self.anchor_book.keys()): # Look for the relevant list that has words related to the anchor
+					or_list = self.anchor_book[self.anchor] + [self.anchor]
+					relevant = any([any(or_word in word for word in tokens) for or_word in or_list])
 				else:
 					relevant = any(self.anchor in word for word in tokens)
 				if relevant:
@@ -112,7 +132,6 @@ class Corpus():
 						documents.append(document)
 					except IndexError:
 						print("Line not found in row_labels: ", readable)
-
 		return documents
 	
 

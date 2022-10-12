@@ -15,11 +15,11 @@ class Grid():
 		self.synonym_book = synonym_book
 		self.clusters = clusters
 
-		self.documents = corpus.documents
-		self.anchor = corpus.anchor
-		self.rows = corpus.rows
-		self.tfidf_pmi_weight = corpus.tfidf_pmi_weight
-		self.linguist = corpus.linguist
+		self.documents = self.corpus.documents
+		self.anchor = self.corpus.anchor
+		self.rows = self.corpus.rows
+		self.tfidf_pmi_weight = self.corpus.tfidf_pmi_weight
+		self.linguist = self.corpus.linguist
 		self.trash = []
 
 		self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
@@ -40,6 +40,12 @@ class Grid():
 
 	def regenerate(self):
 		self.generate_clusters()
+
+	def update_for_anchor(self, key, value, add_or_remove):
+		self.documents = self.corpus.adjust_for_anchor(key, value, add_or_remove) # Adds or removes docs based on anchor changes, recalculates TFIDF and PMI
+		print(len(self.corpus.documents))
+		print(len(self.documents))
+		self.regenerate() # Should preserve existing columns while clustering new docs via machine
 
 	def create_machine_clusters(self, documents, labels, num_clusters):
 		# Skip the seeded clusters in the labels.

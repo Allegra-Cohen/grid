@@ -23,10 +23,10 @@ class Backend():
 		]
 
 		# TODO: This should be a boolean anchor provided by the user. For now, we cheat.
-		self.bool_book = [
-			['harvest', 'harvester', 'thresher', 'equipment', 'machinery'],
-			['horticulture', 'tomato', 'tomatoes', 'onions', 'onion', 'potatoes', 'corn', 'peppers', 'vegetable', 'garden']
-		]
+		self.anchor_book = {
+			'harvest': ['harvester', 'thresher', 'equipment', 'machinery'],
+			'horticulture': ['tomato', 'tomatoes', 'onions', 'onion', 'potatoes', 'corn', 'peppers', 'vegetable', 'garden'],
+		}
 
 		if not os.path.isfile(self.path + 'cleaned_docs.csv'):
 			Corpus.clean_corpus(self.path, self.corpus_filename, 'cleaned_docs.csv', self.synonym_book) # TODO: remove synonym_book and too_common from linguist methods
@@ -71,7 +71,7 @@ class Backend():
 
 		# Handling corpus and row label filenames as separate because corpus can span multiple grids and row label is a temporary file until we get a classifier going.
 		# If the right files don't exist for this anchor, corpus will create them using filename.
-		self.corpus = Corpus(self.path, self.clean_corpus_filename, row_labels_filename, filename, self.rows, anchor, self.bool_book, self.linguist, self.tfidf_pmi_weight)
+		self.corpus = Corpus(self.path, self.clean_corpus_filename, row_labels_filename, filename, self.rows, anchor, self.anchor_book, self.linguist, self.tfidf_pmi_weight)
 
 	# Not sure if this should be in backend, or a method of Grid
 	def load_clusters(self, cells, col_names: list[str]):
@@ -102,6 +102,7 @@ class Backend():
 					machine_clusters.append(cluster)
 
 		return frozen_clusters + seeded_clusters + machine_clusters # Need to be in the right order
+
 
 
 

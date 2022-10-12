@@ -212,27 +212,27 @@ def growth(ci: list[Document], doc_distances, siblings: list[list[Document]]) ->
 
 
 
-def get_composite(cluster, doc_vecs):
+def get_composite(cluster):
 	vecs = []
 	for d in cluster:
-		vecs.append(doc_vecs[d])
+		vecs.append(d.vector)
 	return np.mean(vecs, axis = 0)
 
-def betweenness(clusters, docs, doc_vecs):
-	meta_centroid = get_composite(docs, doc_vecs)
+def betweenness(clusters, docs):
+	meta_centroid = get_composite(docs)
 	to_sum = []
 	for ci in clusters:
 		ni = len(ci)
-		dist = (1 - cosine_similarity(get_composite(ci, doc_vecs), meta_centroid))
+		dist = (1 - cosine_similarity(get_composite(ci), meta_centroid))
 		to_sum.append(ni * (dist**2))
 	return np.sum(to_sum)
 
-def withinness(clusters, doc_vecs):
+def withinness(clusters):
 	to_sum = []
 	for ci in clusters:
-		centroid = get_composite(ci, doc_vecs)
+		centroid = get_composite(ci)
 		for di in ci:
-			dist = (1 - cosine_similarity(doc_vecs[di], centroid))
+			dist = (1 - cosine_similarity(di.vector, centroid))
 			to_sum.append((dist**2))
 	return np.sum(to_sum)
 
@@ -262,19 +262,19 @@ def quality_scores(clusters: list[list[Document]], siblings: list[list[list[Docu
 	return sorted_qualities
 
 
-def C_score(docs, clusters, doc_vecs):
+def C_score(docs, clusters):
 	n = len(docs)
 	k = len(clusters)
 
-	b = betweenness(clusters, docs, doc_vecs)
-	w = withinness(clusters, doc_vecs)
+	b = betweenness(clusters, docs)
+	w = withinness(clusters)
 
 	# print("Num docs: ", n, ", num clusters: ", k, ", betweenness: ", b, "withinness: ", w)
 
 	return (b * (n - k))/(w * (k - 1))
 
 # Generate models -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Generate models
-def gamma_slide(docs, sorted_tuples, doc_vecs, modified_clusters = None):
+def gamma_slide(docs, sorted_tuples, modified_clusters = None):
 	scores, clusters = [], []
 	len_docs = len(docs)
 	len_clusters = len(sorted_tuples)
@@ -298,7 +298,7 @@ def gamma_slide(docs, sorted_tuples, doc_vecs, modified_clusters = None):
 		to_remove = []
 		for i, ci in enumerate(clusters_g):
 			for j, cj in enumerate(clusters_g):
-				if set(ci).issubset(cj) and ci != cj and scores_g[i] < scores_g[j] and ci not in to_remove:
+				if set([c.stripped for c in ci]).issubset([c.stripped for c in cj]) and ci != cj and scores_g[i] < scores_g[j] and ci not in to_remove:
 					to_remove.append(ci)
 		clusters_g = list(clusters_g)
 		[clusters_g.remove(l) for l in to_remove]
@@ -307,9 +307,9 @@ def gamma_slide(docs, sorted_tuples, doc_vecs, modified_clusters = None):
 		if modified_clusters:
 			clusters_g = modified_clusters + clusters_g
 
-		gamma = len(list(set(list(itertools.chain.from_iterable(clusters_g)))))/len_docs
+		gamma = len(list(set([c.stripped for c in list(itertools.chain.from_iterable(clusters_g))])))/len_docs
 
-		current_C = C_score(docs, clusters_g, doc_vecs)
+		current_C = C_score(docs, clusters_g)
 		# print("Gamma: ", gamma, ", score: ", current_C, "\n")
 		
 		# check if C_score is less than last C_score, if so, take the last C_score (local maximum)
@@ -319,18 +319,22 @@ def gamma_slide(docs, sorted_tuples, doc_vecs, modified_clusters = None):
 			last_C = current_C
 			last_tuple = (gamma, clusters_g, current_C)
 
-	return (gamma, clusters_g, current_C)
+	if modified_clusters:
+		return (gamma, modified_clusters + clusters_g, current_C)
+	else:
+		return (gamma, clusters_g, current_C)
 
 
-def get_best_initial_model(docs, doc_vecs, sorted_qualities, quality_names, modified_clusters = None):
+def get_best_initial_model(docs, sorted_qualities, quality_names, modified_clusters = None):
 	best_model, best_score = None, 0
 	for i, q in enumerate(sorted_qualities): # There are six quality measures
 		quality = quality_names[i]
-		model_tuple = gamma_slide(docs, q, doc_vecs, modified_clusters)
+		model_tuple = gamma_slide(docs, q, modified_clusters)
 		current_score, current_model = model_tuple[2], (quality, model_tuple[0], model_tuple[1])
 
 		if current_score > best_score:
 			best_model, best_score = current_model, current_score
+			# print(current_score, quality_names[i], best_model[1])
 
 	return best_model
 
@@ -481,7 +485,7 @@ def run_expect_max(documents: list[Document], seeded_clusters: list[list[Documen
 				doc_to_seeded[d_index, s] = 1
 
 	doc_indices = list(range(len(documents)))
-
+	
 	for i in range(num_loops):
 		n = len([l for l in ps_cat_given_doc if not (np.array(l) == 0).all()]) # Seeded documents stay zero always
 

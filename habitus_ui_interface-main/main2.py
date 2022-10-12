@@ -75,7 +75,9 @@ class UvicornFrontend(Frontend):
             "grid": heat_map,
             "col_num_to_name": col_num_to_name,
             "frozen_columns": frozen_columns,
-            "row_contents": row_contents
+            "row_contents": row_contents,
+            "anchor_book": self.grid.corpus.anchor_book,
+            "synonym_book": self.grid.synonym_book
         }
 
     def load_new_grid(self, newAnchor: str):
@@ -85,6 +87,14 @@ class UvicornFrontend(Frontend):
         t = time.time()
         self.update_track_actions(['new_grid', t, 'grid', newAnchor, None])
         return self.show_grid()
+
+    def update_anchor_book(self, key: str, value: str, add_or_remove: str):
+        self.grid.update_for_anchor(key, value, add_or_remove)
+        self.clicked_col = None
+        self.clicked_row = None
+        self.clicked_documents = self.get_clicked_documents()
+        return self.show_grid()
+
 
     def toggle_copy(self) -> bool:
         self.copy_on = not self.copy_on
@@ -201,6 +211,11 @@ def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function 
 async def loadNewGrid(newAnchor: str):
     print("loadNewGrid", newAnchor)
     return frontend.load_new_grid(newAnchor)
+
+@app.get("/updateAnchorBook/{key}/{value}/{add_or_remove}")
+async def updateAnchorBook(key: str, value: str, add_or_remove: str):
+    print("updateAnchorBook", key, value, add_or_remove)
+    return frontend.update_anchor_book(key, value, add_or_remove)
 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):
