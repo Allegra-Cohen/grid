@@ -158,16 +158,6 @@ function App({apiUrl}) {
 
       </div>
 
-      <AnchorBook className="anchorBook" anchorBook={anchorBook} onButtonClick={(evt) => {console.log(evt);
-                                                                                  setAnchor(evt.anchor);
-                                                                                  setCorpus(evt.clicked_sentences);
-                                                                                  setGridRows(evt.grid);
-                                                                                  setColNumToName(evt.col_num_to_name);
-                                                                                  setFrozenColumns(evt.frozen_columns)
-                                                                                }} apiUrl={apiUrl}/>
-
-      <SynonymBook className="synonymBook" synonymBook={synonymBook} apiUrl={apiUrl}/>
-
       </div>
       </div>
 
