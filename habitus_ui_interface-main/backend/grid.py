@@ -5,9 +5,11 @@ from cluster import Cluster
 from corpus import Corpus
 from document import Document
 from surdeanu2005 import Surdeanu2005
+from randomCluster import Random
 
 class Grid():
-	def __init__(self, path: str, root_filename: str, corpus, k: int, synonym_book, clusters: list[Cluster] = []):
+	def __init__(self, flag: str, path: str, root_filename: str, corpus, k: int, synonym_book, clusters: list[Cluster] = []):
+		self.flag = flag
 		self.path = path
 		self.root_filename = root_filename
 		self.k = k
@@ -22,11 +24,14 @@ class Grid():
 		self.linguist = self.corpus.linguist
 		self.trash = []
 
-		self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
+		if flag == 'treatment' or flag == 'control': # Even control condition needs an initial clustering
+			self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
+		else:
+			self.cluster_generator = Random(self.corpus, self.linguist)
 
 	@classmethod
-	def generate(cls, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book):
-		grid = cls(path, root_filename, corpus, k, synonym_book)
+	def generate(cls, flag: str, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book):
+		grid = cls(flag, path, root_filename, corpus, k, synonym_book)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		grid.generate_clusters()
 		return grid
