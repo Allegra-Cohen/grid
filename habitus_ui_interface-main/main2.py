@@ -73,6 +73,7 @@ class UvicornFrontend(Frontend):
                 heat_map[row.name][col_index] = delta * count
 
         return {
+            "flag": self.flag,
             "anchor": self.grid.anchor,
             "sentences": sentences,
             "clicked_sentences": clicked_sentences,

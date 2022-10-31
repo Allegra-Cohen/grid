@@ -23,6 +23,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
 function App({apiUrl}) {
+    const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
     const [context, setContext] = useState([]);
@@ -37,6 +38,7 @@ function App({apiUrl}) {
         fetch(`${apiUrl}/data/`)
             .then( response => response.json())
             .then( data => {
+                setFlag(data.flag);
                 setAnchor(data.anchor);
                 setCorpus(data.clicked_sentences);
                 setGridRows(data.grid);
@@ -129,9 +131,9 @@ function App({apiUrl}) {
        apiUrl={apiUrl}/>
        </div>
 
-      <div style={{display:"flex", flexDirection:"row"}}>
-
-      <RegenerateButton className="RegenerateButton" onClick={(evt) => {
+    {flag === 'control' ? <div/>
+     :  <div style={{display:"flex", flexDirection:"row"}}>
+        <RegenerateButton className="RegenerateButton" onClick={(evt) => {
           console.log(evt);
           setCorpus(evt.clicked_sentences);
           setGridRows(evt.grid);
@@ -141,22 +143,7 @@ function App({apiUrl}) {
       apiUrl={apiUrl}/>
 
       <KButton className="KButton" apiUrl={apiUrl}/>
-
-      <SaveBox className="SaveBox" onClick={(evt) => {console.log('save box: ', evt)}}
-      apiUrl={apiUrl}/>
-
-      <LoadBox className="LoadBox"
-      onKeyPress={(evt) => {
-          console.log(evt);
-          setAnchor(evt.anchor);
-          setCorpus(evt.clicked_sentences);
-          setGridRows(evt.grid);
-          setColNumToName(evt.col_num_to_name);
-          setFrozenColumns(evt.frozen_columns)}
-      }
-      apiUrl={apiUrl}/>
-
-      </div>
+      </div>}
 
       </div>
       </div>
