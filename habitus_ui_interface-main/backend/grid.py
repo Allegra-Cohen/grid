@@ -43,8 +43,6 @@ class Grid():
 
 	def update_for_anchor(self, key, value, add_or_remove):
 		self.documents = self.corpus.adjust_for_anchor(key, value, add_or_remove) # Adds or removes docs based on anchor changes, recalculates TFIDF and PMI
-		print(len(self.corpus.documents))
-		print(len(self.documents))
 		self.regenerate() # Should preserve existing columns while clustering new docs via machine
 
 	def create_machine_clusters(self, documents, labels, num_clusters):
@@ -177,6 +175,7 @@ class Grid():
 		documents = self.linguist.find_relevant_docs(self.documents, concept)
 		cluster = Cluster(concept, documents, frozen = True)
 		self.clusters.append(cluster)
+		return documents
 
 	def freeze_cluster(self, cluster_index):
 		self.clusters[cluster_index].freeze()
@@ -191,7 +190,7 @@ class Grid():
 			return [document for document in clicked_cluster.documents if document.is_member(row_index)]
 
 
-	def dump(self, filename):
+	def dump(self, filename, write = True):
 
 		def dump_documents():
 			records = []
@@ -209,7 +208,7 @@ class Grid():
 			}
 			for row in self.rows:
 				data[row.name] = [record['map'][row.name] for record in records]
-			pd.DataFrame(data).to_csv(filename + '_documents.csv')
+			pd.DataFrame(data).to_csv(self.path + filename + '_documents.csv')
 
 		def dump_anchor(): # This is stupid right now, but we might have complicated anchors in the future (e.g., '(tomatoes OR onions) AND seed')
 			pd.DataFrame({'anchor':[self.anchor]}).to_csv(self.path + filename + '_anchor.csv')
@@ -246,13 +245,16 @@ class Grid():
 				'readable': [record['readable'] for record in records],
 				'seeded_doc': [record['seeded_doc'] for record in records]
 			}
-			pd.DataFrame(data).to_csv(self.path + filename + '_cells.csv')
-
-		dump_anchor()
-		dump_documents()
-		dump_tokens()
-		dump_vectors()
-		dump_cells()
+			if write:
+				pd.DataFrame(data).to_csv(self.path + filename + '_cells.csv')
+			else:
+				return pd.DataFrame(data)
+		if write:
+			dump_anchor()
+			dump_documents()
+			dump_tokens()
+			dump_vectors()
+		return dump_cells()
 
 
 

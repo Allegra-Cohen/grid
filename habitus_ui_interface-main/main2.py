@@ -11,6 +11,7 @@ from pandas import DataFrame
 from starlette.middleware.cors import CORSMiddleware
 import time
 import pandas as pd
+import os
 
 app = FastAPI()
 
@@ -31,8 +32,10 @@ class UvicornFrontend(Frontend):
         self.clicked_col = None
         self.clicked_row = None
         self.show_grid()
-        self.track_actions = {'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
+        self.track_actions = {'round': [], 'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
         self.tracking_filename = tracking_filename
+        self.round = 0
+        self.update_grid_record()
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -85,7 +88,7 @@ class UvicornFrontend(Frontend):
         self.grid = self.backend.get_grid(k, newAnchor, newAnchor)
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
-        self.update_track_actions(['new_grid', t, 'grid', newAnchor, None])
+        self.update_track_actions([self.round, 'human', 'new_grid', t, 'grid', newAnchor, None])
         return self.show_grid()
 
     def update_anchor_book(self, key: str, value: str, add_or_remove: str):
@@ -102,55 +105,70 @@ class UvicornFrontend(Frontend):
 
     def load_grid(self, anchor):
         t = time.time()
+        self.round = 0
         grid = self.backend.load_grid(anchor)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
-        self.update_track_actions(['load', t, 'grid', self.grid.anchor, None])
+        self.update_track_actions([self.round, 'human', 'load', t, 'grid', self.grid.anchor, None])
+        self.update_grid_record()
         return self.show_grid()
 
     def save_grid(self, filename: str) -> bool:
         print("Saving grid at ", filename)
         t = time.time()
         self.grid.dump(filename)
-        self.update_track_actions(['save', t, 'grid', self.grid.anchor, None])
+        self.update_track_actions([self.round, 'human', 'save', t, 'grid', self.grid.anchor, None])
         return True
 
     def trash(self, text: str) -> dict:
         t = time.time()
         document = self.find_document(text)
         self.grid.delete_document(document)
-        self.update_track_actions(['trash', t, 'sentence', text, None])
+        self.update_track_actions([self.round, 'human', 'trash', t, 'sentence', text, None])
         return self.show_grid()
+
+
+    def record_machine_moves(self, t):
+        for i, c in enumerate(self.grid.clusters):
+            if not c.is_frozen():
+                for d in c.documents:
+                    if d not in c.human_documents: # Only look at docs the machine moves, which aren't seeded and aren't frozen
+                        self.update_track_actions([self.round, 'machine', 'move', t, 'sentence', d.readable, 'to_' + str(i)]) # Can't say which column something has been moved from during reclustering
+
 
     def regenerate(self) -> dict:
         t = time.time()
+        self.round += 1
         self.grid.regenerate()
         self.clicked_col = None
         self.clicked_row = None
         self.clicked_documents = self.get_clicked_documents()
-        self.update_track_actions(['regenerate', t, 'grid', self.grid.anchor, None])
+        self.update_track_actions([self.round, 'human', 'update', t, 'grid', self.grid.anchor, None])
+        self.record_machine_moves(t)
+        self.update_grid_record()
         return self.show_grid()
 
     def set_name(self, col_index: int, name: str) -> dict:
         t = time.time()
         cluster = self.grid.clusters[col_index]
-        self.update_track_actions(['rename_cluster', t, 'cluster', name, 'old_' + cluster.name])
+        self.update_track_actions([self.round, 'human', 'rename_cluster', t, 'cluster', name, 'old_' + cluster.name])
         cluster.set_name(name, True)
         return self.show_grid()
 
     def set_k(self, k: int) -> dict:
         t = time.time()
         self.grid.set_k(k)
-        self.update_track_actions(['set_k', t, 'k', k, None])
+        self.update_track_actions([self.round, 'human', 'set_k', t, 'k', k, None])
         return self.show_grid()
 
     def create_cluster(self, text: str) -> dict:
         t = time.time()
-        self.grid.create_human_cluster(text)
-        self.update_track_actions(['create_cluster', t, 'cluster', text, None])
+        frozen_docs = self.grid.create_human_cluster(text)
+        self.update_track_actions([self.round, 'human', 'create_cluster', t, 'cluster', text, None])
+        [self.update_track_actions([self.round, 'human', 'freeze', t, 'sentence', doc.readable, 'cluster_' + text]) for doc in frozen_docs]
         return self.show_grid()
 
     def click(self, row_name: str, col_index: int) -> list[str]:
@@ -160,13 +178,13 @@ class UvicornFrontend(Frontend):
         self.clicked_col = col_index
         documents = self.get_clicked_documents()
         texts = [document.readable for document in documents]
-        self.update_track_actions(['click', t, 'cell', str(row_index) + '_' + str(col_index), None])
+        self.update_track_actions([self.round, 'human', 'click', t, 'cell', str(row_index) + '_' + str(col_index), None])
         return texts
 
     def sentence_click(self, text: str):
         t = time.time()
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
-        self.update_track_actions(['click', t, 'sentence', text, None])
+        self.update_track_actions([self.round, 'human', 'click', t, 'sentence', text, None])
         return [document.pre_context, text.split('.',1)[1], document.post_context]
 
     # This moves the sentence from the currently clicked_col and clicked_row to
@@ -177,23 +195,31 @@ class UvicornFrontend(Frontend):
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
         if self.copy_on:
             self.grid.copy_document(document, self.clicked_col, col_index)
-            self.update_track_actions(['copy', t, 'sentence', text, 'from_'+str(self.clicked_col)+'to'+str(col_index)])
+            self.update_track_actions([self.round, 'human', 'copy', t, 'sentence', text, 'from_'+str(self.clicked_col)+'_to_'+str(col_index)])
         else:
             self.grid.move_document(document, self.clicked_col, col_index)
-            self.update_track_actions(['move', t, 'sentence', text, 'from_'+str(self.clicked_col)+'to'+str(col_index)])
+            self.update_track_actions([self.round, 'human', 'move', t, 'sentence', text, 'from_'+str(self.clicked_col)+'_to_'+str(col_index)])
         return self.show_grid()
 
+    def update_grid_record(self):
+        grid_path = self.path + 'grid_' + self.tracking_filename
+        df = self.grid.dump(grid_path, write = False)
+        df['round'] = self.round
+        df.to_csv(grid_path, mode = 'a', header = not os.path.exists(grid_path))
+
     def update_track_actions(self, info):
-        self.track_actions['action'].append(info[0])
-        self.track_actions['time'].append(info[1])
-        self.track_actions['object_type'].append(info[2])
-        self.track_actions['object_value'].append(info[3])
-        self.track_actions['other_details'].append(info[4])
+        self.track_actions['round'].append(info[0])
+        self.track_actions['actor'].append(info[1])
+        self.track_actions['action'].append(info[2])
+        self.track_actions['time'].append(info[3])
+        self.track_actions['object_type'].append(info[4])
+        self.track_actions['object_value'].append(info[5])
+        self.track_actions['other_details'].append(info[6])
 
         pd.DataFrame(self.track_actions).to_csv(self.path + self.tracking_filename) # Just rewrite every time. Slower than appending?
 
 
-frontend = UvicornFrontend('../process_files/', 9, 'harvest', 'allegra_tracking_harvest.csv')
+frontend = UvicornFrontend('../process_files/', 3, 'harvest', 'allegra_tracking_harvest.csv')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get

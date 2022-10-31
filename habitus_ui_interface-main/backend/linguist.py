@@ -87,5 +87,5 @@ class Linguist():
 		if pmi is not None:
 			top_words = sorted((((pmi[i, anchor_index]*w + (1-w)*np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if not np.isnan(pmi[i, anchor_index]) and word != anchor_word), reverse = True)[0:n]
 		else:
-			top_words = sorted((((np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if not np.isnan(pmi[i, anchor_index]) and word != anchor_word), reverse = True)[0:n]
+			top_words = sorted((((np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if word != anchor_word), reverse = True)[0:n]
 		return top_words

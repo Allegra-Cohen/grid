@@ -110,6 +110,7 @@ class Corpus():
 		labels = self.load_row_labels()
 		documents = []
 	
+		doc_i = 0
 		for index, line in lines.iterrows():
 			if type(line.stripped) == str:
 				stripped = line['stripped']
@@ -122,14 +123,17 @@ class Corpus():
 					relevant = any([any(or_word in word for word in tokens) for or_word in or_list])
 				else:
 					relevant = any(self.anchor in word for word in tokens)
+					
 				if relevant:
 					try:
 						label_line = [(i,l) for i,l in labels.iterrows() if l['stripped'] == stripped][0]
 						memberships = [label_line[1][row.name] == 1 for row in self.rows]
 						pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
 						post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
-						document = Document(label_line[0], stripped, readable, tokens, pre_context, post_context, memberships = memberships)
+						# document = Document(label_line[0], stripped, readable, tokens, pre_context, post_context, memberships = memberships)
+						document = Document(doc_i, stripped, readable, tokens, pre_context, post_context, memberships = memberships)
 						documents.append(document)
+						doc_i += 1 # Need to keep this separate because might be a subset of label file
 					except IndexError:
 						print("Line not found in row_labels: ", readable)
 		return documents

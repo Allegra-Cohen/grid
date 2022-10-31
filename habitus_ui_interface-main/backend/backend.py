@@ -26,6 +26,7 @@ class Backend():
 		self.anchor_book = {
 			'harvest': ['harvester', 'thresher', 'equipment', 'machinery'],
 			'horticulture': ['tomato', 'tomatoes', 'onions', 'onion', 'potatoes', 'corn', 'peppers', 'vegetable', 'garden'],
+			'credit': ['loan', 'repay']
 		}
 
 		if not os.path.isfile(self.path + 'cleaned_docs.csv'):
@@ -64,9 +65,11 @@ class Backend():
 	def set_up_corpus(self, filename: str, anchor: str):
 		# Get rows and Linguist set up
 		self.rows = [Row('other'), Row('proportions'), Row('processes'), Row('decisions'), Row('conditions'), Row('causes'), Row('all')]
+		# self.rows = [Row('other'), Row('proportion'), Row('parameter'), Row('sequence'), Row('function'), Row('switch'), Row('condition'), Row('all')]
 		self.linguist = Linguist()
 
-		row_labels_filename = 'row_labels_' + filename + '.csv'
+		# row_labels_filename = 'row_labels_' + filename + '.csv'
+		row_labels_filename = 'row_labels_harvest' + '.csv'
 		print('Does the file with row labels exist? ', os.path.isfile(self.path + row_labels_filename))
 
 		# Handling corpus and row label filenames as separate because corpus can span multiple grids and row label is a temporary file until we get a classifier going.
