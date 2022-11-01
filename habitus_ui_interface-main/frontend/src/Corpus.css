@@ -9,3 +9,8 @@ li {
     overflow: 'scroll';
 }
 li:nth-child(odd) { background: #F8F8F8; }
+
+
+.legend{
+    font-family: "InaiMathi";
+}
