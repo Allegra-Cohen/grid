@@ -79,7 +79,7 @@ function Footer({id, colName, frozenColumns, onFooter, apiUrl}){
             (evt) => {
                 console.log(evt.target.lastChild, evt.target.lastChild.toString());
                 if (evt.target.lastChild.toString() === "[object HTMLDivElement]") {
-                    let text = evt.target.textContent;
+                    let text = evt.target.textContent.replace("\/", " | ");
                     fetch(`${apiUrl}/editName/${id}/${text}`)
                     .then( response => response.json())
                     .then( response => onFooter(response));
