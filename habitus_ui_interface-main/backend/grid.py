@@ -88,7 +88,7 @@ class Grid():
 	def name_cluster(self, documents: list[Document]) -> str:
 		names = self.linguist.get_cluster_name(2, documents, self.corpus.tfidf, self.corpus.pmi, self.corpus.anchor,
 				self.corpus.anchor_index, tfidf_pmi_weight = 0.1)
-		name = ' / '.join([c[1] for c in names])
+		name = ' | '.join([c[1] for c in names])
 		return name
 
 	def flatten_lists(self, lists):
