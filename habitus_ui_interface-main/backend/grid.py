@@ -138,16 +138,17 @@ class Grid():
 		self.copy_document(document, cluster_from_index, cluster_to_index)
 	
 	def move_document(self, document, cluster_from_index, cluster_to_index):
-		cluster_from = self.clusters[cluster_from_index]
-		cluster_to = self.clusters[cluster_to_index]
-		cluster_to.insert(document)
-		cluster_from.remove(document)
-		if not cluster_from:
-			print(cluster_from.name, " will be removed.")
-			self.clusters.pop(cluster_from_index)
-		if not cluster_to.frozen:
-			name = self.name_cluster(cluster_to.documents)
-			cluster_to.set_name(name, cluster_to.frozen)
+		if cluster_from_index != cluster_to_index:
+			cluster_from = self.clusters[cluster_from_index]
+			cluster_to = self.clusters[cluster_to_index]
+			cluster_to.insert(document)
+			cluster_from.remove(document)
+			if not cluster_from:
+				print(cluster_from.name, " will be removed.")
+				self.clusters.pop(cluster_from_index)
+			if not cluster_to.frozen:
+				name = self.name_cluster(cluster_to.documents)
+				cluster_to.set_name(name, cluster_to.frozen)
 
 	def move_document_by_index(self, doc_num, cluster_from_index, cluster_to_index):
 		document = self.clusters[cluster_from_index].documents[doc_num]
@@ -173,8 +174,9 @@ class Grid():
 
 	def create_human_cluster(self, concept):
 		documents = self.linguist.find_relevant_docs(self.documents, concept)
-		cluster = Cluster(concept, documents, frozen = True)
-		self.clusters.append(cluster)
+		if len(documents) > 0:
+			cluster = Cluster(concept, documents, frozen = True)
+			self.clusters.append(cluster)
 		return documents
 
 	def freeze_cluster(self, cluster_index):
