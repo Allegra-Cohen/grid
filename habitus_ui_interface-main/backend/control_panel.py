@@ -1,11 +1,13 @@
 import pandas as pd
+import sys
 
 from frontend import Frontend
 
 class ControlPanel(Frontend):
 	def __init__(self, path: str, k: int):
 		super().__init__(path)
-		self.grid = self.backend.get_grid(k)
+		self.anchor = sys.argv[1]
+		self.grid = self.backend.get_grid(k, self.anchor, self.anchor)
 		self.copy_on = False
 		self.show_clusters()
 
