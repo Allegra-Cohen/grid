@@ -26,7 +26,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
 export default function Corpus({sentences, onChange, apiUrl}) {
 
     const [activeSentence, setActiveSentence] = useState();
-    const activateSentence = (item) => activeSentence === item ? setActiveSentence() : setActiveSentence(item);
+    const activateSentence = (item) => activeSentence === item ? setActiveSentence(item) : setActiveSentence(item);
 
     let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} />)
     return (
