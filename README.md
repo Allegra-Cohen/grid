@@ -26,7 +26,7 @@ Implementation consists of two major components.  Interaction with the web brows
 1. `pip3 install spacy`
 1. `python3 -m spacy download en_core_web_sm`
 1. `cd backend`
-1. `python3 control_panel.py` - Make sure the console version works before continuing with execution of the networked version.
+1. `python3 control_panel.py harvest` - Make sure the console version works before continuing with execution of the networked version. "harvest" is the Grid anchor term.
 1. `cd ..`
 
 ## Execution
