@@ -11,6 +11,7 @@ export default function InputBox({text, onKeyPress, apiUrl}){
       	     (evt) => {
      	        if (evt.key === "Enter") {
      	        	let text = evt.target.value;
+     	        	if (evt.target.value.length > 0){
 			        fetch(`${apiUrl}/textInput/${text}`)
 			            .then( response => response.json())
 			            .then( response => {console.log(response);
@@ -20,6 +21,7 @@ export default function InputBox({text, onKeyPress, apiUrl}){
 			            .then(evt.target.value = '')
 			            .then(evt.target.blur())
 	               }
+	           }
 	           }
            } 
            placeholder=" Create new column "
