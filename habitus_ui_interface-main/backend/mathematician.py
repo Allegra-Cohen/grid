@@ -426,9 +426,9 @@ def pick_soft_labels(p_cat_given_doc, threshold, categories, doc_to_seeded):
 	return labels
 
 
-def pick_single_label(p_cat_given_doc):
+def pick_single_label(p_cat_given_doc, rndgen):
 	max_prob = max(p_cat_given_doc)
-	pick_max = random.choice([i for i, p in enumerate(p_cat_given_doc) if p == max_prob])
+	pick_max = rndgen.choice([i for i, p in enumerate(p_cat_given_doc) if p == max_prob])
 	return pick_max
 
 
@@ -465,7 +465,7 @@ def maximization(documents, doc_to_seeded, categories, ps_cat, ps_word_given_cat
 
 
 def run_expect_max(documents: list[Document], seeded_clusters: list[list[Document]], categories, words: list[str], word_indices: dict[str, int], words_in_docs: list[str],
-		word_vectorizer, counts, soft = False, num_loops = 5):
+		word_vectorizer, counts, rndgen, soft = False, num_loops = 5):
 	ps_cat_given_doc = np.zeros((len(documents), len(categories)))
 
 	q = len(categories)
@@ -485,7 +485,7 @@ def run_expect_max(documents: list[Document], seeded_clusters: list[list[Documen
 				doc_to_seeded[d_index, s] = 1
 
 	doc_indices = list(range(len(documents)))
-	
+
 	for i in range(num_loops):
 		n = len([l for l in ps_cat_given_doc if not (np.array(l) == 0).all()]) # Seeded documents stay zero always
 
@@ -504,7 +504,7 @@ def run_expect_max(documents: list[Document], seeded_clusters: list[list[Documen
 				if soft:
 					labels.append(pick_soft_labels(pcd, threshold, categories, doc_to_seeded)) # You need to override the label-picking because if the user puts the doc in too many categories, soft labeling won't preserve the choice.
 				else:
-					labels.append(pick_single_label(pcd, doc_to_seeded))
+					labels.append(pick_single_label(pcd, doc_to_seeded, rndgen))
 	return labels
 
 
