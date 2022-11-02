@@ -97,7 +97,7 @@ function Footer({id, colName, frozenColumns, onFooter, apiUrl}){
 
 export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, apiUrl}){
     const [activeCell, setActiveCell] = useState();
-    const activateCell = (item) => activeCell === item ? setActiveCell(item) : setActiveCell(item);
+    const activateCell = (item) => setActiveCell(item);
     console.log(activeCell)
 
     let gridRows = Object.entries(data).map(([name, cells], ix) => <GridRow key={ix} rowName={name} rowContents={row_contents} data={cells} onChange={onChange} onDrop={onDrop} activateCell={activateCell} activeCell={activeCell} apiUrl={apiUrl} />)
