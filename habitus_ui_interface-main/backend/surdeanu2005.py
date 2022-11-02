@@ -7,14 +7,16 @@ from mathematician import get_best_initial_model
 from mathematician import get_best_initial_model_k
 from mathematician import quality_scores
 from mathematician import run_expect_max
+import random
 
 class Surdeanu2005(ClusterGenerator):
-	def __init__(self, corpus: Corpus, linguist: Linguist):
+	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
 		super().__init__(corpus, linguist)
 		self.quality_names = ['w', 'wb', 'wn', 'gw', 'gwb', 'gwn']
 		self.allowed_seed_size = 0.05
 		self.soft = 0.2
 		self.num_loops = 10
+		self.rndgen = random.Random(seed)
 
 	def generate_clusters(self, documents: list[Document]) -> list[tuple[float, list[Document]]]:
 		clusters, siblings = generate_clusters(documents, self.corpus.doc_distances)
@@ -37,7 +39,7 @@ class Surdeanu2005(ClusterGenerator):
 
 
 		labels = run_expect_max(documents, seeded_document_lists, categories, self.corpus.words, self.corpus.word_indices, self.corpus.words_in_docs, self.linguist.word_vectorizer,
-				self.corpus.counts, soft = self.soft, num_loops = self.num_loops) # Soft needs to be gap situation
+				self.corpus.counts, self.rndgen, soft = self.soft, num_loops = self.num_loops) # Soft needs to be gap situation
 
 		# Again the first N category digits will correspond to seeded_clusters (so if there are 2 seeded clusters, categories 0 and 1 will be those)
 		return labels, len(categories)
