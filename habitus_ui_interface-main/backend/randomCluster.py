@@ -2,12 +2,13 @@ from cluster_generator import ClusterGenerator
 from corpus import Corpus
 from document import Document
 from linguist import Linguist
-from random import randrange
+import random
 
 
 class Random(ClusterGenerator):
-	def __init__(self, corpus: Corpus, linguist: Linguist):
+	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
 		super().__init__(corpus, linguist)
+		self.rndgen = random.Random(seed)
 		
 
 	def generate(self,  documents: list[Document], k: int, frozen_document_lists: list[list[Document]] = [],
@@ -29,11 +30,11 @@ class Random(ClusterGenerator):
 						doc_labels.append(i)
 
 			else:
-				label1 = randrange(n)
+				label1 = self.rndgen.randrange(n)
 				doc_labels = [label1]
 
 			if len(doc_labels) <= 1:
-				label2 = randrange(n*2)
+				label2 = self.rndgen.randrange(n*2)
 				if label2 < n and label2 != label1:
 					doc_labels.append(label2)
 
