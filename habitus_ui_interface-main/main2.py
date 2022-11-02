@@ -4,6 +4,7 @@ print("This is main2.py")
 import sys
 sys.path.append("./backend")
 
+from QA import QA
 from document import Document
 from fastapi import FastAPI, Depends
 from frontend import Frontend
@@ -26,6 +27,7 @@ app.add_middleware(
 class UvicornFrontend(Frontend):
     def __init__(self, flag: str, path: str, k: int, anchor: str, tracking_filename: str):
         super().__init__(path)
+        self.question_sets = {'survey': QA('survey', path, 'survey_questions.txt')}
         self.flag = flag
         self.path = path
         self.grid = self.backend.get_grid(self.flag, k, anchor, anchor)
@@ -73,6 +75,7 @@ class UvicornFrontend(Frontend):
                 heat_map[row.name][col_index] = delta * count
 
         return {
+            "question_sets": self.question_sets,
             "flag": self.flag,
             "anchor": self.grid.anchor,
             "sentences": sentences,
@@ -220,6 +223,21 @@ class UvicornFrontend(Frontend):
 
         pd.DataFrame(self.track_actions).to_csv(self.path + self.tracking_filename) # Just rewrite every time. Slower than appending?
 
+    # Final answers
+    def write_out_answers(self, questionSet):
+        df = self.question_sets[questionSet].return_dataframe()
+        df.to_csv(self.path + questionSet + '_' + self.tracking_filename)
+
+    # Tracking for question-answering
+    def update_question_answers(self, questionSet, questionIndex, selectedAnswerText):
+        t = time.time()
+        question_set = self.question_sets[questionSet]
+        question = question_set.questions[questionIndex]
+        question.update_given_answers(selectedAnswerText)
+        currently_active = question_set.return_active_answers()
+        self.update_track_actions(['survey', 'human', 'answer', t, question.question_text, question.given_answers, None])
+        return currently_active
+
 
 frontend = UvicornFrontend('treatment', '../process_files/', 3, 'harvest', 'allegra_tracking_harvest.csv')
 
@@ -302,3 +320,18 @@ async def loadGrid(text: str):
 async def trash(text: str):
     print("trash ", text)
     return frontend.trash(text)
+
+
+@app.get("/answerQuestion/{questionSet}/{questionIndex}/{selectedAnswerText}")
+async def answerQuestion(questionSet: str, questionIndex: int, selectedAnswerText: str):
+    return frontend.update_question_answers(questionSet, questionIndex, selectedAnswerText)
+
+@app.get("/recordAnswers/{questionSet}")
+async def recordAnswers(questionSet: str):
+    return frontend.write_out_answers(questionSet)
+
+
+
+
+
+

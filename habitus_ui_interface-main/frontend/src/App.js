@@ -19,6 +19,8 @@ import Trash from './Trash'
 import {useEffect, useState} from "react";
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Link } from "react-router-dom";
+
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
@@ -202,7 +204,7 @@ function App({apiUrl}) {
       </div>
       </div>
 
-
+      <Link to="/questions">Click to begin answering questions about the information you've curated.</Link>
     
           </DndProvider>
   );
