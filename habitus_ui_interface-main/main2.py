@@ -250,8 +250,12 @@ frontend = UvicornFrontend('treatment', '../process_files/', 3, 'harvest', 'alle
 # - call into the frontend to perform the action
 # - return the right kind of result, probably forwarded from the frontend
 
-@app.get("/data")
-def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
+@app.get("/data/{edit}")
+def root(edit: bool): # Depends( my function that changes data for front end )
+    if edit:
+        data = frontend.show_grid()
+    else:
+        data = frontend.load_grid(frontend.grid.anchor)
     return data # returns to front end
 
 

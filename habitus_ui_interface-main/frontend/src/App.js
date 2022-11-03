@@ -36,8 +36,12 @@ function App({apiUrl, edit}) {
     const [anchorBook, setAnchorBook] = useState({})
     const [synonymBook, setSynonymBook] = useState([])
 
+    const handleLinkClick = () => {
+        fetch(`${apiUrl}/saveGrid/${anchor}`).then( response => response.json());
+    }
+
     useEffect(() => {
-        fetch(`${apiUrl}/data/`)
+        fetch(`${apiUrl}/data/${edit}`)
             .then( response => response.json())
             .then( data => {
                 setFlag(data.flag);
@@ -211,7 +215,7 @@ function App({apiUrl, edit}) {
       </div>
       {edit === true ?
         <div style={{marginBottom:'20px'}}>
-      <Link to="/test" style={{marginLeft:'80%', background:'pink'}}>Click to begin answering questions.</Link></div>
+      <Link to="/test" onClick = {() => handleLinkClick()} style={{marginLeft:'80%', background:'pink'}}>Click to begin answering questions.</Link></div>
       : <div/>}
     
           </DndProvider>

@@ -13,7 +13,7 @@ function QuestionPage({apiUrl, questionSet}) {
     const [clicked, setClicked] = useState([]);
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/`)
+        fetch(`${apiUrl}/data/${true}`)
             .then( response => response.json())
             .then( data => {
                 setQuestions(data['question_sets'][questionSet]['listDict']);
