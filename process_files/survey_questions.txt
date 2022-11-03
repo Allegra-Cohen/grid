@@ -1,0 +1,42 @@
+[{
+			'questionType': 'choose_one',
+			'questionText': '1. How are you currently employed?',
+			'answerOptions': [
+				{ 'answerText': 'a. Graduate student'},
+				{ 'answerText': 'b. Postdoc'},
+				{ 'answerText': 'c. Faculty member'},
+				{ 'answerText': 'd. Other'},
+			]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': '2. What field(s) do you work in?',
+			'answerOptions': [
+				{ 'answerText': 'a. Computer science'},
+				{ 'answerText': 'b. Social science'},
+				{ 'answerText': 'c. Both'},
+				{ 'answerText': 'd. Other'},
+			]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': '3. How often do you interact with qualitative data such as results from qualitative interviews?',
+			'answerOptions': [
+				{ 'answerText': 'a. Never'},
+				{ 'answerText': 'b. Infrequently'},
+				{ 'answerText': 'c. Often'},
+				{ 'answerText': 'd. All the time'},
+			]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': '4. How often do you build models, either theoretical (e.g., causal diagrams and equation-based models) or computational (e.g., models written in code)?',
+			'answerOptions': [
+				{ 'answerText': 'a. Never'},
+				{ 'answerText': 'b. Infrequently'},
+				{ 'answerText': 'c. Often'},
+				{ 'answerText': 'd. All the time'},
+			]
+		}
+
+]

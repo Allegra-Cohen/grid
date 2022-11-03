@@ -1,0 +1,77 @@
+[{
+			'questionType': 'choose_one',
+			'questionText': '1. What labor source do farmers most rely on during harvest?',
+			'answerOptions': [
+				{ 'answerText': 'a. Migrant labor'},
+				{ 'answerText': 'b. Family labor'},
+				{ 'answerText': 'c. Cooperative labor'},
+				{ 'answerText': "d. Don't know"},
+			]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': '2. What is NOT a factor in whether a farmer hires a harvester or not?',
+			'answerOptions': [
+				{ 'answerText': "a. The size of the farmer's land"},
+				{ 'answerText': 'b. The weather'},
+				{ 'answerText': "c. Whether the farmer's crops are diseased"},
+				{ 'answerText': "d. Don't know"},
+			]
+		},
+{
+			'questionType': 'select_all',
+			'questionText': "3. Which are factors in a farmer's decision to harvest? (Select all that apply)",
+			'answerOptions': [
+				{ 'answerText': 'a. The maturity of the crop'},
+				{ 'answerText': 'b. Whether the farmer already has credit for next season'},
+				{ 'answerText': 'c. The presence of birds'},
+				{ 'answerText': 'd. Whether the farmer wants to crop in the coming season'},
+				{ 'answerText': "e. Whether the farmer's cooperative can provide labor"},
+				{ 'answerText': "f. Don't know"},
+			]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': '4. True or false: If you own a large plot of land, you have the option of either hiring labor or equipment for your harvest',
+			'answerOptions': [
+				{ 'answerText': 'TRUE'},
+				{ 'answerText': 'FALSE'},
+				{ 'answerText': "Don't know"}]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': '5. Is it more expensive to hire a harvester or labor?',
+			'answerOptions': [
+				{ 'answerText': 'a. Harvester'},
+				{ 'answerText': 'b. Labor'},
+				{ 'answerText': "c. Don't know"}]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': "6. What is NOT a role that cooperatives play in farmers' lives:",
+			'answerOptions': [
+				{ 'answerText': 'a. Applying for and dispensing credit loans'},
+				{ 'answerText': 'b. Managing loan repayment'},
+				{ 'answerText': 'c. Helping the older members of the community complete their harvest'},
+				{ 'answerText': 'd. Storing yields'},
+				{ 'answerText': "e. Don't know"}]
+		},
+{
+			'questionType': 'select_all',
+			'questionText': '7. Which are sources of competition during harvest? (Select all that apply.)',
+			'answerOptions': [
+				{ 'answerText': 'a. Competition among farmers for credit'},
+				{ 'answerText': 'b. Competition among farmers for harvesters'},
+				{ 'answerText': 'c. Competition among service providers for fields to harvest'},
+				{ 'answerText': "d. Don't know"}]
+		},
+{
+			'questionType': 'choose_one',
+			'questionText': '8. True or false: Harvesting early will get you better yields.',
+			'answerOptions': [
+				{ 'answerText': 'TRUE'},
+				{ 'answerText': 'FALSE'},
+				{ 'answerText': "Don't know"}]
+		}
+
+]

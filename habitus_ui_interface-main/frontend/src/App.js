@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
-function App({apiUrl}) {
+function App({apiUrl, edit}) {
     const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
@@ -55,7 +55,7 @@ function App({apiUrl}) {
 
   return (
       <DndProvider backend={HTML5Backend}>
-
+      {edit === true ?
       <div style={{display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'5em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
           contenteditable="true" onInput={
                 (evt) => {
@@ -71,7 +71,7 @@ function App({apiUrl}) {
                     }
                 }
 
-            }> {anchor} </div>
+            }> {anchor} </div> : <div style={{marginBottom:'3em'}}/>}
 
     <div className="App" style={{
         display: "flex",
@@ -79,7 +79,8 @@ function App({apiUrl}) {
     }}>
     <div style={{
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        marginRight:'20px'
     }}>
     
 
@@ -105,6 +106,7 @@ function App({apiUrl}) {
         }
        }
     apiUrl={apiUrl} />
+    {edit === true ?
     <div style={{display:"flex", flexDirection:"column"}}>
     <div style={{display:"flex", flexDirection:"row"}}>
 
@@ -148,6 +150,8 @@ function App({apiUrl}) {
        </div>
 
       </div>
+        : <div/>}
+      {edit === true ?
       <div style={{marginLeft:'4em', marginTop:'3em', borderColor:'blue'}}><u>GUIDE</u><ul>
       <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Clicking:</b> Click on cells to view sentences. Colors indicate the amount of knowledge in each cell. Click on sentences to see them in the larger interview context.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>- Some sentences have more than one topic and can appear in more than one column.</li>
@@ -168,6 +172,7 @@ function App({apiUrl}) {
       <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Renaming:</b> You can also freeze a column by double-clicking its name, typing a new one, and pressing Enter.</li>
       </ul></ul>}
       </div>
+      : <div/>}
       </div>
 
       <div style={{
@@ -189,6 +194,7 @@ function App({apiUrl}) {
       onChange={(evt) => {console.log(evt);
                           console.log('sentence click!');
                           setContext(evt)}}
+       edit={edit}
        apiUrl={apiUrl} />
        </div>
               <div style={{
@@ -203,8 +209,10 @@ function App({apiUrl}) {
       </div>
       </div>
       </div>
-
-      <Link to="/questions">Click to begin answering questions about the information you've curated.</Link>
+      {edit === true ?
+        <div style={{marginBottom:'20px'}}>
+      <Link to="/test" style={{marginLeft:'80%', background:'pink'}}>Click to begin answering questions.</Link></div>
+      : <div/>}
     
           </DndProvider>
   );

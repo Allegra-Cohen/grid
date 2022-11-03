@@ -23,7 +23,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
     >{text} {isDragging}</li>
 }
 
-export default function Corpus({sentences, onChange, apiUrl}) {
+export default function Corpus({sentences, onChange, edit, apiUrl}) {
 
     const [activeSentence, setActiveSentence] = useState();
     const activateSentence = (item) => setActiveSentence(item);
@@ -33,9 +33,9 @@ export default function Corpus({sentences, onChange, apiUrl}) {
 
             <ul style={{
                 // width:"30em",
-                marginLeft:".2em" //3
-                // height: "50%",
-                // overflow: "scroll"
+                marginLeft:".2em",
+                height:"600px",
+                overflow: edit ? "none" : "auto",
             }}>
                 {items}
             </ul>

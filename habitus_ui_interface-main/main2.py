@@ -27,7 +27,7 @@ app.add_middleware(
 class UvicornFrontend(Frontend):
     def __init__(self, flag: str, path: str, k: int, anchor: str, tracking_filename: str):
         super().__init__(path)
-        self.question_sets = {'survey': QA('survey', path, 'survey_questions.txt')}
+        self.question_sets = {'survey': QA('survey', path, 'survey_questions.txt'), 'test': QA('test', path, 'test_questions.txt'), 'feedback': QA('feedback', path, 'feedback_questions.txt')}
         self.flag = flag
         self.path = path
         self.grid = self.backend.get_grid(self.flag, k, anchor, anchor)
@@ -225,8 +225,10 @@ class UvicornFrontend(Frontend):
 
     # Final answers
     def write_out_answers(self, questionSet):
-        df = self.question_sets[questionSet].return_dataframe()
+        qset = self.question_sets[questionSet]
+        df = qset.return_dataframe()
         df.to_csv(self.path + questionSet + '_' + self.tracking_filename)
+        qset.clear_answers()
 
     # Tracking for question-answering
     def update_question_answers(self, questionSet, questionIndex, selectedAnswerText):
@@ -235,7 +237,7 @@ class UvicornFrontend(Frontend):
         question = question_set.questions[questionIndex]
         question.update_given_answers(selectedAnswerText)
         currently_active = question_set.return_active_answers()
-        self.update_track_actions(['survey', 'human', 'answer', t, question.question_text, question.given_answers, None])
+        self.update_track_actions([question_set.name, 'human', 'answer', t, question.question_text, question.given_answers, None])
         return currently_active
 
 
@@ -328,6 +330,7 @@ async def answerQuestion(questionSet: str, questionIndex: int, selectedAnswerTex
 
 @app.get("/recordAnswers/{questionSet}")
 async def recordAnswers(questionSet: str):
+    print("writing out for ", questionSet)
     return frontend.write_out_answers(questionSet)
 
 

@@ -33,6 +33,10 @@ class QA():
 				answers.append(answer)
 		return pd.DataFrame({'set': sets, 'question': questions, 'answer': answers})
 
+	def clear_answers(self):
+		for q in self.questions:
+			q.given_answers, q.given_answer_IDs = [], []
+
 
 
 	
