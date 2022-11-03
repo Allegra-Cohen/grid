@@ -17,7 +17,7 @@ function QuestionPage({apiUrl, questionSet}) {
             .then( response => response.json())
             .then( data => {
                 setQuestions(data['question_sets'][questionSet]['listDict']);
-                console.log(data)
+                console.log(questions)
             });
     }, [])
 
@@ -51,7 +51,11 @@ function QuestionPage({apiUrl, questionSet}) {
                 :
                 <ul className='answer-section'>
                         {question.answerOptions.map((answerOption, j) => (
-                            <li style ={{background:'white'}}><button style={{fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white'}} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
+                            <div>
+                            {answerOption.answerText === "d. Other" ? <li style ={{background:'white'}}><textarea placeholder="Other" onChange={(evt) => handleAnswerOptionClick(i, evt.target.value)}/></li>
+                            : <li style ={{background:'white'}}><button style={{fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white'}} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
+                            }
+                            </div>
                         ))}
                 </ul>
                 }
