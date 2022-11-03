@@ -3,9 +3,7 @@ import {createRoot, ReactDOM} from 'react-dom/client';
 import './index.css';
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
-import SurveyPage from './SurveyPage';
 import QuestionPage from './QuestionPage';
-import FeedbackPage from './FeedbackPage';
 import App from './App';
 
 
