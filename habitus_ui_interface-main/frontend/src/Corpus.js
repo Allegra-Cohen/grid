@@ -32,10 +32,9 @@ export default function Corpus({sentences, onChange, apiUrl}) {
     return (
 
             <ul style={{
-                // width:"30em",
-                marginLeft:".2em" //3
-                // height: "50%",
-                // overflow: "scroll"
+                marginLeft:".2em",
+                height: "1200px",
+                overflow: "auto",
             }}>
                 {items}
             </ul>

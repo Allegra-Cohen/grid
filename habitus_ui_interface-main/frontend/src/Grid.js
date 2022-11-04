@@ -65,7 +65,7 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
     let cells = Object.entries(data).map(([colName, v], ix) => <GridCell key={ix} id={rowName+colName} colorValue={v} rowName={rowName} rowContents={rowContents} colName={colName} onChange={onChange} onDrop={onDrop} activateCell={activateCell} isActive={activeCell === rowName+colName} apiUrl={apiUrl} />)
 
     return( <tr>
-        <td style={{textAlign:'right',padding:'1em'}}>{rowName}</td>
+        <td style={{textAlign:'left', padding:'1em'}}>{rowName}</td>
         {cells}
     </tr>)
 }
@@ -123,8 +123,6 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
             <table style={
                 {
                     tableLayout: "fixed",
-                    width: "50em",
-                    textAlign: "center",
                     fontFamily: "InaiMathi"
                 }
             }>
