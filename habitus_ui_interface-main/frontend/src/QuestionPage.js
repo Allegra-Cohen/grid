@@ -63,7 +63,7 @@ function QuestionPage({apiUrl, questionSet}) {
                 ))}
             </ul>
        </div>
-      <div style = {{marginBottom:'500px'}}>
+      <div style = {{marginBottom:'200px'}}>
       {questionSet === 'survey' ? <Link to="/instructions" style = {{marginTop:'10px', marginLeft:'90%', background:'pink'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
       {questionSet === 'test' ? <Link to="/feedback" style = {{marginTop:'10px', marginLeft:'90%', background:'pink'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
       {questionSet === 'feedback' ? <Link to="/thanks" style = {{marginTop:'10px', marginLeft:'80%', background:'pink'}} onClick = {() => handleLinkClick()}> Click here to submit your feedback. </Link> : <div/>}

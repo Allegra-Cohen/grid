@@ -34,8 +34,8 @@ export default function Corpus({sentences, onChange, edit, apiUrl}) {
             <ul style={{
                 // width:"30em",
                 marginLeft:".2em",
-                height:"600px",
-                overflow: edit ? "none" : "auto",
+                height: edit ? "1200px" : "600px",
+                overflow: "auto",
             }}>
                 {items}
             </ul>

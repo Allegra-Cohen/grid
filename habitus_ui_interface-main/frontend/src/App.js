@@ -60,7 +60,7 @@ function App({apiUrl, edit}) {
   return (
       <DndProvider backend={HTML5Backend}>
       {edit === true ?
-      <div style={{display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'5em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
+      <div style={{display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
           contenteditable="true" onInput={
                 (evt) => {
                     console.log(evt.target.lastChild, evt.target.lastChild.toString());
