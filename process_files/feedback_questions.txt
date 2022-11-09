@@ -2,45 +2,36 @@
 			'questionType': 'choose_one',
 			'questionText': '1. How was your experience using the Grid?',
 			'answerOptions': [
-				{ 'answerText': 'a. Terrible'},
-				{ 'answerText': 'b. Not great'},
+				{ 'answerText': 'a. Very poor'},
+				{ 'answerText': 'b. Poor'},
 				{ 'answerText': 'c. Neutral'},
 				{ 'answerText': "d. Good"},
-				{ 'answerText': "e. Great"},
-			]
-		},
-{
-			'questionType': 'choose_one',
-			'questionText': '2. Did you feel that using the Grid was easier than it would have been to organize the information by yourself?',
-			'answerOptions': [
-				{ 'answerText': 'a. Yes'},
-				{ 'answerText': 'b. Maybe'},
-				{ 'answerText': 'c. No'}
+				{ 'answerText': "e. Excellent"},
 			]
 		},
 {
 			'questionType': 'open_answer',
-			'questionText': '3. What was your strategy for organizing the Grid? What was easy and what was difficult?',
+			'questionText': '2. What was your strategy for organizing the Grid?',
 			'answerOptions': []
 		},
 {
 			'questionType': 'open_answer',
-			'questionText': '4. What was your strategy for using the Grid to answer questions? What was easy and what was difficult?',
+			'questionText': '3. What was your strategy for using the Grid to answer questions?',
 			'answerOptions': []
 		},
 {
 			'questionType': 'open_answer',
-			'questionText': '5. What did you like about the Grid?',
+			'questionText': '4. What did you like about the Grid?',
 			'answerOptions': []
 		},
 {
 			'questionType': 'open_answer',
-			'questionText': '6. What did you dislike about the Grid?',
+			'questionText': '5. What did you dislike about the Grid?',
 			'answerOptions': []
 		},
 {
 			'questionType': 'open_answer',
-			'questionText': '7. How does the Grid compare to tools that you use in your work? Please list which tools you use, e.g., specific interview analysis software, the tasks you use them for, e.g., coding interviews, and describe how the Grid compares, e.g., easier/harder to use, more/less specific to the tasks you care about.',
+			'questionText': '6. How does the Grid compare to tools that you use in your work? Please list which tools you use, e.g., specific interview analysis software, the tasks you use them for, e.g., coding interviews, and describe how the Grid compares, e.g., easier/harder to use, more/less specific to the tasks you care about.',
 			'answerOptions': []
 		}
 ]

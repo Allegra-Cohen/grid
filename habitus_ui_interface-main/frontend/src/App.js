@@ -16,15 +16,16 @@ import './SaveBox.css'
 import AnchorBook from './AnchorBook'
 import SynonymBook from './SynonymBook'
 import Trash from './Trash'
+import './info.css';
 import {useEffect, useState} from "react";
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from "react-router-dom";
-
+import Countdown from 'react-countdown';
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
-function App({apiUrl, edit}) {
+function App({apiUrl, edit, timeLimit}) {
     const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
@@ -35,6 +36,16 @@ function App({apiUrl, edit}) {
     const [rowContents, setRowContents] = useState({})
     const [anchorBook, setAnchorBook] = useState({})
     const [synonymBook, setSynonymBook] = useState([])
+    const [disabled, setDisabled] = useState(false);
+
+    const timer = ({ hours, minutes, seconds, completed }) => {
+      if (completed || disabled) {
+        setDisabled(true);
+        return "Done!";
+      } else {
+        return <span>{minutes}:{seconds}</span>;
+      }
+    };
 
     const handleLinkClick = () => {
         fetch(`${apiUrl}/saveGrid/${anchor}`).then( response => response.json());
@@ -59,8 +70,12 @@ function App({apiUrl, edit}) {
 
   return (
       <DndProvider backend={HTML5Backend}>
+      {edit === true ?<div className="info" style={{marginLeft:'84%'}}>
+      Time left: <Countdown date={Date.now() + timeLimit} renderer={timer} /> <br/>
+      <Link to="/instructions2" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
+      </div>:<div/>}
       {edit === true ?
-      <div style={{display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
+      <div style={disabled ? {pointerEvents: "none", opacity: "0.4", display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}: {display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
           contenteditable="true" onInput={
                 (evt) => {
                     console.log(evt.target.lastChild, evt.target.lastChild.toString());
@@ -77,10 +92,7 @@ function App({apiUrl, edit}) {
 
             }> {anchor} </div> : <div style={{marginBottom:'3em'}}/>}
 
-    <div className="App" style={{
-        display: "flex",
-        flexDirection: "row"
-    }}>
+    <div className="App" style={disabled ? {pointerEvents: "none", opacity: "0.4", display: "flex", flexDirection: "row"} : {display: "flex", flexDirection: "row"}}>
     <div style={{
         display: "flex",
         flexDirection: "column",
@@ -213,10 +225,6 @@ function App({apiUrl, edit}) {
       </div>
       </div>
       </div>
-      {edit === true ?
-        <div style={{marginBottom:'20px'}}>
-      <Link to="/test" onClick = {() => handleLinkClick()} style={{marginLeft:'80%', background:'pink'}}>Click to begin answering questions.</Link></div>
-      : <div/>}
     
           </DndProvider>
   );

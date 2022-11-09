@@ -23,9 +23,10 @@
 			'questionText': '3. How often do you interact with qualitative data such as results from qualitative interviews?',
 			'answerOptions': [
 				{ 'answerText': 'a. Never'},
-				{ 'answerText': 'b. Infrequently'},
-				{ 'answerText': 'c. Often'},
-				{ 'answerText': 'd. All the time'},
+				{ 'answerText': 'b. Rarely'},
+				{ 'answerText': 'c. Sometimes'},
+				{ 'answerText': 'd. Often'},
+				{ 'answerText': 'e. Always'},
 			]
 		},
 {
@@ -33,9 +34,10 @@
 			'questionText': '4. How often do you build models, either theoretical (e.g., causal diagrams and equation-based models) or computational (e.g., models written in code)?',
 			'answerOptions': [
 				{ 'answerText': 'a. Never'},
-				{ 'answerText': 'b. Infrequently'},
-				{ 'answerText': 'c. Often'},
-				{ 'answerText': 'd. All the time'},
+				{ 'answerText': 'b. Rarely'},
+				{ 'answerText': 'c. Sometimes'},
+				{ 'answerText': 'd. Often'},
+				{ 'answerText': 'e. Always'},
 			]
 		}
 

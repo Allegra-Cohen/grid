@@ -13,6 +13,7 @@ from starlette.middleware.cors import CORSMiddleware
 import time
 import pandas as pd
 import os
+from datetime import date
 
 app = FastAPI()
 
@@ -240,6 +241,12 @@ class UvicornFrontend(Frontend):
         self.update_track_actions([question_set.name, 'human', 'answer', t, question.question_text, question.given_answers, None])
         return currently_active
 
+    def write_consent(self):
+        consent = "Participant consented to participate in this study on " + str(date.today()) # Put ID number in string
+        filename = 'consent' + '.txt' # Put ID number in here
+        with open(self.path + filename, 'a') as file:
+            file.write(consent)
+
 
 frontend = UvicornFrontend('treatment', '../process_files/', 3, 'harvest', 'allegra_tracking_harvest.csv')
 
@@ -336,6 +343,11 @@ async def answerQuestion(questionSet: str, questionIndex: int, selectedAnswerTex
 async def recordAnswers(questionSet: str):
     print("writing out for ", questionSet)
     return frontend.write_out_answers(questionSet)
+
+@app.get("/recordConsent/")
+async def recordConsent():
+    print("consent for ", None)
+    return frontend.write_consent()
 
 
 
