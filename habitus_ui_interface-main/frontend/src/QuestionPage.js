@@ -13,6 +13,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     const [questions, setQuestions] = useState([]);
     const [clicked, setClicked] = useState([]);
     const [disabled, setDisabled] = useState(false);
+    const [start, setStart] = useState(Date.now());
 
     const timer = ({ hours, minutes, seconds, completed }) => {
       if (completed || disabled) {
@@ -51,7 +52,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
       <DndProvider backend={HTML5Backend}>
       {questionSet === 'test' ?
       <div className="info" style={{marginLeft:'84%'}}>
-      Time left: <Countdown date={Date.now() + timeLimit} renderer={timer} /> <br/>
+      Time left: <Countdown date={start + timeLimit} renderer={timer} /> <br/>
       <Link to="/feedback" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
       </div>
         : <div/>}

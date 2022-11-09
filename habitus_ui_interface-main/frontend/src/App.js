@@ -23,8 +23,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from "react-router-dom";
 import Countdown from 'react-countdown';
 
-// This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
-
 function App({apiUrl, edit, timeLimit}) {
     const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
@@ -37,6 +35,7 @@ function App({apiUrl, edit, timeLimit}) {
     const [anchorBook, setAnchorBook] = useState({})
     const [synonymBook, setSynonymBook] = useState([])
     const [disabled, setDisabled] = useState(false);
+    const [start, setStart] = useState(Date.now());
 
     const timer = ({ hours, minutes, seconds, completed }) => {
       if (completed || disabled) {
@@ -71,7 +70,7 @@ function App({apiUrl, edit, timeLimit}) {
   return (
       <DndProvider backend={HTML5Backend}>
       {edit === true ?<div className="info" style={{marginLeft:'84%'}}>
-      Time left: <Countdown date={Date.now() + timeLimit} renderer={timer} /> <br/>
+      Time left: <Countdown date={start + timeLimit} renderer={timer} /> <br/>
       <Link to="/instructions2" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
       </div>:<div/>}
       {edit === true ?
@@ -121,6 +120,7 @@ function App({apiUrl, edit, timeLimit}) {
             setColNumToName({...evt.col_num_to_name})
         }
        }
+       edit={edit}
     apiUrl={apiUrl} />
     {edit === true ?
     <div style={{display:"flex", flexDirection:"column"}}>

@@ -2,7 +2,7 @@ import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import "./Corpus.css"
 
-function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiUrl}){
+function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, edit, apiUrl}){
     // const gradientArray = ["#fafa6e","#c4ec74","#92dc7e","#64c987","#39b48e","#089f8f","#00898a","#08737f","#215d6e","#2a4858"];
     // const gradientArray = ["#d4a1ff", "#cb99f8","#c292f2","#b88aeb","#af83e5","#a67bde","#9d74d8","#936dd1","#8a66cb","#815fc5","#7758be","#6d51b8","#644bb2","#5a44ac","#4f3ea5", "#44379f", "#393199", "#2c2b93", "#1c268d", "#002087"]; 
     // const gradientArray = ["#fafa6e","#c4ec74","#92dc7e","#64c987","#39b48e","#089f8f","#00898a","#08737f","#215d6e","#2a4858", '#2a4858','#28475b','#28455f','#2a4261','#2f4063','#363d63',
@@ -22,13 +22,15 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
         drop: (item) => {
-            fetch(`${apiUrl}/drag/${rowName}/${colName}/${item.text}`)
-            .then( response => response.json())
-            .then( data => {
-                console.log('data', data);
-                onDrop(data)
-            });
-            console.log([rowName, colName, item]);
+            if (edit){
+                fetch(`${apiUrl}/drag/${rowName}/${colName}/${item.text}`)
+                .then( response => response.json())
+                .then( data => {
+                    console.log('data', data);
+                    onDrop(data)
+                });
+                console.log([rowName, colName, item]);
+            }
         },
         collect: (monitor) => ({
             isOver: monitor.isOver() && rowContents[rowName].includes(monitor.getItem().text)
@@ -45,7 +47,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
 
         onClick={
       (evt) => {
-        fetch(`${apiUrl}/click/${rowName}/${colName}`)
+        fetch(`${apiUrl}/click/${rowName}/${colName}/${edit}`)
             .then( response => response.json())
             .then( response => {console.log(response);
                 console.log(colName);
@@ -59,9 +61,9 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     </td>);
     }
 
-function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, activeCell, apiUrl}){
+function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, activeCell, edit, apiUrl}){
 
-    let cells = Object.entries(data).map(([colName, v], ix) => <GridCell key={ix} id={rowName+colName} colorValue={v} rowName={rowName} rowContents={rowContents} colName={colName} onChange={onChange} onDrop={onDrop} activateCell={activateCell} isActive={activeCell === rowName+colName} apiUrl={apiUrl} />)
+    let cells = Object.entries(data).map(([colName, v], ix) => <GridCell key={ix} id={rowName+colName} colorValue={v} rowName={rowName} rowContents={rowContents} colName={colName} onChange={onChange} onDrop={onDrop} activateCell={activateCell} isActive={activeCell === rowName+colName} edit={edit} apiUrl={apiUrl} />)
 
     return( <tr>
         <td style={{textAlign:'left', padding:'1em'}}>{rowName}</td>
@@ -69,7 +71,7 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
     </tr>)
 }
 
-function Footer({id, colName, frozenColumns, onFooter, apiUrl}){
+function Footer({id, colName, frozenColumns, onFooter, edit, apiUrl}){
     
     return (
     <td key={id}><div style={{
@@ -98,12 +100,12 @@ function Footer({id, colName, frozenColumns, onFooter, apiUrl}){
 
 }
 
-export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, apiUrl}){
+export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, edit, apiUrl}){
     const [activeCell, setActiveCell] = useState();
     const activateCell = (item) => setActiveCell(item);
     console.log(activeCell)
 
-    let gridRows = Object.entries(data).map(([name, cells], ix) => <GridRow key={ix} rowName={name} rowContents={row_contents} data={cells} onChange={onChange} onDrop={onDrop} activateCell={activateCell} activeCell={activeCell} apiUrl={apiUrl} />)
+    let gridRows = Object.entries(data).map(([name, cells], ix) => <GridRow key={ix} rowName={name} rowContents={row_contents} data={cells} onChange={onChange} onDrop={onDrop} activateCell={activateCell} activeCell={activeCell} edit={edit} apiUrl={apiUrl} />)
     // Get the col names from the first row
     // let rowNames = Object.keys(data)
     let rows = Object.values(data);
@@ -114,7 +116,7 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
         let colNames = colIDs.map((colID) => col_num_to_name[colID]);
         // console.log('grid here');
         // console.log(col_num_to_name)
-        footer = colNames.map((name, ix) => <Footer key = {ix} id={ix} colName={name} frozenColumns={frozen_columns} onFooter={onFooter} apiUrl={apiUrl} />)
+        footer = colNames.map((name, ix) => <Footer key = {ix} id={ix} colName={name} frozenColumns={frozen_columns} onFooter={onFooter} edit={edit} apiUrl={apiUrl} />)
     }
 
 
