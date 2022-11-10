@@ -14,3 +14,11 @@ li:nth-child(odd) { background: #F8F8F8; }
 .legend{
     font-family: "InaiMathi";
 }
+
+
+.footer::placeholder {
+  color: var(--placeholder-color);
+  font-family: "InaiMathi";
+  font-size: 12pt;
+  width: max-content;
+}

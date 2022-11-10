@@ -113,17 +113,18 @@ class Grid():
 		#       in their clusters, but not in any other clusters, which gets really complicated in mathematician.
 		all_frozen_docs = self.flatten_lists(frozen_document_lists)
 		documents = [doc for doc in self.documents if doc not in all_frozen_docs]
-		labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists)
+		if len(documents) > 0:
+			labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists)
 
-		# The frozen ones will not be updated.
-		self.update_seeded_clusters(documents, labels)
-		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()] # Need to recalculate this list because you may have lost a seeded cluster or two if they were composed of only documents frozen elsewhere
+			# The frozen ones will not be updated.
+			self.update_seeded_clusters(documents, labels)
+			seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()] # Need to recalculate this list because you may have lost a seeded cluster or two if they were composed of only documents frozen elsewhere
 
-		new_machine_clusters = self.create_machine_clusters(documents, labels, num_clusters)
-		# Replace any machine clusters that already exist, remove extraneous, add any extra.
-		# For now, just remove old and put new on the end, but in the future, preserve order if possible.
-		new_clusters = frozen_clusters + seeded_clusters + new_machine_clusters
-		self.clusters = new_clusters
+			new_machine_clusters = self.create_machine_clusters(documents, labels, num_clusters)
+			# Replace any machine clusters that already exist, remove extraneous, add any extra.
+			# For now, just remove old and put new on the end, but in the future, preserve order if possible.
+			new_clusters = frozen_clusters + seeded_clusters + new_machine_clusters
+			self.clusters = new_clusters
 
 	def export_for_evaluation(self, filename):
 		document_list = [document.readable for document in self.corpus.get_documents()]
