@@ -1,7 +1,7 @@
 version: '3'
 
 volumes:
-  files:
+  results:
     driver: local
 services:
   grid:
@@ -11,4 +11,4 @@ services:
       - 3000:3000
     restart: unless-stopped
     volumes:
-      - files:/grid
+      - results:/grid/habitus_ui_interface-main/process_files/results

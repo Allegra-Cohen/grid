@@ -1,5 +1,6 @@
 # docker build . -t grid
 # docker-compose up -d
+# docker-compose down
 
 FROM ubuntu:20.04
 
