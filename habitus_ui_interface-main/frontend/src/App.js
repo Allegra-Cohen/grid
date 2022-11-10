@@ -97,7 +97,8 @@ function App({apiUrl}) {
         (evt) => {
             console.log('onfooter:', evt);
             setGridRows({...evt.grid});
-            setColNumToName({...evt.col_num_to_name})
+            setColNumToName({...evt.col_num_to_name});
+            setFrozenColumns([...evt.frozen_columns]);
         }
        }
     apiUrl={apiUrl} />

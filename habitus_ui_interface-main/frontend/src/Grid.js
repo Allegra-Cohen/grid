@@ -1,6 +1,7 @@
 import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import "./Corpus.css"
+import "./Grid.css"
 
 function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiUrl}){
     // const gradientArray = ["#fafa6e","#c4ec74","#92dc7e","#64c987","#39b48e","#089f8f","#00898a","#08737f","#215d6e","#2a4858"];
@@ -73,24 +74,26 @@ function Footer({id, colName, frozenColumns, onFooter, apiUrl}){
     
     return (
     <td key={id}><div style={{
-        color: frozenColumns.includes(id) ? 'black' : 'blue'
-    }}
-    contenteditable="true" onInput={
+        color: frozenColumns.includes(id) ? 'black' : 'blue',
+        textAlign: "center",
+        verticalAlign:"top",
+        width: "5em",
+        padding:".1em"
+    }}>
+    {id}.<br/> {colName}<textarea placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}} 
+    onKeyDown={
             (evt) => {
-                console.log(evt.target.lastChild, evt.target.lastChild.toString());
-                if (evt.target.lastChild.toString() === "[object HTMLDivElement]") {
-                    let text = evt.target.textContent.replace("\/", " | ");
+                if(evt.key=="Enter"){
+                    let text = evt.target.value.replace("\/", " | ");
                     fetch(`${apiUrl}/editName/${id}/${text}`)
                     .then( response => response.json())
-                    .then( response => onFooter(response));
-                    console.log("!", text);
-                    evt.target.value = ''; // This clearly isn't dealing with the input field or something.
+                    .then( response => {onFooter(response);
+                        console.log("!!!", response.frozen_columns)
+                    });
+                    evt.target.value = '';
                     evt.target.blur();
-                    window.location.reload() // Wow I hate this! I just can't figure out how to get the <td> to update dynamically without reloading the whole page. Footer is called again by the App to re-render, it just doesn't change contenteditable.
                 }
-            }
-
-        }>{id}. {colName}</div>
+                }}/></div>
     </td>)
 
 }
