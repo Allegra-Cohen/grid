@@ -7,6 +7,7 @@ RUN export TZ=Etc/UTC
 RUN apt update
 RUN DEBIAN_FRONTEND="noninteractive" apt -y install tzdata
 RUN apt -y install apt-utils
+RUN apt -y install curl
 
 # Install Python
 RUN apt -y install python3-pip
@@ -32,7 +33,8 @@ RUN mkdir grid
 ADD . /grid/
 
 RUN apt -y install nodejs
-RUN apt -y install npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt -y install nodejs
 RUN cd /grid/habitus_ui_interface-main/frontend
 RUN npm install
 
