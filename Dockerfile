@@ -1,20 +1,24 @@
 # docker build . -t grid
+# docker-compose up -d
 
 FROM ubuntu:20.04
 
 # Install base packages
 RUN export TZ=Etc/UTC
+RUN export TERM=xterm
 RUN apt update
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN DEBIAN_FRONTEND="noninteractive" apt -y install tzdata
+RUN apt -y install dialog
 RUN apt -y install apt-utils
 RUN apt -y install curl
+RUN apt -y install nano
 
 # Install Python
 RUN apt -y install python3-pip
 RUN apt -y install python3.9
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
 RUN apt -y install python3.9-dev
-RUN apt -y install nano
 
 # Install Python packages
 RUN pip3 install uvicorn==0.18.2
@@ -32,10 +36,10 @@ RUN python3 -c "import nltk; nltk.download('punkt')"
 RUN mkdir grid
 ADD . /grid/
 
-RUN apt -y install nodejs
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt -y install nodejs
-RUN cd /grid/habitus_ui_interface-main/frontend
+WORKDIR /grid/habitus_ui_interface-main/frontend
+# WORKDIR must be defined before this command.
 RUN npm install
 
 # Run the experiment

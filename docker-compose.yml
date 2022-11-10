@@ -1,5 +1,8 @@
 version: '3'
 
+volumes:
+  files:
+    driver: local
 services:
   grid:
     container_name: grid
@@ -7,5 +10,5 @@ services:
     ports:
       - 3000:3000
     restart: unless-stopped
-#    volumes:
-#      - grid_data: /
+    volumes:
+      - files:/grid
