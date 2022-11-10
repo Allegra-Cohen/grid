@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  grid:
+    container_name: grid
+    image: grid:latest
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+#    volumes:
+#      - grid_data: /
