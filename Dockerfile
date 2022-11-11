@@ -34,6 +34,7 @@ RUN pip3 install spacy==3.4.1
 RUN python3 -m spacy download en_core_web_sm
 RUN python3 -c "import nltk; nltk.download('punkt')"
 
+# Install grid and dependencies
 RUN mkdir grid
 ADD . /grid/
 

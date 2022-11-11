@@ -1,20 +1,45 @@
+# Docker use
+
+Build the image from this directory using
+```sh
+docker build . -t grid
+```
+
+Start the container from this directory with
+```sh
+docker-compose up -d
+```
+and stop the container with
+```sh
+docker-compose down
+```
+
+<hr>
+
+## Notes for preparing the image
+
+### Get docker started
+1. volume create grid_volume
 1. docker run --name grid_container --volume grid_volume -it -p3000:3000 ubuntu:20.04 /bin/bash
-or
-1. docker run --name grid_container --volume grid_volume -it -p3000:3000 ubuntu:22.04 /bin/bash
 
+### Install base packages
 1. export TZ=Etc/UTC
-1. export DEBIAN_FRONTEND=noninteractive
+1. export TERM=xterm
 1. apt update
-1. apt -y install dialog # optional
-1. apt -y install tzdata
+1. echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+1. export DEBIAN_FRONTEND=noninteractive apt -y install tzdata
+1. apt -y install dialog
+1. apt -y install apt-utils
+1. apt -y install curl
+1. apt -y install nano
 
-1. apt -y install python3-pip
-# These are not needed for Ubuntu 22.04.
+### Install Python
+1. apt -y install python3-pip # will install python 3.8
 1. apt -y install python3.9
-1. update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
+1. update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
 1. apt -y install python3.9-dev
-1. apt -y install python3.10-dev
 
+### Install Python packages
 1. pip3 install uvicorn==0.18.2
 1. pip3 install fastapi==0.80.0
 1. pip3 install gensim==3.8.3
@@ -23,25 +48,24 @@ or
 1. pip3 install sklearn==0.0
 1. pip3 install spacy==3.4.1
 
+### Install Python data
 1. python3 -m spacy download en_core_web_sm
 1. python3 -c "import nltk; nltk.download('punkt')"
 
-1. docker cp . grid_container:/grid
 
-1. cd grid
+### Install grid and dependencies
+1. mkdir grid
+1. docker cp . grid_container:/grid # from outside this shell
+
 1. curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 1. apt -y install nodejs
-
-1. cd habitus_ui_interface-main/frontend
+1. cd /grid/habitus_ui_interface-main/frontend
 1. npm install
-1. cd ..
 
-# This is only a test
-1. cd backend
-1. python3 control_panel.py
-1. cd ..
-
+### Run the experiment
+1. cd /grid/habitus_ui_interface-main
 1. python3 -m uvicorn --reload main2:app &
 1. cd frontend
 1. npm start
 
+Now access the experiment via http://localhost:3000.
