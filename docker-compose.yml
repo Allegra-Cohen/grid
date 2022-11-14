@@ -1,0 +1,14 @@
+version: '3'
+
+volumes:
+  results:
+    driver: local
+services:
+  grid:
+    container_name: grid
+    image: grid:latest
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - results:/grid/habitus_ui_interface-main/process_files/results
