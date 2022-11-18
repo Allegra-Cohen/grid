@@ -149,14 +149,12 @@ def generate_clusters(docs, doc_distances):
 # Quality measures --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Quality measures
 def within(ci: list[Document], doc_distances) -> float:
 	ni = len(ci)
-	
-	distances = distance_within_cluster(ci, doc_distances)
-
-	score = np.divide(1, (ni * (ni - 1)) )*np.sum(distances)
-	if np.isinf(score):
-		return np.nan
+	if ni > 1:
+		distances = distance_within_cluster(ci, doc_distances)
+		score = np.divide(1, (ni * (ni - 1)) )*np.sum(distances)
 	else:
-		return score
+		score = np.nan # No within distance for a single document cluster
+	return score
 
 def between(ci: list[Document], clusters: list[list[Document]], doc_count: int, doc_distances) -> float:
 	ni = len(ci)
@@ -165,7 +163,7 @@ def between(ci: list[Document], clusters: list[list[Document]], doc_count: int, 
 	cj = []
 	for cluster in clusters:
 		for doc in cluster:
-			if doc not in ci:
+			if doc not in ci and doc not in cj:
 				cj.append(doc)
 
 	for dr in ci:
@@ -173,11 +171,11 @@ def between(ci: list[Document], clusters: list[list[Document]], doc_count: int, 
 			dist = doc_distances[dr.get_index(), ds.get_index()]
 			distances.append(dist)
 
-	score = np.divide(1, (ni * (doc_count - ni))) * np.sum(distances)
-	if np.isinf(score):
-		return np.nan
+	if ni != doc_count:
+		score = np.divide(1, (ni * (doc_count - ni))) * np.sum(distances)
 	else:
-		return score
+		score = np.nan # No between distance if all documents are in the cluster
+	return score
 
 def neighborhood(ci: list[Document], doc_distances, siblings: list[list[Document]]) -> float:
 	sib = None
@@ -201,14 +199,13 @@ def growth(ci: list[Document], doc_distances, siblings: list[list[Document]]) ->
 	w_sum_i = np.sum(distance_within_cluster(ci, doc_distances))
 	w_sum_j = np.sum(distance_within_cluster(cj, doc_distances))
 	ni, nj = len(ci), len(cj)
-	within_children = (w_sum_i + w_sum_j) / (ni*(ni - 1) + nj*(nj - 1))
 
-	g = d_between / within_children
-
-	if np.isinf(g):
+	if ni != 1 or nj != 1:
+		within_children = (w_sum_i + w_sum_j) / (ni*(ni - 1) + nj*(nj - 1))
+		g = d_between / within_children
+		return g
+	else:
 		return np.nan
-
-	return g
 
 
 
@@ -270,8 +267,10 @@ def C_score(docs, clusters):
 	w = withinness(clusters)
 
 	# print("Num docs: ", n, ", num clusters: ", k, ", betweenness: ", b, "withinness: ", w)
-
-	return (b * (n - k))/(w * (k - 1))
+	if k > 1:
+		return (b * (n - k))/(w * (k - 1))
+	else:
+		return np.nan # Don't want a single cluster
 
 # Generate models -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Generate models
 def gamma_slide(docs, sorted_tuples, modified_clusters = None):
@@ -283,7 +282,7 @@ def gamma_slide(docs, sorted_tuples, modified_clusters = None):
 		score, cluster = score_tuple[0], score_tuple[1]
 		scores.append(score)
 		clusters.append(cluster)
-	
+
 	last_C, last_tuple = -100000, None
 	current_C = 0, None
 
@@ -310,7 +309,6 @@ def gamma_slide(docs, sorted_tuples, modified_clusters = None):
 		gamma = len(list(set([c.stripped for c in list(itertools.chain.from_iterable(clusters_g))])))/len_docs
 
 		current_C = C_score(docs, clusters_g)
-		# print("Gamma: ", gamma, ", score: ", current_C, "\n")
 		
 		# check if C_score is less than last C_score, if so, take the last C_score (local maximum)
 		if current_C < last_C:
@@ -319,10 +317,7 @@ def gamma_slide(docs, sorted_tuples, modified_clusters = None):
 			last_C = current_C
 			last_tuple = (gamma, clusters_g, current_C)
 
-	if modified_clusters:
-		return (gamma, modified_clusters + clusters_g, current_C)
-	else:
-		return (gamma, clusters_g, current_C)
+	return last_tuple
 
 
 def get_best_initial_model(docs, sorted_qualities, quality_names, modified_clusters = None):
@@ -334,7 +329,6 @@ def get_best_initial_model(docs, sorted_qualities, quality_names, modified_clust
 
 		if current_score > best_score:
 			best_model, best_score = current_model, current_score
-			# print(current_score, quality_names[i], best_model[1])
 
 	return best_model
 
@@ -466,6 +460,8 @@ def maximization(documents, doc_to_seeded, categories, ps_cat, ps_word_given_cat
 
 def run_expect_max(documents: list[Document], seeded_clusters: list[list[Document]], categories, words: list[str], word_indices: dict[str, int], words_in_docs: list[str],
 		word_vectorizer, counts, rndgen, soft = False, num_loops = 5):
+
+	documents = [d for d in documents if "labor" not in d.readable]
 	ps_cat_given_doc = np.zeros((len(documents), len(categories)))
 
 	q = len(categories)
@@ -495,16 +491,16 @@ def run_expect_max(documents: list[Document], seeded_clusters: list[list[Documen
 
 		ps_cat_given_doc = maximization(documents, doc_to_seeded, categories, ps_cat, ps_word_given_cat, word_indices)
 
-		labels = []
-		threshold = calculate_soft_threshold(ps_cat_given_doc)
-		for i, pcd in enumerate(ps_cat_given_doc): # These are in the order of docs
-			if np.sum(doc_to_seeded[i, :]) > 0:
-				labels.append(list(np.where(doc_to_seeded[i, :] == 1.0)[0]))
+	labels = []
+	threshold = calculate_soft_threshold(ps_cat_given_doc)
+	for i, pcd in enumerate(ps_cat_given_doc): # These are in the order of docs
+		if np.sum(doc_to_seeded[i, :]) > 0:
+			labels.append(list(np.where(doc_to_seeded[i, :] == 1.0)[0]))
+		else:
+			if soft:
+				labels.append(pick_soft_labels(pcd, threshold, categories, doc_to_seeded)) # You need to override the label-picking because if the user puts the doc in too many categories, soft labeling won't preserve the choice.
 			else:
-				if soft:
-					labels.append(pick_soft_labels(pcd, threshold, categories, doc_to_seeded)) # You need to override the label-picking because if the user puts the doc in too many categories, soft labeling won't preserve the choice.
-				else:
-					labels.append(pick_single_label(pcd, doc_to_seeded, rndgen))
+				labels.append(pick_single_label(pcd, doc_to_seeded, rndgen))
 	return labels
 
 

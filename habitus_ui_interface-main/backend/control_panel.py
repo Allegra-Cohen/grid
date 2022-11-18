@@ -114,7 +114,7 @@ class ControlPanel(Frontend):
 				_, frozen_or_seeded, concept = user_input.split(' ')
 				frozen, seeded, concept = frozen_or_seeded == 'f', frozen_or_seeded == 's', concept
 				if frozen or seeded:
-					self.grid.create_human_cluster(frozen, concept)
+					self.grid.create_human_cluster(concept)
 
 			elif user_input.startswith(freeze_command):
 				_, cluster_index = user_input.split(' ')
