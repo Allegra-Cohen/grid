@@ -70,8 +70,9 @@ class Corpus():
 
 	def save_vectors(self, documents: list[Document]):
 		print("Calculating vector embeddings ... \n ")
-		# model = api.load('word2vec-google-news-300')
-		filename = "/Users/allegracohen/Documents/Postdoc/habitus/odin_project/keith_glove/glove_to_word2vec.habitus1.300d.txt"
+		# model = api.load(self.path + 'resources/word2vec-google-news-300')
+		filename = self.path + "resources/glove_to_word2vec.habitus1.300d.txt"
+		print("Loading model for a long time...\n")
 		model = KeyedVectors.load_word2vec_format(filename)
 		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, model, self.tfidf, self.linguist.tfidf_vectorizer, self.pmi, self.anchor, self.tfidf_pmi_weight)
 		np.save(self.path + self.root_filename + '_doc_distances_lem.npy', doc_distances)
