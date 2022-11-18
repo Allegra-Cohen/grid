@@ -11,4 +11,5 @@ services:
       - 3000:3000
     restart: unless-stopped
     volumes:
-      - results:/grid/habitus_ui_interface-main/process_files/results
+      - ./process_files/resources:/grid/process_files/resources
+      - results:/grid/process_files/results
