@@ -1,10 +1,12 @@
 __pycache__/
 .git/
 .vscode/
-resources/
 Dockerfile
 docker-compose.yml
 .dockerignore
 .gitignore
 DOCKER.md
 README.md
+
+process_files/resources/
+
