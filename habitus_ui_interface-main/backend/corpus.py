@@ -26,7 +26,7 @@ class Corpus():
 		self.documents: list[Document] = self.load_anchored_documents()
 		self.initialize(recalculate_pmi, recalculate_vectors)
 
-	def initialize(self, recalculate_pmi, recalculate_vectors):
+	def initialize(self, recalculate_pmi: bool, recalculate_vectors: bool):
 		vector_texts = [document.get_vector_text() for document in self.documents]
 		self.counts = self.linguist.word_vectorizer.fit_transform(vector_texts).toarray()
 		self.words = self.linguist.word_vectorizer.get_feature_names_out()
@@ -70,15 +70,14 @@ class Corpus():
 
 	def save_vectors(self, documents: list[Document]):
 		print("Calculating vector embeddings ... \n ")
-		# model = api.load('word2vec-google-news-300')
-		filename = "/Users/allegracohen/Documents/Postdoc/habitus/odin_project/keith_glove/glove_to_word2vec.habitus1.300d.txt"
+		# model = api.load(self.path + 'resources/word2vec-google-news-300')
+		filename = self.path + "resources/glove_to_word2vec.habitus1.300d.txt"
+		print(f"Loading model {filename} for a long time...\n")
 		model = KeyedVectors.load_word2vec_format(filename)
 		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, model, self.tfidf, self.linguist.tfidf_vectorizer, self.pmi, self.anchor, self.tfidf_pmi_weight)
 		np.save(self.path + self.root_filename + '_doc_distances_lem.npy', doc_distances)
 		with open(self.path + self.root_filename + '_doc_vecs_lem.json', 'w') as file:
 			json.dump({k: v.tolist() for k, v in doc_vecs.items()}, file) 
-
-
 
 	def adjust_for_anchor(self, key, value, add_or_remove):
 		if add_or_remove == "'add'":

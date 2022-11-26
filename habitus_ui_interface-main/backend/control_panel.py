@@ -6,8 +6,11 @@ from frontend import Frontend
 class ControlPanel(Frontend):
 	def __init__(self, path: str, k: int):
 		super().__init__(path)
-		self.anchor = sys.argv[1]
-		self.grid = self.backend.get_grid(k, self.anchor, self.anchor)
+		anchor = sys.argv[1]
+		flag = sys.argv[2]
+		if not (flag == "treatment" or flag == "control"):
+			raise RuntimeError(f"Unknown flag: {flag}")
+		self.grid = self.backend.get_grid(flag, k, anchor, anchor)
 		self.copy_on = False
 		self.show_clusters()
 
