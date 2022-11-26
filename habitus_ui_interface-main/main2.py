@@ -266,7 +266,7 @@ class UvicornFrontend(Frontend):
             file.write(consent)
 
 
-frontend = UvicornFrontend(0, 'treatment', '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans')
+frontend = UvicornFrontend(0, 'treatment', '../process_files/', 6, 'harvest', 'results/tracking', 'kmeans')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get

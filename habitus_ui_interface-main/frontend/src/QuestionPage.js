@@ -38,12 +38,15 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
         fetch(`${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${answerText}`)
             .then( response => response.json())
             .then( data => {
-                setClicked(data);
+                if (data instanceof Array) {
+                    setClicked(data);
+                } else{
+                    setClicked([]);
+                }
             });
     };
 
     const handleLinkClick = () => {
-        console.log("AAAAAH")
         fetch(`${apiUrl}/recordAnswers/${questionSet}`).then( response => response.json());
         setClicked = []
     }
@@ -69,7 +72,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
                         {question.answerOptions.map((answerOption, j) => (
                             <div>
                             {answerOption.answerText === "d. Other" ? <li style ={{background:'white'}}><textarea placeholder="Other" onChange={(evt) => handleAnswerOptionClick(i, evt.target.value)}/></li>
-                            : <li style ={{background:'white'}}><button style={{fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white'}} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
+                            : <li style ={{background:'white'}}><button style={{fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white' }} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
                             }
                             </div>
                         ))}
