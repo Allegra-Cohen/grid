@@ -5,10 +5,11 @@ from cluster import Cluster
 from corpus import Corpus
 from document import Document
 from surdeanu2005 import Surdeanu2005
+from soft_kmeans import SoftKMeans
 from randomCluster import Random
 
 class Grid():
-	def __init__(self, flag: str, path: str, root_filename: str, corpus, k: int, synonym_book, clusters: list[Cluster] = []):
+	def __init__(self, flag: str, path: str, root_filename: str, corpus, k: int, synonym_book, clustering_algorithm, clusters: list[Cluster] = []):
 		self.flag = flag
 		self.path = path
 		self.root_filename = root_filename
@@ -25,13 +26,16 @@ class Grid():
 		self.trash = []
 
 		if flag == 'treatment' or flag == 'control': # Even control condition needs an initial clustering
-			self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
+			if clustering_algorithm == 'surdeanu':
+				self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
+			else:
+				self.cluster_generator = SoftKMeans(self.corpus, self.linguist)
 		else:
 			self.cluster_generator = Random(self.corpus, self.linguist)
 
 	@classmethod
-	def generate(cls, flag: str, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book):
-		grid = cls(flag, path, root_filename, corpus, k, synonym_book)
+	def generate(cls, flag: str, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
+		grid = cls(flag, path, root_filename, corpus, k, synonym_book, clustering_algorithm)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		grid.generate_clusters()
 		return grid
@@ -114,7 +118,7 @@ class Grid():
 		all_frozen_docs = self.flatten_lists(frozen_document_lists)
 		documents = [doc for doc in self.documents if doc not in all_frozen_docs]
 		if len(documents) > 0:
-			labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists)
+			labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists, all_frozen_docs)
 
 			# The frozen ones will not be updated.
 			self.update_seeded_clusters(documents, labels)

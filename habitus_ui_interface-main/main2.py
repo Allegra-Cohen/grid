@@ -26,13 +26,14 @@ app.add_middleware(
 )
 
 class UvicornFrontend(Frontend):
-    def __init__(self, user_id, flag: str, path: str, k: int, anchor: str, tracking_prefix: str):
+    def __init__(self, user_id, flag: str, path: str, k: int, anchor: str, tracking_prefix: str, clustering_algorithm: str):
         super().__init__(path)
         self.user_id = user_id
         self.question_sets = {'survey': QA('survey', path, 'survey_questions.txt'), 'test': QA('test', path, 'test_questions.txt'), 'feedback': QA('feedback', path, 'feedback_questions.txt')}
         self.flag = flag
         self.path = path
-        self.grid = self.backend.get_grid(self.flag, k, anchor, anchor)
+        self.clustering_algorithm = clustering_algorithm
+        self.grid = self.backend.get_grid(self.flag, k, anchor, anchor, self.clustering_algorithm)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
@@ -93,7 +94,7 @@ class UvicornFrontend(Frontend):
 
     def load_new_grid(self, newAnchor: str):
         k = self.grid.k
-        self.grid = self.backend.get_grid(self.flag, k, newAnchor, newAnchor)
+        self.grid = self.backend.get_grid(self.flag, k, newAnchor, newAnchor, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
         self.update_track_actions([self.round, 'human', 'new_grid', t, 'grid', newAnchor, None])
@@ -114,7 +115,7 @@ class UvicornFrontend(Frontend):
     def load_grid(self, anchor):
         t = time.time()
         self.round = 0
-        grid = self.backend.load_grid(self.flag, anchor)
+        grid = self.backend.load_grid(self.flag, anchor, self.clustering_algorithm)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
         self.copy_on = False
@@ -265,7 +266,7 @@ class UvicornFrontend(Frontend):
             file.write(consent)
 
 
-frontend = UvicornFrontend(0, 'treatment', '../process_files/', 3, 'harvest', 'results/tracking')
+frontend = UvicornFrontend(0, 'treatment', '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
