@@ -9,7 +9,7 @@ class QA():
 
 		# Open up the questions filename
 		with open(path + filename, 'r') as file:
-		    qset = file.read().replace('\n', '').replace('\t', '').strip()
+			qset = file.read().replace('\n', '').replace('\t', '').strip()
 		listDict = ast.literal_eval(qset)
 
 		self.listDict = listDict

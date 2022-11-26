@@ -7,3 +7,6 @@ docker-compose.yml
 .gitignore
 DOCKER.md
 README.md
+
+process_files/resources/
+
