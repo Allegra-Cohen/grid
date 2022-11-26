@@ -24,10 +24,11 @@ app.add_middleware(
 )
 
 class UvicornFrontend(Frontend):
-    def __init__(self, path: str, k: int, anchor: str, tracking_filename: str):
+    def __init__(self, path: str, k: int, anchor: str, tracking_filename: str, clustering_algorithm: str):
         super().__init__(path)
         self.path = path
-        self.grid = self.backend.get_grid(k, anchor, anchor)
+        self.clustering_algorithm = clustering_algorithm
+        self.grid = self.backend.get_grid(k, anchor, anchor, self.clustering_algorithm)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
@@ -85,7 +86,7 @@ class UvicornFrontend(Frontend):
 
     def load_new_grid(self, newAnchor: str):
         k = self.grid.k
-        self.grid = self.backend.get_grid(k, newAnchor, newAnchor)
+        self.grid = self.backend.get_grid(k, newAnchor, newAnchor, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
         self.update_track_actions([self.round, 'human', 'new_grid', t, 'grid', newAnchor, None])
@@ -106,7 +107,7 @@ class UvicornFrontend(Frontend):
     def load_grid(self, anchor):
         t = time.time()
         self.round = 0
-        grid = self.backend.load_grid(anchor)
+        grid = self.backend.load_grid(anchor, self.clustering_algorithm)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
         self.copy_on = False
@@ -219,7 +220,7 @@ class UvicornFrontend(Frontend):
         pd.DataFrame(self.track_actions).to_csv(self.path + self.tracking_filename) # Just rewrite every time. Slower than appending?
 
 
-frontend = UvicornFrontend('../process_files/', 6, 'harvest', 'allegra_tracking_harvest.csv')
+frontend = UvicornFrontend('../process_files/', 6, 'harvest', 'allegra_tracking_harvest.csv', 'kmeans')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get

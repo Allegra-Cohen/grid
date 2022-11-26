@@ -37,14 +37,14 @@ class Backend():
 
 	# TODO: Right now filename is also the anchor. frontend needs to handle getting a filename from the GUI and passing it here.
 	#       Suggest that filename should be provided when the user creates the Grid (a process which isn't supported yet.)
-	def get_grid(self, k: int, anchor: str, filename: str) -> Grid:
+	def get_grid(self, k: int, anchor: str, filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
 		self.set_up_corpus(filename, anchor)
-		grid = Grid.generate(self.path, filename, self.corpus, k, self.synonym_book)
+		grid = Grid.generate(self.path, filename, self.corpus, k, self.synonym_book, clustering_algorithm)
 		return grid
 
 
-	def load_grid(self, filename: str) -> Grid:
+	def load_grid(self, filename: str, clustering_algorithm: str) -> Grid:
 		print("Loading grid from root filename ", filename)
 		try:
 			anchor = list(pd.read_csv(self.path + filename + '_anchor.csv')['anchor'])[0]
@@ -54,7 +54,7 @@ class Backend():
 			col_names = pd.unique(cells['col'])
 			clusters = self.load_clusters(cells, col_names)
 			k = len(col_names)
-			grid = Grid(self.path, filename, self.corpus, k, self.synonym_book, clusters)
+			grid = Grid(self.path, filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
 		except FileNotFoundError:
 			print("That grid doesn't exist. Try creating it and saving it.")
 			grid = None
