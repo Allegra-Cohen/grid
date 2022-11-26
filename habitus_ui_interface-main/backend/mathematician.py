@@ -149,14 +149,12 @@ def generate_clusters(docs, doc_distances):
 # Quality measures --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Quality measures
 def within(ci: list[Document], doc_distances) -> float:
 	ni = len(ci)
-	
-	distances = distance_within_cluster(ci, doc_distances)
-
-	score = np.divide(1, (ni * (ni - 1)) )*np.sum(distances)
-	if np.isinf(score):
-		return np.nan
+	if ni > 1:
+		distances = distance_within_cluster(ci, doc_distances)
+		score = np.divide(1, (ni * (ni - 1)) )*np.sum(distances)
 	else:
-		return score
+		score = np.nan
+	return score
 
 def between(ci: list[Document], clusters: list[list[Document]], doc_count: int, doc_distances) -> float:
 	ni = len(ci)
@@ -165,7 +163,7 @@ def between(ci: list[Document], clusters: list[list[Document]], doc_count: int, 
 	cj = []
 	for cluster in clusters:
 		for doc in cluster:
-			if doc not in ci:
+			if doc not in ci and doc not in cj:
 				cj.append(doc)
 
 	for dr in ci:
@@ -173,11 +171,11 @@ def between(ci: list[Document], clusters: list[list[Document]], doc_count: int, 
 			dist = doc_distances[dr.get_index(), ds.get_index()]
 			distances.append(dist)
 
-	score = np.divide(1, (ni * (doc_count - ni))) * np.sum(distances)
-	if np.isinf(score):
-		return np.nan
+	if ni != doc_count:
+		score = np.divide(1, (ni * (doc_count - ni))) * np.sum(distances)
 	else:
-		return score
+		score = np.nan
+	return score
 
 def neighborhood(ci: list[Document], doc_distances, siblings: list[list[Document]]) -> float:
 	sib = None
@@ -201,14 +199,13 @@ def growth(ci: list[Document], doc_distances, siblings: list[list[Document]]) ->
 	w_sum_i = np.sum(distance_within_cluster(ci, doc_distances))
 	w_sum_j = np.sum(distance_within_cluster(cj, doc_distances))
 	ni, nj = len(ci), len(cj)
-	within_children = (w_sum_i + w_sum_j) / (ni*(ni - 1) + nj*(nj - 1))
-
-	g = d_between / within_children
-
-	if np.isinf(g):
+	
+	if ni != 1 or nj != 1:
+		within_children = (w_sum_i + w_sum_j) / (ni*(ni - 1) + nj*(nj - 1))
+		g = d_between / within_children
+		return g
+	else:
 		return np.nan
-
-	return g
 
 
 
@@ -270,8 +267,10 @@ def C_score(docs, clusters):
 	w = withinness(clusters)
 
 	# print("Num docs: ", n, ", num clusters: ", k, ", betweenness: ", b, "withinness: ", w)
-
-	return (b * (n - k))/(w * (k - 1))
+	if k > 1:
+		return (b * (n - k))/(w * (k - 1))
+	else:
+		return np.nan # Don't want a single cluster
 
 # Generate models -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- Generate models
 def gamma_slide(docs, sorted_tuples, modified_clusters = None):
@@ -310,7 +309,6 @@ def gamma_slide(docs, sorted_tuples, modified_clusters = None):
 		gamma = len(list(set([c.stripped for c in list(itertools.chain.from_iterable(clusters_g))])))/len_docs
 
 		current_C = C_score(docs, clusters_g)
-		# print("Gamma: ", gamma, ", score: ", current_C, "\n")
 		
 		# check if C_score is less than last C_score, if so, take the last C_score (local maximum)
 		if current_C < last_C:
@@ -319,10 +317,7 @@ def gamma_slide(docs, sorted_tuples, modified_clusters = None):
 			last_C = current_C
 			last_tuple = (gamma, clusters_g, current_C)
 
-	if modified_clusters:
-		return (gamma, modified_clusters + clusters_g, current_C)
-	else:
-		return (gamma, clusters_g, current_C)
+	return last_tuple
 
 
 def get_best_initial_model(docs, sorted_qualities, quality_names, modified_clusters = None):
@@ -334,7 +329,6 @@ def get_best_initial_model(docs, sorted_qualities, quality_names, modified_clust
 
 		if current_score > best_score:
 			best_model, best_score = current_model, current_score
-			# print(current_score, quality_names[i], best_model[1])
 
 	return best_model
 
