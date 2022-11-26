@@ -1,5 +1,5 @@
 [{
-			'questionType': 'choose_one',
+			'questionType': 'select_all',
 			'questionText': '1. What could cause a farmer to harvest late? (Select all that apply.)',
 			'answerOptions': [
 				{ 'answerText': 'a. Bird attacks'},
