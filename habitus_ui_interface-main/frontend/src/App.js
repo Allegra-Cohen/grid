@@ -23,7 +23,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from "react-router-dom";
 import Countdown from 'react-countdown';
 
-function App({apiUrl, edit, timeLimit}) {
+function App({apiUrl, edit, training, timeLimit}) {
     const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
@@ -51,7 +51,7 @@ function App({apiUrl, edit, timeLimit}) {
     }
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/${edit}`)
+        fetch(`${apiUrl}/data/${edit}/${training}`)
             .then( response => response.json())
             .then( data => {
                 setFlag(data.flag);
@@ -69,7 +69,7 @@ function App({apiUrl, edit, timeLimit}) {
 
   return (
       <DndProvider backend={HTML5Backend}>
-      {edit === true ?<div className="info" style={{marginLeft:'84%'}}>
+      {edit === true & training === false ?<div className="info" style={{marginLeft:'84%'}}>
       Time left: <Countdown date={start + timeLimit} renderer={timer} /> <br/>
       <Link to="/instructions2" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
       </div>:<div/>}
@@ -155,20 +155,11 @@ function App({apiUrl, edit, timeLimit}) {
       }
       apiUrl={apiUrl}/>
 
-      <Trash className='Trash' onDrop={
-        (evt) => {
-                  console.log(evt);
-                  console.log('trash!', evt);
-                  setCorpus(evt.clicked_sentences);
-                  setGridRows(evt.grid);
-                  setColNumToName(evt.col_num_to_name)}
-       }
-       apiUrl={apiUrl}/>
        </div>
 
       </div>
         : <div/>}
-      {edit === true ?
+      {edit === true & training === false ?
       <div style={{marginLeft:'4em', marginTop:'3em', borderColor:'blue'}}><u>GUIDE</u><ul>
       <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Clicking:</b> Click on cells to view sentences. Colors indicate the amount of knowledge in each cell. Click on sentences to see them in the larger interview context.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>- Some sentences have more than one topic and can appear in more than one column.</li>
@@ -211,7 +202,7 @@ function App({apiUrl, edit, timeLimit}) {
       onChange={(evt) => {console.log(evt);
                           console.log('sentence click!');
                           setContext(evt)}}
-       edit={edit}
+       edit={edit} training={training}
        apiUrl={apiUrl} />
        </div>
               <div style={{

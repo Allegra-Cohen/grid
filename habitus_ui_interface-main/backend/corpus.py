@@ -59,6 +59,8 @@ class Corpus():
 
 	# The loaded vectors are stored directly in the documents.
 	def load_vectors(self, filename: str, documents: list[Document], recalculate: bool):
+		print(filename)
+		print(recalculate)
 		if (not os.path.isfile(self.path + filename)) or recalculate:
 			self.save_vectors(self.documents)
 

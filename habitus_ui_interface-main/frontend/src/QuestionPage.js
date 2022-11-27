@@ -25,7 +25,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     };
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/${true}`)
+        fetch(`${apiUrl}/data/${true}/${false}`)
             .then( response => response.json())
             .then( data => {
                 setQuestions(data['question_sets'][questionSet]['listDict']);
@@ -61,7 +61,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
         : <div/>}
       {questionSet === 'survey' ? <div className = 'info' style = {{width: 'max-content', marginTop:'1%', marginLeft:'1%', fontSize:'14pt'}}> Please answer these questions about your professional background: </div> : <div/>}
       {questionSet === 'feedback' ? <div className = 'info' style = {{width: 'max-content', marginTop:'1%', marginLeft:'1%', fontSize:'14pt'}}> Please answer the questions below about your experience using the Grid: </div> : <div/>}
-      {questionSet === 'test' ? <div style={disabled ? {pointerEvents: "none", opacity: "0.4"}:{}}><App apiUrl="http://localhost:8000" edit={false} timeLimitGrid={timeLimit}/></div>: <div/>}
+      {questionSet === 'test' ? <div style={disabled ? {pointerEvents: "none", opacity: "0.4"}:{}}><App apiUrl="http://localhost:8000" edit={false} training={false} timeLimitGrid={timeLimit}/></div>: <div/>}
       <div className='question-section' style = {disabled ? {pointerEvents: "none", opacity: "0.4", marginTop:'1%', marginLeft:'1.2%', fontSize:'12pt'} : {marginTop:'1%', marginLeft:'1.2%', fontSize:'12pt'}}>
             <ul className='question-content' style={{columns: questionSet === 'test' ? 2 : 1}}> {questions.map((question, i) => (
                 <div style={{marginBottom:'3%'}}>

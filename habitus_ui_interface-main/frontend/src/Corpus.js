@@ -24,7 +24,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
     >{text} {isDragging}</li>
 }
 
-export default function Corpus({sentences, onChange, edit, apiUrl}) {
+export default function Corpus({sentences, onChange, edit, training, apiUrl}) {
 
     const [activeSentence, setActiveSentence] = useState();
     const activateSentence = (item) => setActiveSentence(item);
@@ -34,7 +34,7 @@ export default function Corpus({sentences, onChange, edit, apiUrl}) {
 
             <ul className = 'corpus' id='style-3'style={{
                 marginLeft:".2em",
-                height: edit ? "75em" : "35em",
+                height: edit & !training ? "75em" : "35em",
                 overflowY: "scroll"
             }}><div class="force-overflow">
                 {items}

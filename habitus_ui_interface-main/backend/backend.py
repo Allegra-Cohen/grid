@@ -31,31 +31,37 @@ class Backend():
 
 		if not os.path.isfile(self.path + 'cleaned_docs.csv'):
 			Corpus.clean_corpus(self.path, self.corpus_filename, 'cleaned_docs.csv', self.synonym_book) # TODO: remove synonym_book and too_common from linguist methods
-		
-		self.clean_corpus_filename = 'cleaned_docs.csv'
 
 
 	# TODO: Right now filename is also the anchor. frontend needs to handle getting a filename from the GUI and passing it here.
 	#       Suggest that filename should be provided when the user creates the Grid (a process which isn't supported yet.)
 	def get_grid(self, flag: str, k: int, anchor: str, filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
-		self.set_up_corpus(filename, anchor)
+		clean_corpus_filename = 'cleaned_docs.csv'
+		self.set_up_corpus(filename, clean_corpus_filename, anchor)
 		grid = Grid.generate(flag, self.path, filename, self.corpus, k, self.synonym_book, clustering_algorithm)
 		return grid
 
 
 	def load_grid(self, flag: str, filename: str, clustering_algorithm: str) -> Grid:
+
 		print("Loading grid from root filename ", filename)
 		try:
-			anchor = list(pd.read_csv(self.path + filename + '_anchor.csv')['anchor'])[0]
-			self.set_up_corpus(filename, anchor)
+			if filename == "training":
+				anchor = 'horticulture'
+				clean_corpus_filename = "training_docs.csv"
+				self.set_up_corpus(filename+'_docs', clean_corpus_filename, anchor)
+			else:
+				clean_corpus_filename = "cleaned_docs.csv"
+				anchor = list(pd.read_csv(self.path + filename + '_anchor.csv')['anchor'])[0]
+				self.set_up_corpus(filename, clean_corpus_filename, anchor)
 
 			cells = pd.read_csv(self.path + filename + '_cells.csv')
 			col_names = pd.unique(cells['col'])
 			clusters = self.load_clusters(cells, col_names)
 			k = len(col_names)
 			grid = Grid(flag, self.path, filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
-			
+
 		except FileNotFoundError:
 			print("That grid doesn't exist. Try creating it and saving it.")
 			grid = None
@@ -63,19 +69,19 @@ class Backend():
 		return grid
 
 
-	def set_up_corpus(self, filename: str, anchor: str):
+	def set_up_corpus(self, filename: str, clean_corpus_filename, anchor: str):
 		# Get rows and Linguist set up
 		self.rows = [Row('other'), Row('proportions'), Row('processes'), Row('decisions'), Row('conditions'), Row('causes'), Row('all')]
 		# self.rows = [Row('other'), Row('proportion'), Row('parameter'), Row('sequence'), Row('function'), Row('switch'), Row('condition'), Row('all')]
 		self.linguist = Linguist()
 
 		# row_labels_filename = 'row_labels_' + filename + '.csv'
-		row_labels_filename = 'row_labels_harvest' + '.csv'
+		row_labels_filename = 'row_labels_' + anchor + '.csv'
 		print('Does the file with row labels exist? ', os.path.isfile(self.path + row_labels_filename))
 
 		# Handling corpus and row label filenames as separate because corpus can span multiple grids and row label is a temporary file until we get a classifier going.
 		# If the right files don't exist for this anchor, corpus will create them using filename.
-		self.corpus = Corpus(self.path, self.clean_corpus_filename, row_labels_filename, filename, self.rows, anchor, self.anchor_book, self.linguist, self.tfidf_pmi_weight)
+		self.corpus = Corpus(self.path, clean_corpus_filename, row_labels_filename, filename, self.rows, anchor, self.anchor_book, self.linguist, self.tfidf_pmi_weight)
 
 	# Not sure if this should be in backend, or a method of Grid
 	def load_clusters(self, cells, col_names: list[str]):

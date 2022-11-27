@@ -46,7 +46,7 @@ I will give you an electronic copy of the consent form and my contact informatio
       <div> <input className="checkbox" type = 'checkbox' id = "consent"/> <label for="consent" style={{marginLeft:'14%', marginTop:'1%'}} onClick = {() => handleConsentClick(true)}> Yes, I voluntarily consent to participate in this study. </label></div>
       <div> <input className="checkbox" type = 'checkbox' id = "notConsent"/> <label for="notConsent" style={{marginLeft:'14%', marginTop:'1%'}} onClick = {() => handleConsentClick(false)}> No, I do not consent and will exit the browser window. </label></div>
 
-      <Link to="/survey" className="info" style= {disabled ? {pointerEvents: "none", opacity: "0.4", marginLeft:"70%"} : {marginLeft:"70%"}}>Click here to move to the next page.</Link>
+      <Link to="/pretraining" className="info" style= {disabled ? {pointerEvents: "none", opacity: "0.4", marginLeft:"70%"} : {marginLeft:"70%"}}>Click here to move to the next page.</Link>
       <div style={{marginTop:"5%"}} />
 
       </div>

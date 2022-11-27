@@ -31,6 +31,7 @@ class UvicornFrontend(Frontend):
         self.user_id = user_id
         self.question_sets = {'survey': QA('survey', path, 'survey_questions.txt'), 'test': QA('test', path, 'test_questions.txt'), 'feedback': QA('feedback', path, 'feedback_questions.txt')}
         self.flag = flag
+        self.training = True
         self.path = path
         self.clustering_algorithm = clustering_algorithm
         self.grid = self.backend.get_grid(self.flag, k, anchor, anchor, self.clustering_algorithm)
@@ -38,7 +39,7 @@ class UvicornFrontend(Frontend):
         self.clicked_col = None
         self.clicked_row = None
         self.show_grid()
-        self.track_actions = {'user_id':[], 'condition':[], 'round': [], 'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
+        self.track_actions = {'user_id':[], 'training':[], 'condition':[], 'round': [], 'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
         self.tracking_prefix = tracking_prefix
         self.round = 0
         self.update_grid_record('initial', 'initial', time.time())
@@ -220,6 +221,7 @@ class UvicornFrontend(Frontend):
         grid_path = self.path + self.tracking_prefix + '_grid_' + str(self.user_id) + '.csv'
         df = self.grid.dump(grid_path, write = False)
         df['user_id'] = self.user_id
+        df['training'] = self.training
         df['condition'] = self.flag
         df['round'] = self.round
         df['action'] = action
@@ -227,8 +229,12 @@ class UvicornFrontend(Frontend):
         df['time'] = t
         df.to_csv(grid_path, mode = 'a', header = not os.path.exists(grid_path))
 
+    def toggle_training(self):
+        self.training = not self.training
+
     def update_track_actions(self, info):
         self.track_actions['user_id'].append(self.user_id)
+        self.track_actions['training'].append(self.training)
         self.track_actions['condition'].append(self.flag)
         self.track_actions['round'].append(info[0])
         self.track_actions['actor'].append(info[1])
@@ -266,7 +272,7 @@ class UvicornFrontend(Frontend):
             file.write(consent)
 
 
-frontend = UvicornFrontend(0, 'treatment', '../process_files/', 6, 'harvest', 'results/tracking', 'kmeans')
+frontend = UvicornFrontend(0, 'control', '../process_files/', 6, 'harvest', 'results/tracking', 'kmeans')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
@@ -275,10 +281,13 @@ frontend = UvicornFrontend(0, 'treatment', '../process_files/', 6, 'harvest', 'r
 # - call into the frontend to perform the action
 # - return the right kind of result, probably forwarded from the frontend
 
-@app.get("/data/{edit}")
-def root(edit: bool): # Depends( my function that changes data for front end )
+@app.get("/data/{edit}/{training}")
+def root(edit: bool, training: bool): # Depends( my function that changes data for front end )
     if edit:
-        data = frontend.show_grid()
+        if not training:
+            data = frontend.show_grid()
+        else:
+            data = frontend.load_grid("training") # Not happy about re-summoning a grid with hard-coded anchor, but it's necessary for the training
     else:
         data = frontend.load_grid(frontend.grid.anchor)
     return data # returns to front end
@@ -352,6 +361,10 @@ async def trash(text: str):
     print("trash ", text)
     return frontend.trash(text)
 
+@app.get("/toggleTraining/")
+async def toggleTraining():
+    print("training off")
+    return frontend.toggle_training()
 
 @app.get("/answerQuestion/{questionSet}/{questionIndex}/{selectedAnswerText}")
 async def answerQuestion(questionSet: str, questionIndex: int, selectedAnswerText: str):

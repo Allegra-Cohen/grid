@@ -1,0 +1,242 @@
+,row,col,frozen_col,readable,seeded_doc
+0,other,rice | input,False,"64. but it's not horticulture instead of rice, it's horticulture AND rice on two different plots.",False
+1,other,seed | season,False,21. This is mainly for onions and for some other vegetables.,False
+2,other,seed | season,False,"55. Third: availability of seeds: For horticulture tomatoes, onions, seeds are imported.",False
+3,other,seed | season,False,"92. Dagana is mostly rice cropping based, Podor is mostly onions and tomatoes.",False
+4,other,industry | people,False,"27. Tomato industry, rice industry, millers, export horticulture.",False
+5,other,industry | people,False,31. (Something else about horticulture competition right after this but I didn't catch it.),False
+6,other,industry | people,False,"49. Divided into five departments: Horticulture, fishery, forestry, livestock health and animal science, and social science & politics that focuses on macroeconomics and policy.",False
+7,other,industry | people,False,"54. For the season we already know what crops are appropriate: Rice is appropriate or not, horticulture too.",False
+8,other,industry | people,False,63. He's seen farmers doing horticulture like salad and tomato,False
+9,other,industry | people,False,"73. People will claim that regulation is failing and people are importing onions, but that's not the case.",False
+10,other,zone | kaolack,False,"66. In Ndiaye the horticulture region, Kaolack, etc.",False
+11,other,zone | kaolack,False,95. It's the onion zone.,False
+12,other,srv | zone,False,"65. ANCAR is also in the SRV, but it leaves the rice advising to SAED and handles horticulture in the SRV.",False
+13,other,srv | zone,False,"80. Senegal gets onions from Holland, Scandinavia, France",False
+14,other,onion | tomato,False,1. Mr. D grew tomatoes in last year's colddry season and made a good profit.,False
+15,other,onion | tomato,False,"9. Last year, tomatoes sold at a high price and many of Mr. D's neighbors have already planted tomatoes this year.",False
+16,other,onion | tomato,False,25. Onion Growers' Cooperative is nation-wide so they have the power to pressure the government.,False
+17,other,onion | tomato,False,36. We're looking at the reimbursement table again (note: for onions!!).,False
+18,other,onion | tomato,False,"51. Maybe for crops that aren't supported by credit, but most of the time they use fertilizer for rice, and when the cropping time comes from tomato and onion, they get fertilizer through the same system.",False
+19,other,onion | tomato,False,68. _Value chain__Onion glut,False
+20,other,onion | tomato,False,"69. Yes, he guesses all those constraints Cheryl mentioned are real, they exist in the onion VC.",False
+21,proportions,rice | input,False,8. But the inputs for tomatoes are higher.,False
+22,proportions,rice | input,False,"47. But inputs are more expensive for horticulture than rice, so the payoff is higher but so is the investment.",False
+23,proportions,seed | season,False,11. Farmers will compare the expected profit of tomatoes to the increasing price of seed to determine whether that seed price is too high.,False
+24,proportions,seed | season,False,"17. Growing tomatoes in the colddry season and paddy in the rainy season, keeping more paddy for consumption, in order to have a surplus of both cash and rice.",False
+25,proportions,seed | season,False,"59. If you have savings, you might go contrarian and plant onions; if you are planting what everyone else plants because they need access to credit (e.g., tomatoes), your prices will be low.",False
+26,proportions,seed | season,False,86. Also now people might be better at cropping onion than they used to be.,False
+27,proportions,seed | season,False,89. Podor soil is more appropriate for onion than rice.,False
+28,proportions,seed | season,False,"94. If you are in a cold season and you are in Podor, most people will do onion.",False
+29,proportions,industry | people,False,"46. If you can't get credit (maybe because you didn't pay), then horticulture is a good option because you might make more money even than rice.",False
+30,proportions,srv | zone,False,"26. Most of them are in the SRV because most production is in Podor, but there's also the Niaye zone that's the main horticulture zone that has onion too (Dakar to St. Louis).",False
+31,proportions,subsistence | commercialization,False,41. Horticulture is all for commercialization.,False
+32,proportions,subsistence | commercialization,False,42. 20 - 30% of rice is for subsistence but horticulture is for market.,False
+33,proportions,onion | tomato,False,"5. If a farmer had a good price for tomatoes last season, no matter what the government says about rice, he will grow tomatoes again because he's thinking about the profits, even though the rice is subsidized.",False
+34,proportions,onion | tomato,False,"6. If the expected profit for tomatoes is higher, it doesn't matter what the government does to incentivize rice.",False
+35,proportions,onion | tomato,False,7. A half hectare of tomatoes earns almost twice as much for the farmer than one hectare of rice.,False
+36,proportions,onion | tomato,False,"12. Dr. Fall would expect the majority of farmers would go for tomatoes, because the price of tomato seed probably wouldn't be so much compared to the expected profit.",False
+37,proportions,onion | tomato,False,"13. Last year was a good year for tomatoes, so farmers expect the same thing this year, and the price of seed just can't get high enough to cut into the profits.",False
+38,proportions,onion | tomato,False,14. Dr. Fall expects 50 to 60% of farmers to go for tomatoes.,False
+39,proportions,onion | tomato,False,"15. Farmers might emphasize tomatoes this colddry season, expecting a high price, in order to get enough cash to afford other foods at their high prices.",False
+40,proportions,onion | tomato,False,"18. Farmers are growing more tomatoes and rice for their own benefit and to prevent their own hunger, but also because they're interested in the national big picture.",False
+41,proportions,onion | tomato,False,"22. But for tomatoes, there's an industry working with farmers to buy local production, and even though it's not always capable of buying all the production, there's still a good market.",False
+42,proportions,onion | tomato,False,"24. There's some effort for promotion of local rice, and sometimes they increase the tax rate of importers for rice, but the mechanism is quite different than the onion import market.",False
+43,proportions,onion | tomato,False,33. We could see horticulture harvests around January and early February (we would see a lot of farms doing onions and tomatoes).,False
+44,proportions,onion | tomato,False,"37. The bulletin says the remaining credit comes from credit loaned on onions, which is supposed to be paid by June six months between onion harvest and full credit reimbursement!",False
+45,proportions,onion | tomato,False,52. The only change might be to work within the plot to create furrows (billons) to protect onions or tomatoes from too much water.,False
+46,proportions,onion | tomato,False,"60. If you know what happened last season: If last year everyone planted onions but prices were low, then they'll probably change.",False
+47,proportions,onion | tomato,False,67. Tomato is mostly in Dagana and the onions are supposed to be Podor (Dr Fall confirms the data confirm his expectations.),False
+48,proportions,onion | tomato,False,70. Lots of farmers picked onions because it's more economically profitable than rice.,False
+49,proportions,onion | tomato,False,"72. Law of supply and demand determines that if everyone floods onions, the price drops.",False
+50,proportions,onion | tomato,False,74. So the quality is as high as imported onions and they're still squashing the little farmers.,False
+51,proportions,onion | tomato,False,"75. Holidays have big demand for onion or other things Sheep Day, etc.",False
+52,proportions,onion | tomato,False,76. Podor is the leading onion producing region but the problem is everywhere at different scales.,False
+53,proportions,onion | tomato,False,"77. Regardless of region, they're all producing onion in the colddry season and there's no storage infrastructure and the quality is lower than required at market by consumers Onion glut makes life easier for tomato growers!",False
+54,proportions,onion | tomato,False,"81. If there's not a lot of onion internationally and you're not producing a lot locally, you can't shield yourself from price hikes.",False
+55,proportions,onion | tomato,False,"82. If you have a good local production of onion and you have an increase in the world market, the competition is unfair because imported onion is higher quality (unless you use the local onion, like, NOW.)",False
+56,proportions,onion | tomato,False,84. Dr. Fall overheard ladies complaining that local onions have too much water.,False
+57,proportions,onion | tomato,False,"85. But for this year, the conditions were really good for onions and you expect to have a market while imports are stopped.",False
+58,proportions,onion | tomato,False,"87. Onions you also have less damage than other crops, even though there's still weeds and stuff.",False
+59,proportions,onion | tomato,False,"88. Also, last year's onion price was high (check this, it's a hypothetical), so everyone switches to onion.",False
+60,proportions,onion | tomato,False,"90. You can guess if you're in the field you see a lot of opportunities for onions for farmers, the world market is growing onion production, Dr Fall believes this coming year will be difficult because they're producing a lot of onion and the price will be low compared to what farmers think it is.",False
+61,proportions,onion | tomato,False,"91. E.g. Not only Podor is doing onions but now regions that usually do tomato are also doing onions, so you think it'll be a bad year for a lot of people.",False
+62,processes,rice | input,False,"28. But during harvest time for rice, harvest for rice corresponds to seeding period for horticulture croppings.",False
+63,processes,rice | input,False,"38. Cold season, you plant horticulture, the other season you do rice.",False
+64,processes,seed | season,False,2. We must notice that rice and tomatoes are not grown at the same time.,False
+65,processes,seed | season,False,"4. If a farmer harvests paddy rice late, he won't be able to start tomatoes in the colddry season.",False
+66,processes,seed | season,False,"17. Growing tomatoes in the colddry season and paddy in the rainy season, keeping more paddy for consumption, in order to have a surplus of both cash and rice.",False
+67,processes,seed | season,False,39. So some farmers prefer to do horticulture in cold season so there's time to sell and start rice in the rainy season.,False
+68,processes,seed | season,False,93. Some may crop rice and then tomatoes in colddry; some mostly oriented towards onions in the colddry.,False
+69,processes,industry | people,False,30. Also agribusinesses like the tomato canning industry have their own regular labor.,False
+70,processes,onion | tomato,False,32. Colddry (SSF): End of November  December into beginning of February (horticulture)Rainy season can vary between mid-June - Sept or July through mid-October depending on the rains.,False
+71,processes,onion | tomato,False,33. We could see horticulture harvests around January and early February (we would see a lot of farms doing onions and tomatoes).,False
+72,processes,onion | tomato,False,"34. If we just care about millers, etc., we would come around April where we would see rice on the farm and the commercialization of colddry horticulture crops.",False
+73,processes,onion | tomato,False,"35. Feb-April we would see the remnants of commercialization of onions and tomatoes, plus the growth of hotdry rice.",False
+74,processes,onion | tomato,False,"37. The bulletin says the remaining credit comes from credit loaned on onions, which is supposed to be paid by June six months between onion harvest and full credit reimbursement!",False
+75,processes,onion | tomato,False,71. There's also government support through market regulation (stopping import of onions until local onions are sold.),False
+76,decisions,seed | season,False,11. Farmers will compare the expected profit of tomatoes to the increasing price of seed to determine whether that seed price is too high.,False
+77,decisions,seed | season,False,39. So some farmers prefer to do horticulture in cold season so there's time to sell and start rice in the rainy season.,False
+78,decisions,seed | season,False,"53. But some farmers only plant in one season, and they either specialize in rice or in tomatoes or onions.",False
+79,decisions,seed | season,False,"59. If you have savings, you might go contrarian and plant onions; if you are planting what everyone else plants because they need access to credit (e.g., tomatoes), your prices will be low.",False
+80,decisions,seed | season,False,"78. If you use your plot for onion, you don't have space for tomatoes.",False
+81,decisions,seed | season,False,93. Some may crop rice and then tomatoes in colddry; some mostly oriented towards onions in the colddry.,False
+82,decisions,seed | season,False,"94. If you are in a cold season and you are in Podor, most people will do onion.",False
+83,decisions,industry | people,False,"46. If you can't get credit (maybe because you didn't pay), then horticulture is a good option because you might make more money even than rice.",False
+84,decisions,industry | people,False,83. People know they can store imported onions but not local onions.,False
+85,decisions,subsistence | commercialization,False,0. Farmers will do horticulture for subsistence but not rice planting without a loan.,False
+86,decisions,onion | tomato,False,"5. If a farmer had a good price for tomatoes last season, no matter what the government says about rice, he will grow tomatoes again because he's thinking about the profits, even though the rice is subsidized.",False
+87,decisions,onion | tomato,False,"10. Tomatoes is one of the crops with access to credit, so if you can get credit, you might go for tomatoes.",False
+88,decisions,onion | tomato,False,"12. Dr. Fall would expect the majority of farmers would go for tomatoes, because the price of tomato seed probably wouldn't be so much compared to the expected profit.",False
+89,decisions,onion | tomato,False,"13. Last year was a good year for tomatoes, so farmers expect the same thing this year, and the price of seed just can't get high enough to cut into the profits.",False
+90,decisions,onion | tomato,False,14. Dr. Fall expects 50 to 60% of farmers to go for tomatoes.,False
+91,decisions,onion | tomato,False,"15. Farmers might emphasize tomatoes this colddry season, expecting a high price, in order to get enough cash to afford other foods at their high prices.",False
+92,decisions,onion | tomato,False,"18. Farmers are growing more tomatoes and rice for their own benefit and to prevent their own hunger, but also because they're interested in the national big picture.",False
+93,decisions,onion | tomato,False,"20. Coop leaders don't really direct what the area is, but they might influence what to crop, how to switch from one crop to another; they have information about fertilizer, etc.. Oh, the leader is growing onion, so maybe I will follow.",False
+94,decisions,onion | tomato,False,"40. Now, this year, farmers don't want to grow potatoes; they've gone to onion.",False
+95,decisions,onion | tomato,False,"60. If you know what happened last season: If last year everyone planted onions but prices were low, then they'll probably change.",False
+96,decisions,onion | tomato,False,61. Farmers are imitative : If you go for tomatoes then perhaps someone else will go for onions.,False
+97,decisions,onion | tomato,False,70. Lots of farmers picked onions because it's more economically profitable than rice.,False
+98,decisions,onion | tomato,False,"88. Also, last year's onion price was high (check this, it's a hypothetical), so everyone switches to onion.",False
+99,decisions,onion | tomato,False,"90. You can guess if you're in the field you see a lot of opportunities for onions for farmers, the world market is growing onion production, Dr Fall believes this coming year will be difficult because they're producing a lot of onion and the price will be low compared to what farmers think it is.",False
+100,decisions,onion | tomato,False,"96. If you are in Dagana, where you have local tomato industry, people are mostly oriented towards tomatoes.",False
+101,decisions,onion | tomato,False,"97. In terms of variety (tomatoesonions), you're choosing based on market demand (people will go to see what kind of rice people want).",False
+102,conditions,rice | input,False,"38. Cold season, you plant horticulture, the other season you do rice.",False
+103,conditions,seed | season,False,"4. If a farmer harvests paddy rice late, he won't be able to start tomatoes in the colddry season.",False
+104,conditions,seed | season,False,"45. Cotton, peanut, rice and tomatoes are the only crops with easy access to credit.",False
+105,conditions,seed | season,False,"59. If you have savings, you might go contrarian and plant onions; if you are planting what everyone else plants because they need access to credit (e.g., tomatoes), your prices will be low.",False
+106,conditions,seed | season,False,"78. If you use your plot for onion, you don't have space for tomatoes.",False
+107,conditions,seed | season,False,"94. If you are in a cold season and you are in Podor, most people will do onion.",False
+108,conditions,industry | people,False,19. But for tomatoes you need the right type of soil.,False
+109,conditions,industry | people,False,"46. If you can't get credit (maybe because you didn't pay), then horticulture is a good option because you might make more money even than rice.",False
+110,conditions,industry | people,False,"50. The government lets farmers know that certain fertilizers are for certain crops (e.g. DAP is for rice and horticulture producers, which includes formulas like 9920).",False
+111,conditions,industry | people,False,83. People know they can store imported onions but not local onions.,False
+112,conditions,subsistence | commercialization,False,0. Farmers will do horticulture for subsistence but not rice planting without a loan.,False
+113,conditions,onion | tomato,False,"6. If the expected profit for tomatoes is higher, it doesn't matter what the government does to incentivize rice.",False
+114,conditions,onion | tomato,False,"10. Tomatoes is one of the crops with access to credit, so if you can get credit, you might go for tomatoes.",False
+115,conditions,onion | tomato,False,"15. Farmers might emphasize tomatoes this colddry season, expecting a high price, in order to get enough cash to afford other foods at their high prices.",False
+116,conditions,onion | tomato,False,"57. Finally, access to an industrial firm: Tomatoes and rice are the only things that have contracts between farmers and coops or processors.",False
+117,conditions,onion | tomato,False,"58. only rice, peanuts, cotton, tomatoes facilitate access to credit (the mechanism isn't clear but the firm facilitates).",False
+118,conditions,onion | tomato,False,"60. If you know what happened last season: If last year everyone planted onions but prices were low, then they'll probably change.",False
+119,conditions,onion | tomato,False,61. Farmers are imitative : If you go for tomatoes then perhaps someone else will go for onions.,False
+120,conditions,onion | tomato,False,"72. Law of supply and demand determines that if everyone floods onions, the price drops.",False
+121,conditions,onion | tomato,False,"81. If there's not a lot of onion internationally and you're not producing a lot locally, you can't shield yourself from price hikes.",False
+122,conditions,onion | tomato,False,"82. If you have a good local production of onion and you have an increase in the world market, the competition is unfair because imported onion is higher quality (unless you use the local onion, like, NOW.)",False
+123,conditions,onion | tomato,False,"96. If you are in Dagana, where you have local tomato industry, people are mostly oriented towards tomatoes.",False
+124,causes,seed | season,False,3. A farmer might do rice and then as a result he might miss the cropping season for tomatoes.,False
+125,causes,seed | season,False,"4. If a farmer harvests paddy rice late, he won't be able to start tomatoes in the colddry season.",False
+126,causes,seed | season,False,"17. Growing tomatoes in the colddry season and paddy in the rainy season, keeping more paddy for consumption, in order to have a surplus of both cash and rice.",False
+127,causes,seed | season,False,39. So some farmers prefer to do horticulture in cold season so there's time to sell and start rice in the rainy season.,False
+128,causes,seed | season,False,"59. If you have savings, you might go contrarian and plant onions; if you are planting what everyone else plants because they need access to credit (e.g., tomatoes), your prices will be low.",False
+129,causes,seed | season,False,"62. We don't have seed operators for tomatoes, onions, etc bc these seeds are imported; seed potatoes are seeing a local industry",False
+130,causes,industry | people,False,16. Sometimes people sell tomatoes to pay back credit for rice.,False
+131,causes,industry | people,False,43. You don't get credit for horticulture because it's not a government priority.,False
+132,causes,srv | zone,False,"26. Most of them are in the SRV because most production is in Podor, but there's also the Niaye zone that's the main horticulture zone that has onion too (Dakar to St. Louis).",False
+133,causes,onion | tomato,False,"5. If a farmer had a good price for tomatoes last season, no matter what the government says about rice, he will grow tomatoes again because he's thinking about the profits, even though the rice is subsidized.",False
+134,causes,onion | tomato,False,"12. Dr. Fall would expect the majority of farmers would go for tomatoes, because the price of tomato seed probably wouldn't be so much compared to the expected profit.",False
+135,causes,onion | tomato,False,"18. Farmers are growing more tomatoes and rice for their own benefit and to prevent their own hunger, but also because they're interested in the national big picture.",False
+136,causes,onion | tomato,False,"20. Coop leaders don't really direct what the area is, but they might influence what to crop, how to switch from one crop to another; they have information about fertilizer, etc.. Oh, the leader is growing onion, so maybe I will follow.",False
+137,causes,onion | tomato,False,"24. There's some effort for promotion of local rice, and sometimes they increase the tax rate of importers for rice, but the mechanism is quite different than the onion import market.",False
+138,causes,onion | tomato,False,"44. For the tomato industry, there's a similar system with SAED and banks, but onion isn't tied to any private sector organizations (just traders), so there isn't credit.",False
+139,causes,onion | tomato,False,"60. If you know what happened last season: If last year everyone planted onions but prices were low, then they'll probably change.",False
+140,causes,onion | tomato,False,61. Farmers are imitative : If you go for tomatoes then perhaps someone else will go for onions.,False
+141,causes,onion | tomato,False,70. Lots of farmers picked onions because it's more economically profitable than rice.,False
+142,causes,onion | tomato,False,"72. Law of supply and demand determines that if everyone floods onions, the price drops.",False
+143,causes,onion | tomato,False,"85. But for this year, the conditions were really good for onions and you expect to have a market while imports are stopped.",False
+144,causes,onion | tomato,False,"88. Also, last year's onion price was high (check this, it's a hypothetical), so everyone switches to onion.",False
+145,causes,onion | tomato,False,"90. You can guess if you're in the field you see a lot of opportunities for onions for farmers, the world market is growing onion production, Dr Fall believes this coming year will be difficult because they're producing a lot of onion and the price will be low compared to what farmers think it is.",False
+146,causes,onion | tomato,False,"91. E.g. Not only Podor is doing onions but now regions that usually do tomato are also doing onions, so you think it'll be a bad year for a lot of people.",False
+147,causes,onion | tomato,False,"97. In terms of variety (tomatoesonions), you're choosing based on market demand (people will go to see what kind of rice people want).",False
+148,all,rice | input,False,8. But the inputs for tomatoes are higher.,False
+149,all,rice | input,False,"28. But during harvest time for rice, harvest for rice corresponds to seeding period for horticulture croppings.",False
+150,all,rice | input,False,"38. Cold season, you plant horticulture, the other season you do rice.",False
+151,all,rice | input,False,"47. But inputs are more expensive for horticulture than rice, so the payoff is higher but so is the investment.",False
+152,all,rice | input,False,"64. but it's not horticulture instead of rice, it's horticulture AND rice on two different plots.",False
+153,all,seed | season,False,2. We must notice that rice and tomatoes are not grown at the same time.,False
+154,all,seed | season,False,3. A farmer might do rice and then as a result he might miss the cropping season for tomatoes.,False
+155,all,seed | season,False,"4. If a farmer harvests paddy rice late, he won't be able to start tomatoes in the colddry season.",False
+156,all,seed | season,False,11. Farmers will compare the expected profit of tomatoes to the increasing price of seed to determine whether that seed price is too high.,False
+157,all,seed | season,False,"17. Growing tomatoes in the colddry season and paddy in the rainy season, keeping more paddy for consumption, in order to have a surplus of both cash and rice.",False
+158,all,seed | season,False,21. This is mainly for onions and for some other vegetables.,False
+159,all,seed | season,False,39. So some farmers prefer to do horticulture in cold season so there's time to sell and start rice in the rainy season.,False
+160,all,seed | season,False,"45. Cotton, peanut, rice and tomatoes are the only crops with easy access to credit.",False
+161,all,seed | season,False,"53. But some farmers only plant in one season, and they either specialize in rice or in tomatoes or onions.",False
+162,all,seed | season,False,"55. Third: availability of seeds: For horticulture tomatoes, onions, seeds are imported.",False
+163,all,seed | season,False,"59. If you have savings, you might go contrarian and plant onions; if you are planting what everyone else plants because they need access to credit (e.g., tomatoes), your prices will be low.",False
+164,all,seed | season,False,"62. We don't have seed operators for tomatoes, onions, etc bc these seeds are imported; seed potatoes are seeing a local industry",False
+165,all,seed | season,False,"78. If you use your plot for onion, you don't have space for tomatoes.",False
+166,all,seed | season,False,86. Also now people might be better at cropping onion than they used to be.,False
+167,all,seed | season,False,89. Podor soil is more appropriate for onion than rice.,False
+168,all,seed | season,False,"92. Dagana is mostly rice cropping based, Podor is mostly onions and tomatoes.",False
+169,all,seed | season,False,93. Some may crop rice and then tomatoes in colddry; some mostly oriented towards onions in the colddry.,False
+170,all,seed | season,False,"94. If you are in a cold season and you are in Podor, most people will do onion.",False
+171,all,industry | people,False,16. Sometimes people sell tomatoes to pay back credit for rice.,False
+172,all,industry | people,False,19. But for tomatoes you need the right type of soil.,False
+173,all,industry | people,False,"27. Tomato industry, rice industry, millers, export horticulture.",False
+174,all,industry | people,False,30. Also agribusinesses like the tomato canning industry have their own regular labor.,False
+175,all,industry | people,False,31. (Something else about horticulture competition right after this but I didn't catch it.),False
+176,all,industry | people,False,43. You don't get credit for horticulture because it's not a government priority.,False
+177,all,industry | people,False,"46. If you can't get credit (maybe because you didn't pay), then horticulture is a good option because you might make more money even than rice.",False
+178,all,industry | people,False,"49. Divided into five departments: Horticulture, fishery, forestry, livestock health and animal science, and social science & politics that focuses on macroeconomics and policy.",False
+179,all,industry | people,False,"50. The government lets farmers know that certain fertilizers are for certain crops (e.g. DAP is for rice and horticulture producers, which includes formulas like 9920).",False
+180,all,industry | people,False,"54. For the season we already know what crops are appropriate: Rice is appropriate or not, horticulture too.",False
+181,all,industry | people,False,63. He's seen farmers doing horticulture like salad and tomato,False
+182,all,industry | people,False,"73. People will claim that regulation is failing and people are importing onions, but that's not the case.",False
+183,all,industry | people,False,83. People know they can store imported onions but not local onions.,False
+184,all,zone | kaolack,False,"66. In Ndiaye the horticulture region, Kaolack, etc.",False
+185,all,zone | kaolack,False,95. It's the onion zone.,False
+186,all,srv | zone,False,"26. Most of them are in the SRV because most production is in Podor, but there's also the Niaye zone that's the main horticulture zone that has onion too (Dakar to St. Louis).",False
+187,all,srv | zone,False,"65. ANCAR is also in the SRV, but it leaves the rice advising to SAED and handles horticulture in the SRV.",False
+188,all,srv | zone,False,"80. Senegal gets onions from Holland, Scandinavia, France",False
+189,all,subsistence | commercialization,False,0. Farmers will do horticulture for subsistence but not rice planting without a loan.,False
+190,all,subsistence | commercialization,False,41. Horticulture is all for commercialization.,False
+191,all,subsistence | commercialization,False,42. 20 - 30% of rice is for subsistence but horticulture is for market.,False
+192,all,onion | tomato,False,1. Mr. D grew tomatoes in last year's colddry season and made a good profit.,False
+193,all,onion | tomato,False,"5. If a farmer had a good price for tomatoes last season, no matter what the government says about rice, he will grow tomatoes again because he's thinking about the profits, even though the rice is subsidized.",False
+194,all,onion | tomato,False,"6. If the expected profit for tomatoes is higher, it doesn't matter what the government does to incentivize rice.",False
+195,all,onion | tomato,False,7. A half hectare of tomatoes earns almost twice as much for the farmer than one hectare of rice.,False
+196,all,onion | tomato,False,"9. Last year, tomatoes sold at a high price and many of Mr. D's neighbors have already planted tomatoes this year.",False
+197,all,onion | tomato,False,"10. Tomatoes is one of the crops with access to credit, so if you can get credit, you might go for tomatoes.",False
+198,all,onion | tomato,False,"12. Dr. Fall would expect the majority of farmers would go for tomatoes, because the price of tomato seed probably wouldn't be so much compared to the expected profit.",False
+199,all,onion | tomato,False,"13. Last year was a good year for tomatoes, so farmers expect the same thing this year, and the price of seed just can't get high enough to cut into the profits.",False
+200,all,onion | tomato,False,14. Dr. Fall expects 50 to 60% of farmers to go for tomatoes.,False
+201,all,onion | tomato,False,"15. Farmers might emphasize tomatoes this colddry season, expecting a high price, in order to get enough cash to afford other foods at their high prices.",False
+202,all,onion | tomato,False,"18. Farmers are growing more tomatoes and rice for their own benefit and to prevent their own hunger, but also because they're interested in the national big picture.",False
+203,all,onion | tomato,False,"20. Coop leaders don't really direct what the area is, but they might influence what to crop, how to switch from one crop to another; they have information about fertilizer, etc.. Oh, the leader is growing onion, so maybe I will follow.",False
+204,all,onion | tomato,False,"22. But for tomatoes, there's an industry working with farmers to buy local production, and even though it's not always capable of buying all the production, there's still a good market.",False
+205,all,onion | tomato,False,"24. There's some effort for promotion of local rice, and sometimes they increase the tax rate of importers for rice, but the mechanism is quite different than the onion import market.",False
+206,all,onion | tomato,False,25. Onion Growers' Cooperative is nation-wide so they have the power to pressure the government.,False
+207,all,onion | tomato,False,32. Colddry (SSF): End of November  December into beginning of February (horticulture)Rainy season can vary between mid-June - Sept or July through mid-October depending on the rains.,False
+208,all,onion | tomato,False,33. We could see horticulture harvests around January and early February (we would see a lot of farms doing onions and tomatoes).,False
+209,all,onion | tomato,False,"34. If we just care about millers, etc., we would come around April where we would see rice on the farm and the commercialization of colddry horticulture crops.",False
+210,all,onion | tomato,False,"35. Feb-April we would see the remnants of commercialization of onions and tomatoes, plus the growth of hotdry rice.",False
+211,all,onion | tomato,False,36. We're looking at the reimbursement table again (note: for onions!!).,False
+212,all,onion | tomato,False,"37. The bulletin says the remaining credit comes from credit loaned on onions, which is supposed to be paid by June six months between onion harvest and full credit reimbursement!",False
+213,all,onion | tomato,False,"40. Now, this year, farmers don't want to grow potatoes; they've gone to onion.",False
+214,all,onion | tomato,False,"44. For the tomato industry, there's a similar system with SAED and banks, but onion isn't tied to any private sector organizations (just traders), so there isn't credit.",False
+215,all,onion | tomato,False,"51. Maybe for crops that aren't supported by credit, but most of the time they use fertilizer for rice, and when the cropping time comes from tomato and onion, they get fertilizer through the same system.",False
+216,all,onion | tomato,False,52. The only change might be to work within the plot to create furrows (billons) to protect onions or tomatoes from too much water.,False
+217,all,onion | tomato,False,"57. Finally, access to an industrial firm: Tomatoes and rice are the only things that have contracts between farmers and coops or processors.",False
+218,all,onion | tomato,False,"58. only rice, peanuts, cotton, tomatoes facilitate access to credit (the mechanism isn't clear but the firm facilitates).",False
+219,all,onion | tomato,False,"60. If you know what happened last season: If last year everyone planted onions but prices were low, then they'll probably change.",False
+220,all,onion | tomato,False,61. Farmers are imitative : If you go for tomatoes then perhaps someone else will go for onions.,False
+221,all,onion | tomato,False,67. Tomato is mostly in Dagana and the onions are supposed to be Podor (Dr Fall confirms the data confirm his expectations.),False
+222,all,onion | tomato,False,68. _Value chain__Onion glut,False
+223,all,onion | tomato,False,"69. Yes, he guesses all those constraints Cheryl mentioned are real, they exist in the onion VC.",False
+224,all,onion | tomato,False,70. Lots of farmers picked onions because it's more economically profitable than rice.,False
+225,all,onion | tomato,False,71. There's also government support through market regulation (stopping import of onions until local onions are sold.),False
+226,all,onion | tomato,False,"72. Law of supply and demand determines that if everyone floods onions, the price drops.",False
+227,all,onion | tomato,False,74. So the quality is as high as imported onions and they're still squashing the little farmers.,False
+228,all,onion | tomato,False,"75. Holidays have big demand for onion or other things Sheep Day, etc.",False
+229,all,onion | tomato,False,76. Podor is the leading onion producing region but the problem is everywhere at different scales.,False
+230,all,onion | tomato,False,"77. Regardless of region, they're all producing onion in the colddry season and there's no storage infrastructure and the quality is lower than required at market by consumers Onion glut makes life easier for tomato growers!",False
+231,all,onion | tomato,False,"81. If there's not a lot of onion internationally and you're not producing a lot locally, you can't shield yourself from price hikes.",False
+232,all,onion | tomato,False,"82. If you have a good local production of onion and you have an increase in the world market, the competition is unfair because imported onion is higher quality (unless you use the local onion, like, NOW.)",False
+233,all,onion | tomato,False,84. Dr. Fall overheard ladies complaining that local onions have too much water.,False
+234,all,onion | tomato,False,"85. But for this year, the conditions were really good for onions and you expect to have a market while imports are stopped.",False
+235,all,onion | tomato,False,"87. Onions you also have less damage than other crops, even though there's still weeds and stuff.",False
+236,all,onion | tomato,False,"88. Also, last year's onion price was high (check this, it's a hypothetical), so everyone switches to onion.",False
+237,all,onion | tomato,False,"90. You can guess if you're in the field you see a lot of opportunities for onions for farmers, the world market is growing onion production, Dr Fall believes this coming year will be difficult because they're producing a lot of onion and the price will be low compared to what farmers think it is.",False
+238,all,onion | tomato,False,"91. E.g. Not only Podor is doing onions but now regions that usually do tomato are also doing onions, so you think it'll be a bad year for a lot of people.",False
+239,all,onion | tomato,False,"96. If you are in Dagana, where you have local tomato industry, people are mostly oriented towards tomatoes.",False
+240,all,onion | tomato,False,"97. In terms of variety (tomatoesonions), you're choosing based on market demand (people will go to see what kind of rice people want).",False
