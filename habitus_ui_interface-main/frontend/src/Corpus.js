@@ -1,5 +1,6 @@
 import {useDrag} from "react-dnd";
 import {useId, useEffect, useState} from "react";
+import "./Corpus.css"
 
 function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
     const [{ isDragging }, dragRef] = useDrag({
@@ -31,13 +32,13 @@ export default function Corpus({sentences, onChange, edit, apiUrl}) {
     let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} />)
     return (
 
-            <ul style={{
-                // width:"30em",
+            <ul className = 'corpus' id='style-3'style={{
                 marginLeft:".2em",
-                height: edit ? "1200px" : "600px",
-                overflow: "auto",
-            }}>
+                height: edit ? "75em" : "35em",
+                overflowY: "scroll"
+            }}><div class="force-overflow">
                 {items}
+                </div>
             </ul>
 
     )

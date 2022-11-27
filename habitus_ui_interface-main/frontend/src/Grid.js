@@ -44,7 +44,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
             width: "5em",
             height: "4em",
             background: gradientArray[ix],
-            border: isActive ? '2px solid #BE1C06' : null}}
+            border: isActive ? '0.15em solid #BE1C06' : null}}
 
         onClick={
       (evt) => {
