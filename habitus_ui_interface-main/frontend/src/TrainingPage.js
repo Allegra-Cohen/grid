@@ -47,22 +47,24 @@ function TrainingPage({step, apiUrl}) {
       </ul>
       <b>Columns</b> organize sentences by topic. You may not know which topics are important at first; the Grid is designed to help you discover them.
       </ul>
-      You can access sentences in the Grid by clicking on cells. The color of a cell shows how many sentences are in it. Sentences will appear to the right of the Grid; if there are many sentences in a cell, you can scroll to see all of them. <br/><br/>
-      You can also look at the sentences in the context of the interview. Because these sentences are from an un-processed corpus of raw interview notes, you may find sentence fragments or garbage text.<br/><br/>
+      You can access sentences in the Grid by clicking on cells. The color of a cell shows how many sentences are in it. Sentences will appear to the right of the Grid; if there are many sentences in a cell, you can scroll to see all of them. Sentences can be in more than one row and column at once.<br/><br/>
+      You can also look at the sentences in the context of the interview by clicking on the sentences themselves. Because these sentences are from an un-processed corpus of raw interview notes, you may find sentence fragments or garbage text.<br/><br/>
 
-      <b>Training task: </b>Please click around the Grid for a moment to get a feel for the rows and columns. For example, click on the cell in the "processes" row and "seed | season" column. Note that the sentences here talk about the beginning, end, and overlap of events, and these events are largely about season.
+      {flag === 'control' ?
+      <div><b>Training task: </b>Currently there is only one column in this Grid. It contains all the sentences in the corpus. Please click around this column to get a feel for the rows. For example, the "processes" row contains sentences that talk about when events begin, end, and overlap.</div>
+      :
+      <div><b>Training task: </b>Please click around the Grid for a moment to get a feel for the rows and columns. For example, click on the cell in the "processes" row and "seed | season" column. Note that the sentences here talk about the beginning, end, and overlap of events, and these events are largely about season.</div>}
       <br/><br/>
       <div style={{'fontSize': '14pt'}}><Link to="/training2">Done! Next: Part 2</Link></div><br/><br/> </div> : <div/> }
 
       {step ===2 ? <div>
-        The columns you see here are pre-generated for you. You may disagree with the organization of sentences; for example, sometimes columns contain too many topics.
+        {flag !== 'control' ? <div> The columns you see here are pre-generated for you. You may disagree with the organization of sentences; for example, sometimes columns contain too many topics.
         Your goal is to organize these columns such that their contents make sense to you.<br/><br/>
 
-        {flag !== 'control' ? <div>The machine will help you organize columns, but it needs direction. You can work with the machine in two ways. The first way is to freeze columns. When you freeze a column, you tell the machine that it is not allowed
-        to put sentences into that column or take sentences out. You should freeze columns for two reasons: You want a column to contain sentences about a keyword and only that keyword; or, you are happy with an existing column and do not want it to be changed. <br/><br/> </div>
-         : <div> The first thing you can do to improve columns is to <b>freeze</b> them. You should freeze columns for two reasons: You want to put all the sentences that share a word into one column, or you are finished with a column you have been working on. <br/><br/></div>}
+        The machine will help you organize columns, but it needs direction. You can work with the machine in two ways. The first way is to freeze columns. When you freeze a column, you tell the machine that it is not allowed
+        to put sentences into that column or take sentences out. You should freeze columns for two reasons: You want a column to contain sentences about a keyword and only that keyword; or, you are happy with an existing column and do not want it to be changed. <br/><br/>
 
-        <b>Freezing columns</b><br/>
+         <b>Freezing columns</b><br/>
         <ul>
         <b>Create new column: </b> You can freeze a column by creating it using a keyword. Suppose you want to create a column with all the sentences about onions. Type "onion" into the box labeled "Create new column" and press enter. 
         Now, click around the new onion column. The color of the column name is now black, indicating that you have frozen it. <br/>
@@ -70,12 +72,30 @@ function TrainingPage({step, apiUrl}) {
         </ul>
 
         Notice that even though you created a new column, the "onion" sentences are still elsewhere in the Grid, for example, in the "onion | tomato" column. This is annoying! To let the Grid know about your changes, click the "Update Grid" button.<br/><br/>
-        {flag !== 'control' ? <div>This button does two things. First, it removes the "onion" sentences from the pool of sentences that the machine is allowed to organize. Second, it asks the machine to reorganize the remaining sentences. You'll notice that
-        new columns appear in response to your changes. <br/><br/> In summary, freezing columns allows you to make a decision about some sentences (e.g., "I want a column about onions!") while leaving the rest of the sentences to the machine. <br/><br/></div>
-            : <div>This button will remove the sentences you have frozen from the starting columns.<br/><br/></div>
+        </div>
+         
+         : 
+
+         <div> There is currently only one column in this Grid, containing all the sentences in the corpus. Your goal is to expand the columns until the sentences are organized to your liking. You can do this by creating columns. <br/><br/>
+        <b>Creating columns</b><br/>
+        <ul>
+        <b>Create new column: </b> You can create a column using a single keyword. Suppose you want to create a column with all the sentences about onions. Type "onions" into the box labeled "Create new column" and press enter. 
+        Now, click around the new column; you'll see that all the sentences with the word "onion(s)" have been put into it.<br/>
+        <b>Rename column: </b> You can also rename an existing column. Type a new name into the "Rename" box below the "onions" column and press enter.
+        </ul>
+        Notice that even though you created a new column, the "onion" sentences are still in the original column. This is annoying! To let the Grid know about your changes, click the "Update Grid" button. This will remove the "onion" sentences
+        from the original column and update the original column's name to reflect what's in it.<br/><br/>
+        </div>
+
         }
 
-        <b>Training task: </b> Freeze two more columns for keywords of your choice (look at existing column names and click around the cells for inspiration!) and update the Grid.<br/><br/>
+
+        {flag !== 'control' ? <div>This button does two things. First, it removes the "onion" sentences from the pool of sentences that the machine is allowed to organize. Second, it asks the machine to reorganize the remaining sentences. You'll notice that
+        new columns appear in response to your changes. <br/><br/> In summary, freezing columns allows you to make a decision about some sentences (e.g., "I want a column about onions!") while leaving the rest of the sentences to the machine. <br/><br/></div>
+            : <div/>
+        }
+
+        <b>Training task: </b> Freeze two more columns for keywords of your choice (click around the cells for inspiration!) and update the Grid.<br/><br/>
         <div style={{'fontSize': '14pt'}}><Link to="/training3">Done! Next: Part 3</Link></div><br/><br/>
 
         </div>
@@ -84,7 +104,7 @@ function TrainingPage({step, apiUrl}) {
 
         {step ===3 ? <div>
 
-        Freezing columns is handy, but you may not always want to make big changes to the Grid. Sometimes you may want to move individual sentences for more precise organization. Good news: You can!<br/><br/>
+        Creating new columns is handy, but you may not always want to make big changes to the Grid. Sometimes you may want to move individual sentences for more precise organization. Good news: You can!<br/><br/>
 
         {flag !== 'control' ?
         <div><b>Seeding columns: </b><br/>
@@ -94,15 +114,15 @@ function TrainingPage({step, apiUrl}) {
         <b>Copying:</b> If you want to put a sentence in multiple columns, you can click the "Copy" button before you drag. Don't forget to turn it off when you're done!<br/><br/>
 
         <b>Training task: </b> Click on any column and find three sentences to move. Drag these sentences into one unfrozen column (any column with a blue name). 
-        Note that the name of this column may change to reflect the new sentences. Next, click "Update Grid" and look at the first blue column. The other sentences may have changed or disappeared, but the sentences you put together are still together.
+        Note that the name of this column may change to reflect the new sentences. Next, click "Update Grid." The sentences you dragged together will still be in the same column (though it may not be the one you're looking at.)
 
         </div>
         :
-        <div> Freezing columns is handy, but you may not always want to make big changes to the Grid. Sometimes you may want to move individual sentences for more precise organization. Good news: You can!<br/><br/>
         <div>
         <b>Moving sentences: </b><br/>
-        You can drag sentences between columns to move them. Try it out with some sentences! Note that when you drag a sentence into a column, the name of the column may change to reflect what's in it.
-        </div>
+        You can drag sentences between columns to move them. Try it out with some sentences! Note that the colors of the cells change to reflect how many sentences are in them. Also, dragging a sentence won't change which row(s) it is in, only its column.<br/><br/>
+
+        <b>Copying:</b> If you want to put a sentence in multiple columns, you can click the "Copy" button before you drag. Don't forget to turn it off when you're done!<br/><br/>
         </div>
         }<br/>
 

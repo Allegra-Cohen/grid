@@ -43,7 +43,7 @@ class Backend():
 		return grid
 
 
-	def load_grid(self, flag: str, filename: str, clustering_algorithm: str) -> Grid:
+	def load_grid(self, flag: str, edit: bool, filename: str, clustering_algorithm: str) -> Grid:
 
 		print("Loading grid from root filename ", filename)
 		try:
@@ -61,6 +61,10 @@ class Backend():
 			clusters = self.load_clusters(cells, col_names)
 			k = len(col_names)
 			grid = Grid(flag, self.path, filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
+			
+			# Another hack, just re-run to make it one column. Yikes!
+			if flag == 'control' and edit:
+				grid.control_initialize()
 
 		except FileNotFoundError:
 			print("That grid doesn't exist. Try creating it and saving it.")
@@ -69,7 +73,7 @@ class Backend():
 		return grid
 
 
-	def set_up_corpus(self, filename: str, clean_corpus_filename, anchor: str):
+	def set_up_corpus(self, filename: str, clean_corpus_filename: str, anchor: str):
 		# Get rows and Linguist set up
 		self.rows = [Row('other'), Row('proportions'), Row('processes'), Row('decisions'), Row('conditions'), Row('causes'), Row('all')]
 		# self.rows = [Row('other'), Row('proportion'), Row('parameter'), Row('sequence'), Row('function'), Row('switch'), Row('condition'), Row('all')]

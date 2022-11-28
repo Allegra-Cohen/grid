@@ -10,7 +10,7 @@ from mathematician import run_expect_max
 import random
 
 class Surdeanu2005(ClusterGenerator):
-	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
+	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 3):
 		super().__init__(corpus, linguist)
 		self.quality_names = ['w', 'wb', 'wn', 'gw', 'gwb', 'gwn']
 		self.allowed_seed_size = 0.05

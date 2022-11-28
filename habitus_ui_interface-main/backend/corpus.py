@@ -3,7 +3,6 @@ from gensim.models import KeyedVectors
 import json
 import numpy as np
 import pandas as pd
-import spacy
 import os.path
 
 from document import Document
@@ -149,10 +148,9 @@ class Corpus():
 	@staticmethod
 	def clean_corpus(path: str, corpus_filename: str, clean_filename: str, synonym_book: list[list[str]]):
 		linguist = Linguist()
-		nlp = spacy.load("en_core_web_sm")
 		corpus_lines = Corpus.load_corpus_lines(path, corpus_filename)
-		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, False, False, True, synonym_book)).reset_index()['sentence'])
-		readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, True, False, False, None)).reset_index()['sentence'])
+		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (False, False, True, synonym_book)).reset_index()['sentence'])
+		readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (True, False, False, None)).reset_index()['sentence'])
 		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename)
 
 	# Question for Keith: Do we need these?

@@ -37,7 +37,10 @@ class Grid():
 	def generate(cls, flag: str, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
 		grid = cls(flag, path, root_filename, corpus, k, synonym_book, clustering_algorithm)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
-		grid.generate_clusters()
+		if flag != 'control':
+			grid.generate_clusters()
+		else:
+			grid.control_initialize()
 		return grid
 
 	# Say whether there are any clusters.
@@ -50,7 +53,11 @@ class Grid():
 	def regenerate(self):
 		self.generate_clusters()
 
-	# This is just for the study and can be removed afterwards
+	# This is just for the study and can be removed afterwards. I could have put it in a ClusterGenerator but that would have been really annoying,
+	#    plus it isn't generating any clusters.
+	def control_initialize(self):
+		self.clusters = [Cluster(self.anchor, self.documents, False)]
+
 	def control_update(self):
 		frozen_docs = self.flatten_lists([cluster.documents for cluster in self.clusters if cluster.is_frozen()])
 		for i, cluster in enumerate(self.clusters):

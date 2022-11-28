@@ -43,7 +43,6 @@ class UvicornFrontend(Frontend):
         self.tracking_prefix = tracking_prefix
         self.round = 0
         self.update_grid_record('initial', 'initial', time.time())
-        self.grid.set_k(5) # I want the initial clustering to be more challenging, then the subsequent clustering more helpful
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -113,10 +112,10 @@ class UvicornFrontend(Frontend):
         self.copy_on = not self.copy_on
         return self.copy_on
 
-    def load_grid(self, anchor):
+    def load_grid(self, edit, anchor):
         t = time.time()
         self.round = 0
-        grid = self.backend.load_grid(self.flag, anchor, self.clustering_algorithm)
+        grid = self.backend.load_grid(self.flag, edit, anchor, self.clustering_algorithm)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
         self.copy_on = False
@@ -168,7 +167,8 @@ class UvicornFrontend(Frontend):
         t = time.time()
         cluster = self.grid.clusters[col_index]
         self.update_track_actions([self.round, 'human', 'rename_cluster', t, 'cluster', name, 'old_' + cluster.name])
-        cluster.set_name(name, True)
+        can_freeze = not (self.flag == 'control' and col_index == 0)
+        cluster.set_name(name, can_freeze) # This is so nobody can accidentally freeze the initial control column. Should usually be: cluster.set_name(name, True)
         return self.show_grid()
 
     def set_k(self, k: int) -> dict:
@@ -275,7 +275,7 @@ class UvicornFrontend(Frontend):
             file.write(consent)
 
 
-frontend = UvicornFrontend(0, 'control', '../process_files/', 6, 'harvest', 'results/tracking', 'kmeans')
+frontend = UvicornFrontend(0, 'treatment', '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
@@ -290,9 +290,9 @@ def root(edit: bool, training: bool): # Depends( my function that changes data f
         if not training:
             data = frontend.show_grid()
         else:
-            data = frontend.load_grid("training") # Not happy about re-summoning a grid with hard-coded anchor, but it's necessary for the training
+            data = frontend.load_grid(edit, "training") # Not happy about re-summoning a grid with hard-coded anchor, but it's necessary for the training
     else:
-        data = frontend.load_grid(frontend.grid.anchor)
+        data = frontend.load_grid(edit, frontend.grid.anchor)
     return data # returns to front end
 
 
