@@ -50,6 +50,24 @@ class Grid():
 	def regenerate(self):
 		self.generate_clusters()
 
+	# This is just for the study and can be removed afterwards
+	def control_update(self):
+		frozen_docs = self.flatten_lists([cluster.documents for cluster in self.clusters if cluster.is_frozen()])
+		for i, cluster in enumerate(self.clusters):
+			if not cluster.is_frozen():
+				allowed_docs = []
+				for doc in cluster.documents:
+					if doc in cluster.human_documents or doc not in frozen_docs:
+						allowed_docs.append(doc)
+				cluster.set_documents(allowed_docs)
+				if not cluster.documents and not cluster.human_documents:
+					self.clusters.pop(i)
+				else:
+					name = self.name_cluster(cluster.documents)
+					cluster.set_name(name, False)
+
+
+
 	def update_for_anchor(self, key, value, add_or_remove):
 		self.documents = self.corpus.adjust_for_anchor(key, value, add_or_remove) # Adds or removes docs based on anchor changes, recalculates TFIDF and PMI
 		self.regenerate() # Should preserve existing columns while clustering new docs via machine

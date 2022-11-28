@@ -127,8 +127,8 @@ function App({apiUrl, edit, training, timeLimit}) {
     <div style={{display:"flex", flexDirection:"column"}}>
     <div style={{display:"flex", flexDirection:"row"}}>
 
-    {flag === 'control' ? <div style={{marginLeft:"18em"}}/>
-     :  <div style={{display:"flex", flexDirection:"row", marginLeft:"3em", marginTop:"1em"}}>
+    
+       <div style={{display:"flex", flexDirection:"row", marginLeft:"3em", marginTop:"1em"}}>
         <RegenerateButton className="RegenerateButton" onClick={(evt) => {
           console.log(evt);
           setCorpus(evt.clicked_sentences);
@@ -138,7 +138,7 @@ function App({apiUrl, edit, training, timeLimit}) {
       }
       apiUrl={apiUrl}/>
 
-      </div>}
+      </div>
 
     <InputBox data={gridRows} col_num_to_name={colNumToName} 
       onKeyPress={(evt) => {

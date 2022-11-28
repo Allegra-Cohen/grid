@@ -152,7 +152,10 @@ class UvicornFrontend(Frontend):
     def regenerate(self) -> dict:
         t = time.time()
         self.round += 1
-        self.grid.regenerate()
+        if self.flag == 'control':
+            self.grid.control_update()
+        else:
+            self.grid.regenerate()
         self.clicked_col = None
         self.clicked_row = None
         self.clicked_documents = self.get_clicked_documents()
