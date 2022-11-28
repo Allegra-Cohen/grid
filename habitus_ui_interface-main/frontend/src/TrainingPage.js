@@ -119,7 +119,7 @@ function TrainingPage({step, apiUrl}) {
 
 
         </div>
-      <div style={{'marginBottom':'5%'}}><App apiUrl="http://localhost:8000" edit={true} training={true} timeLimitGrid={0}/></div> 
+      <div style={{'marginBottom':'5%'}}><App apiUrl="" edit={true} training={true} timeLimitGrid={0}/></div> 
       </DndProvider>
   );
 }
