@@ -30,8 +30,11 @@ class Grid():
 				self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
 			else:
 				self.cluster_generator = SoftKMeans(self.corpus, self.linguist)
-		else:
+		elif flag == 'placebo':
 			self.cluster_generator = Random(self.corpus, self.linguist)
+		else:
+			self.cluster_generator = None
+			print("Incorrect flag!!")
 
 	@classmethod
 	def generate(cls, flag: str, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
@@ -39,6 +42,8 @@ class Grid():
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		if flag != 'control':
 			grid.generate_clusters()
+		elif grid.cluster_generator is None:
+			return None
 		else:
 			grid.control_initialize()
 		return grid

@@ -12,7 +12,7 @@ function TrainingPage({step, apiUrl}) {
     const [flag, setFlag] = useState();
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/${true}/${false}`)
+        fetch(`${apiUrl}/data/`)
             .then( response => response.json())
             .then( data => {
                 setFlag(data['flag']);
@@ -22,7 +22,6 @@ function TrainingPage({step, apiUrl}) {
 
 
     const handleLinkClick = () => {
-        fetch(`${apiUrl}/loadNewGrid/${'harvest'}`).then( response => response.json());
         fetch(`${apiUrl}/toggleTraining/`).then( response => response.json());
     }
 
@@ -107,14 +106,18 @@ function TrainingPage({step, apiUrl}) {
         Creating new columns is handy, but you may not always want to make big changes to the Grid. Sometimes you may want to move individual sentences for more precise organization. Good news: You can!<br/><br/>
 
         {flag !== 'control' ?
-        <div><b>Seeding columns: </b><br/>
-        You can drag sentences between columns to move them. This is called <b>seeding</b> a column because it tells the machine not to move that sentence. 
-        Seeding is most useful when you want to group several sentences into a column, but you want the machine to decide what else to put there. It's an intermediate step between machine-generated and frozen columns (although you can also drag sentences into frozen columns.) <br/><br/>
+        <div><b>Dragging sentences: </b><br/>
+        You can drag sentences between columns to move them. When you drag a sentence from one unfrozen column to another, it is called <b>seeding</b> because the machine will not move that sentence when it reorganizes. 
+        Seeding is most useful when you want to group several sentences into a column, but you want the machine to decide what else to put there. It's an intermediate step between machine-generated and frozen columns. <br/><br/>
+
+        <b>Training task: </b> Click on any unfrozen column (blue text) and find two or more sentences to move. Drag these sentences into another unfrozen column. 
+        Note that the name of this column may change to reflect the new sentences. Next, click "Update Grid." The sentences you dragged together will stay together when the machine reorganizes.<br/><br/> 
+
+        Seeding only works with documents that are not already part of a frozen column. Suppose you drag a sentence out of a frozen column A and into an unfrozen target column B;
+        it will not remain there during reorganizing unless you freeze column B. Sentences dragged between frozen columns will stay in their target column.<br/><br/> 
             
         <b>Copying:</b> If you want to put a sentence in multiple columns, you can click the "Copy" button before you drag. Don't forget to turn it off when you're done!<br/><br/>
 
-        <b>Training task: </b> Click on any column and find three sentences to move. Drag these sentences into one unfrozen column (any column with a blue name). 
-        Note that the name of this column may change to reflect the new sentences. Next, click "Update Grid." The sentences you dragged together will still be in the same column (though it may not be the one you're looking at.)
 
         </div>
         :

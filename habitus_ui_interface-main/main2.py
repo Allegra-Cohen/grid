@@ -34,15 +34,12 @@ class UvicornFrontend(Frontend):
         self.training = True
         self.path = path
         self.clustering_algorithm = clustering_algorithm
-        self.grid = self.backend.get_grid(self.user.flag, k, anchor, anchor, self.clustering_algorithm)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
-        self.show_grid()
         self.track_actions = {'user_id':[], 'training':[], 'condition':[], 'round': [], 'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
         self.tracking_prefix = tracking_prefix
         self.round = 0
-        self.update_grid_record('initial', 'initial', time.time())
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -92,8 +89,8 @@ class UvicornFrontend(Frontend):
             "synonym_book": self.grid.synonym_book
         }
 
-    def load_new_grid(self, newAnchor: str):
-        k = self.grid.k
+    def load_new_grid(self, newAnchor: str, k: int):
+        print("OVER HERE")
         self.grid = self.backend.get_grid(self.user.flag, k, newAnchor, newAnchor, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
@@ -275,7 +272,8 @@ class UvicornFrontend(Frontend):
             file.write(consent)
 
 user = User('../process_files/user_to_condition.csv')
-frontend = UvicornFrontend(user, '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans')
+max_k = 5
+frontend = UvicornFrontend(user, '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans') # 'kmeans' doesn't refer to the condition, it refers to whether KMeans or Surdeanu2005 is used for treatment condition
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
@@ -284,17 +282,13 @@ frontend = UvicornFrontend(user, '../process_files/', 5, 'harvest', 'results/tra
 # - call into the frontend to perform the action
 # - return the right kind of result, probably forwarded from the frontend
 
-@app.get("/data/{edit}/{training}")
-def root(edit: bool, training: bool): # Depends( my function that changes data for front end )
-    if edit:
-        if not training:
-            data = frontend.show_grid()
-        else:
-            data = frontend.load_grid(edit, "training") # Not happy about re-summoning a grid with hard-coded anchor, but it's necessary for the training
-    else:
-        data = frontend.load_grid(edit, frontend.grid.anchor)
+@app.get("/data/")
+def root(): # Depends( my function that changes data for front end )
+    data = frontend.show_grid()
+    print("Root called ", frontend.grid.anchor, " ----------------------------------------------------------------------")
     return data # returns to front end
 
+# The following are not useful outside the experiment ---------------------------------------------------------------------------
 @app.get("/setUser/{userID}")
 async def setUser(userID: int):
     print("setting user: ", userID)
@@ -303,10 +297,30 @@ async def setUser(userID: int):
     print("corresponding condition: ", user.flag)
     return user.flag
 
+@app.get("/loadTrainingGrid/")
+async def loadTrainingGrid():
+    print("loadTrainingGrid")
+    frontend.load_grid(True, "training")
+    print(frontend.grid.anchor, " grid now loaded")
+    return frontend.show_grid()
+
+@app.get("/loadCurationGrid/")
+async def loadCurationGrid():
+    print("loadCurationGrid")
+    frontend.load_new_grid('harvest', max_k)
+    print(frontend.grid.anchor, " grid now loaded")
+
+@app.get("/loadTestGrid/")
+async def loadTestGrid():
+    print("loadTestGrid")
+    frontend.load_grid(False, 'harvest')
+
+# --------------------------------------------------------------------------------------------------------------------------------
+
 @app.get("/loadNewGrid/{newAnchor}")
 async def loadNewGrid(newAnchor: str):
     print("loadNewGrid", newAnchor)
-    return frontend.load_new_grid(newAnchor)
+    return frontend.load_new_grid(newAnchor, max_k)
 
 @app.get("/updateAnchorBook/{key}/{value}/{add_or_remove}")
 async def updateAnchorBook(key: str, value: str, add_or_remove: str):

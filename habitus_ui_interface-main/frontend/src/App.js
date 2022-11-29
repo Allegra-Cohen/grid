@@ -51,7 +51,7 @@ function App({apiUrl, edit, training, timeLimit}) {
     }
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/${edit}/${training}`)
+        fetch(`${apiUrl}/data/`)
             .then( response => response.json())
             .then( data => {
                 setFlag(data.flag);
@@ -74,22 +74,8 @@ function App({apiUrl, edit, training, timeLimit}) {
       <Link to="/instructions2" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
       </div>:<div/>}
       {edit === true ?
-      <div style={disabled ? {pointerEvents: "none", opacity: "0.4", display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}: {display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
-          contenteditable="true" onInput={
-                (evt) => {
-                    console.log(evt.target.lastChild, evt.target.lastChild.toString());
-                    if (evt.target.lastChild.toString() === "[object HTMLDivElement]") {
-                        let text = evt.target.textContent;
-                        fetch(`${apiUrl}/loadNewGrid/${text}`)
-                        .then( response => response.json());
-                        console.log("!", text);
-                        evt.target.value = '';
-                        evt.target.blur();
-                        window.location.reload();
-                    }
-                }
-
-            }> {anchor} </div> : <div style={{marginBottom:'3em'}}/>}
+      <div style={disabled ? {pointerEvents: "none", opacity: "0.4", display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}: {display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}}>
+       {anchor} </div> : <div style={{marginBottom:'3em'}}/>}
 
     <div className="App" style={disabled ? {pointerEvents: "none", opacity: "0.4", display: "flex", flexDirection: "row"} : {display: "flex", flexDirection: "row"}}>
     <div style={{
@@ -168,7 +154,6 @@ function App({apiUrl, edit, training, timeLimit}) {
       <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Dragging:</b> Drag sentences between columns. Sentences do not move between rows. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Create new column:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word. If the word is not in the corpus, no column will be created.</li>
       </ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Trash:</b> You can drag a sentence into the trash can if you want to get rid of it. This will remove the sentence from the entire Grid permanently.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>- A column will disappear if you remove all sentences from it.</li>
        </ul>
       {flag === 'control' ? <div/> :<ul>

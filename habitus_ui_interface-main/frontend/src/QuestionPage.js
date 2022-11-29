@@ -25,16 +25,17 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     };
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/${true}/${false}`)
+        fetch(`${apiUrl}/data/`)
+            .then(console.log(questionSet))
             .then( response => response.json())
             .then( data => {
-                setQuestions(data['question_sets'][questionSet]['listDict']);
-                console.log(questions)
+                setQuestions([...data['question_sets'][questionSet]['listDict']]);
             });
     }, [])
 
 
     const handleAnswerOptionClick = (questionIndex, answerText) => {
+        console.log(questionSet);
         fetch(`${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${answerText}`)
             .then( response => response.json())
             .then( data => {
@@ -48,7 +49,8 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
 
     const handleLinkClick = () => {
         fetch(`${apiUrl}/recordAnswers/${questionSet}`).then( response => response.json());
-        setClicked = []
+        setClicked([]);
+        console.log(questionSet)
     }
 
      return (
@@ -56,7 +58,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
       {questionSet === 'test' ?
       <div className="info" style={{marginLeft:'84%'}}>
       Time left: <Countdown date={start + timeLimit} renderer={timer} /> <br/>
-      <Link to="/feedback" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
+      <Link to="/instructions3" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
       </div>
         : <div/>}
       {questionSet === 'survey' ? <div className = 'info' style = {{width: 'max-content', marginTop:'1%', marginLeft:'1%', fontSize:'14pt'}}> Please answer these questions about your professional background: </div> : <div/>}
@@ -84,7 +86,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
        </div>
       <div style = {{marginBottom:'10%'}}>
       {questionSet === 'survey' ? <Link to="/instructions" className="info" style={{marginLeft:'80%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
-      {questionSet === 'test' ? <Link to="/feedback" className="info" style={{marginLeft:'80%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
+      {questionSet === 'test' ? <Link to="/instructions3" className="info" style={{marginLeft:'80%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
       {questionSet === 'feedback' ? <Link to="/thanks" className="info" style={{marginLeft:'70%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to submit your feedback. </Link> : <div/>}
       </div>
     
