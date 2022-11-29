@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 class UvicornFrontend(Frontend):
-    def __init__(self, user, path: str, k: int, anchor: str, tracking_prefix: str, clustering_algorithm: str):
+    def __init__(self, user, path: str, tracking_prefix: str, clustering_algorithm: str):
         super().__init__(path)
         self.user = user
         self.question_sets = {'survey': QA('survey', path, 'survey_questions.txt'), 'test': QA('test', path, 'test_questions.txt'), 'feedback': QA('feedback', path, 'feedback_questions.txt')}
@@ -273,7 +273,7 @@ class UvicornFrontend(Frontend):
 
 user = User('../process_files/user_to_condition.csv')
 max_k = 5
-frontend = UvicornFrontend(user, '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans') # 'kmeans' doesn't refer to the condition, it refers to whether KMeans or Surdeanu2005 is used for treatment condition
+frontend = UvicornFrontend(user, '../process_files/', 'results/tracking', 'kmeans') # 'kmeans' doesn't refer to the condition, it refers to whether KMeans or Surdeanu2005 is used for treatment condition
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
