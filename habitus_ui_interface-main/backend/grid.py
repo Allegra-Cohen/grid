@@ -129,7 +129,7 @@ class Grid():
 
 	def generate_clusters(self):
 		print("K: ", self.k)
-		print("Generating grid ... ")
+		print("Generating grid with generator ", self.cluster_generator, "... ")
 		frozen_clusters = [cluster for cluster in self.clusters if cluster.is_frozen()]
 		seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()]
 

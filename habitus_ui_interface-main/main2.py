@@ -5,6 +5,7 @@ import sys
 sys.path.append("./backend")
 
 from QA import QA
+from user import User
 from document import Document
 from fastapi import FastAPI, Depends
 from frontend import Frontend
@@ -26,15 +27,14 @@ app.add_middleware(
 )
 
 class UvicornFrontend(Frontend):
-    def __init__(self, user_id, flag: str, path: str, k: int, anchor: str, tracking_prefix: str, clustering_algorithm: str):
+    def __init__(self, user, path: str, k: int, anchor: str, tracking_prefix: str, clustering_algorithm: str):
         super().__init__(path)
-        self.user_id = user_id
+        self.user = user
         self.question_sets = {'survey': QA('survey', path, 'survey_questions.txt'), 'test': QA('test', path, 'test_questions.txt'), 'feedback': QA('feedback', path, 'feedback_questions.txt')}
-        self.flag = flag
         self.training = True
         self.path = path
         self.clustering_algorithm = clustering_algorithm
-        self.grid = self.backend.get_grid(self.flag, k, anchor, anchor, self.clustering_algorithm)
+        self.grid = self.backend.get_grid(self.user.flag, k, anchor, anchor, self.clustering_algorithm)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
@@ -80,7 +80,7 @@ class UvicornFrontend(Frontend):
 
         return {
             "question_sets": self.question_sets,
-            "flag": self.flag,
+            "flag": self.user.flag,
             "anchor": self.grid.anchor,
             "sentences": sentences,
             "clicked_sentences": clicked_sentences,
@@ -94,7 +94,7 @@ class UvicornFrontend(Frontend):
 
     def load_new_grid(self, newAnchor: str):
         k = self.grid.k
-        self.grid = self.backend.get_grid(self.flag, k, newAnchor, newAnchor, self.clustering_algorithm)
+        self.grid = self.backend.get_grid(self.user.flag, k, newAnchor, newAnchor, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
         self.update_track_actions([self.round, 'human', 'new_grid', t, 'grid', newAnchor, None])
@@ -115,7 +115,7 @@ class UvicornFrontend(Frontend):
     def load_grid(self, edit, anchor):
         t = time.time()
         self.round = 0
-        grid = self.backend.load_grid(self.flag, edit, anchor, self.clustering_algorithm)
+        grid = self.backend.load_grid(self.user.flag, edit, anchor, self.clustering_algorithm)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
         self.copy_on = False
@@ -151,7 +151,7 @@ class UvicornFrontend(Frontend):
     def regenerate(self) -> dict:
         t = time.time()
         self.round += 1
-        if self.flag == 'control':
+        if self.user.flag == 'control':
             self.grid.control_update()
         else:
             self.grid.regenerate()
@@ -167,7 +167,7 @@ class UvicornFrontend(Frontend):
         t = time.time()
         cluster = self.grid.clusters[col_index]
         self.update_track_actions([self.round, 'human', 'rename_cluster', t, 'cluster', name, 'old_' + cluster.name])
-        can_freeze = not (self.flag == 'control' and col_index == 0)
+        can_freeze = not (self.user.flag == 'control' and col_index == 0)
         cluster.set_name(name, can_freeze) # This is so nobody can accidentally freeze the initial control column. Should usually be: cluster.set_name(name, True)
         return self.show_grid()
 
@@ -221,11 +221,11 @@ class UvicornFrontend(Frontend):
         return self.show_grid()
 
     def update_grid_record(self, action, actor, t):
-        grid_path = self.path + self.tracking_prefix + '_grid_' + str(self.user_id) + '.csv'
+        grid_path = self.path + self.tracking_prefix + '_grid_' + str(self.user.user_id) + '.csv'
         df = self.grid.dump(grid_path, write = False)
-        df['user_id'] = self.user_id
+        df['user_id'] = self.user.user_id
         df['training'] = self.training
-        df['condition'] = self.flag
+        df['condition'] = self.user.flag
         df['round'] = self.round
         df['action'] = action
         df['actor'] = actor
@@ -236,9 +236,9 @@ class UvicornFrontend(Frontend):
         self.training = not self.training
 
     def update_track_actions(self, info):
-        self.track_actions['user_id'].append(self.user_id)
+        self.track_actions['user_id'].append(self.user.user_id)
         self.track_actions['training'].append(self.training)
-        self.track_actions['condition'].append(self.flag)
+        self.track_actions['condition'].append(self.user.flag)
         self.track_actions['round'].append(info[0])
         self.track_actions['actor'].append(info[1])
         self.track_actions['action'].append(info[2])
@@ -247,15 +247,15 @@ class UvicornFrontend(Frontend):
         self.track_actions['object_value'].append(info[5])
         self.track_actions['other_details'].append(info[6])
 
-        pd.DataFrame(self.track_actions).to_csv(self.path + self.tracking_prefix + '_actions_' + str(self.user_id) + '.csv') # Just rewrite every time. Slower than appending?
+        pd.DataFrame(self.track_actions).to_csv(self.path + self.tracking_prefix + '_actions_' + str(self.user.user_id) + '.csv') # Just rewrite every time. Slower than appending?
 
     # Final answers
     def write_out_answers(self, questionSet):
         qset = self.question_sets[questionSet]
         df = qset.return_dataframe()
-        df['user_id'] = self.user_id
-        df['condition'] = self.flag
-        df.to_csv(self.path + self.tracking_prefix + '_' + questionSet + '_' + str(self.user_id) + '.csv')
+        df['user_id'] = self.user.user_id
+        df['condition'] = self.user.flag
+        df.to_csv(self.path + self.tracking_prefix + '_' + questionSet + '_' + str(self.user.user_id) + '.csv')
         qset.clear_answers()
 
     # Tracking for question-answering
@@ -269,13 +269,13 @@ class UvicornFrontend(Frontend):
         return currently_active
 
     def write_consent(self):
-        consent = "Participant " + str(self.user_id) + " consented to participate in this study on " + str(date.today()) # Put ID number in string
-        filename = 'results/consent_' + str(self.user_id) + '.txt' # Put ID number in here
+        consent = "Participant " + str(self.user.user_id) + " consented to participate in this study on " + str(date.today()) # Put ID number in string
+        filename = 'results/consent_' + str(self.user.user_id) + '.txt' # Put ID number in here
         with open(self.path + filename, 'a') as file:
             file.write(consent)
 
-
-frontend = UvicornFrontend(0, 'treatment', '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans')
+user = User('../process_files/user_to_condition.csv')
+frontend = UvicornFrontend(user, '../process_files/', 5, 'harvest', 'results/tracking', 'kmeans')
 
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
@@ -295,6 +295,13 @@ def root(edit: bool, training: bool): # Depends( my function that changes data f
         data = frontend.load_grid(edit, frontend.grid.anchor)
     return data # returns to front end
 
+@app.get("/setUser/{userID}")
+async def setUser(userID: int):
+    print("setting user: ", userID)
+    user.set_id(userID)
+    user.assign_flag()
+    print("corresponding condition: ", user.flag)
+    return user.flag
 
 @app.get("/loadNewGrid/{newAnchor}")
 async def loadNewGrid(newAnchor: str):

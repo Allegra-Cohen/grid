@@ -7,6 +7,7 @@ import QuestionPage from './QuestionPage';
 import './QuestionPage.css';
 import TrainingPage from './TrainingPage';
 import ConsentPage from './ConsentPage';
+import LoginPage from './LoginPage';
 import App from './App';
 import './info.css';
 
@@ -20,7 +21,8 @@ root.render(
   <React.StrictMode>
   <BrowserRouter>
   <Routes>
-    <Route path="/" element={<ConsentPage apiUrl="." />}/>
+    <Route path="/" element={<LoginPage apiUrl="." />}/>
+    <Route path="/consent" element={<ConsentPage apiUrl="." />}/>
     <Route path="/pretraining" element={<div><div style={{marginLeft:'30%', marginTop:'5%', width: '30%'}} className='info'>Before beginning the study, you will go through a brief training to learn how to use the tool.<br/></div><div><Link to="/training1" className="info" style={{marginLeft:'60%', marginTop:'5%'}}>Click here to begin.</Link></div></div>}/>
     <Route path="/training1" element={<TrainingPage step={1} apiUrl="."/>}/>
     <Route path="/training2" element={<TrainingPage step={2} apiUrl="."/>}/>

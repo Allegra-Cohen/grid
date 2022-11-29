@@ -14,7 +14,6 @@ class Random(ClusterGenerator):
 	def generate(self,  documents: list[Document], k: int, frozen_document_lists: list[list[Document]] = [],
 			seeded_document_lists: list[list[Document]] = [], all_frozen_docs: list[Document] = []) -> tuple[list[list[int]], int]:
 
-		# random.seed(self.seed)
 		if len(frozen_document_lists) > 0:
 			k_selected = self.rndgen.sample(list(range(2,k)), 1)[0]
 		else:
