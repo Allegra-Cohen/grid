@@ -184,6 +184,9 @@ class Grid():
 			self.clusters.append(cluster)
 		return documents
 
+	def delete_cluster(self, cluster_index):
+		self.clusters.pop(cluster_index)
+
 	def freeze_cluster(self, cluster_index):
 		self.clusters[cluster_index].freeze()
 

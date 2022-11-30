@@ -175,7 +175,7 @@ class UvicornFrontend(Frontend):
     def delete_frozen(self, col_index: int) -> dict:
         t = time.time()
         name = self.grid.clusters[col_index].name
-        self.grid.clusters.pop(col_index)
+        self.grid.delete_cluster(col_index)
         self.update_track_actions([self.round, 'human', 'delete_cluster', t, 'cluster', name, None])
         return self.show_grid()
 
