@@ -87,13 +87,17 @@ function TrainingPage({step, apiUrl}) {
         </ul>
         Notice that even though you created a new column, the "onion" sentences are still in the original column. This is annoying! To let the Grid know about your changes, click the "Update Grid" button. This will remove the "onion" sentences
         from the original column and update the original column's name to reflect what's in it.<br/><br/>
+        <b>Delete column: </b> You can click on the wastebasket button beneath a column that you've created to delete it, and then click Update Grid. This will return the sentences in that column to the original column.<br/><br/>
         </div>
 
         }
 
 
         {flag !== 'control' ? <div>This button does two things. First, it removes the "onion" sentences from the pool of sentences that the machine is allowed to organize. Second, it asks the machine to reorganize the remaining sentences. You'll notice that
-        new columns appear in response to your changes. <br/><br/> In summary, freezing columns allows you to make a decision about some sentences (e.g., "I want a column about onions!") while leaving the rest of the sentences to the machine. <br/><br/></div>
+        new columns appear in response to your changes. <br/><br/> In summary, freezing columns allows you to make a decision about some sentences (e.g., "I want a column about onions!") while leaving the rest of the sentences to the machine. <br/><br/>
+
+        <b>Delete frozen column: </b> You can click on the wastebasket button beneath a frozen column to delete it. You must update the Grid in order to return the sentences from that column to the Grid.<br/><br/>
+        </div>
             : <div/>
         }
 
