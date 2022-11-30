@@ -1,6 +1,7 @@
 import numpy as np
 import re
 import string
+import spacy
 
 from document import Document
 from nltk.corpus import stopwords
@@ -12,6 +13,7 @@ class Linguist():
 	def __init__(self):
 		self.word_vectorizer = CountVectorizer(analyzer = 'word', tokenizer = word_tokenize)
 		self.tfidf_vectorizer = TfidfVectorizer(tokenizer = word_tokenize)
+		self.nlp = spacy.load("en_core_web_sm")
 
 	def tokenize(self, text: str) -> list[str]:
 		return word_tokenize(text)
@@ -23,7 +25,7 @@ class Linguist():
 		cleaned = no_digits.lower().translate(str.maketrans(string.punctuation, ' '*len(string.punctuation))).strip()
 		return cleaned
 
-	def clean_text(self, text, nlp, readable = False, allow_stopwords = False, lemmatize = False, synonym_book = None):
+	def clean_text(self, text, readable = False, allow_stopwords = False, lemmatize = False, synonym_book = None):
 
 		stop = set(stopwords.words('english') + list(string.punctuation) + ['', ' ', '…', 'also'])
 
@@ -45,7 +47,7 @@ class Linguist():
 			cleaned = cleaned.replace(c, ' ')
 		if not allow_stopwords:
 			if lemmatize:
-				cleaned = ' '.join(w.lemma_ for w in nlp(cleaned) if str(w) not in stop and str(w) not in junk)
+				cleaned = ' '.join(w.lemma_ for w in self.nlp(cleaned) if str(w) not in stop and str(w) not in junk)
 			else:
 				cleaned = ' '.join(w for w in cleaned.split(' ') if w not in stop and w not in junk)
 		cleaned = re.sub(' +', ' ', cleaned)
@@ -59,6 +61,8 @@ class Linguist():
 		return cleaned
 
 	def find_relevant_docs(self, documents: list[Document], anchor: str) -> list[Document]:
+
+		anchor = self.nlp(anchor)[0].lemma_
 
 		def has_anchor(document: Document) -> bool:
 			words = self.tokenize(document.get_vector_text())
