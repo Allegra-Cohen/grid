@@ -30,7 +30,7 @@ class SoftKMeans(ClusterGenerator):
 		self.rndgen = random.Random(self.seed)
 
 	def initialize_clusters_plus_plus(self):
-		first = self.documents[random.sample(range(0, len(self.documents)), 1)][0]
+		first = self.documents[self.rndgen.sample(range(0, len(self.documents)), 1)][0]
 		centroids = [first]
 		for i in range(self.k):
 			Ds = []
