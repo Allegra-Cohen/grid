@@ -146,24 +146,25 @@ function App({apiUrl, edit, training, timeLimit}) {
       </div>
         : <div/>}
       {edit === true & training === false ?
-      <div style={{marginLeft:'4em', marginTop:'3em', borderColor:'blue'}}><u>GUIDE</u><ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Clicking:</b> Click on cells to view sentences. Colors indicate the amount of knowledge in each cell. Click on sentences to see them in the larger interview context.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- Some sentences have more than one topic and can appear in more than one column.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- You can organize information in two ways:</li>
+      <div style={{marginLeft:'4em', marginTop:'3em', borderColor:'blue'}}><u>Cheat sheet</u>
+      {flag === 'control' ?
       <ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Dragging:</b> Drag sentences between columns. Sentences do not move between rows. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Create new column:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word. If the word is not in the corpus, no column will be created.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> ...</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Update Grid:</b> Clicking this button will remove the contents of new columns from the beginning column.</li>
       </ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- A column will disappear if you remove all sentences from it.</li>
-       </ul>
-      {flag === 'control' ? <div/> :<ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Update Grid:</b> You can click "Update Grid" to ask the machine to reorganize the columns.</li>
+      : 
       <ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- The machine will reorganize information that you haven't organized, paying attention to the changes you have made. It may produce new columns using the sentences you have not interacted with; these columns have blue names.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- Once you put a sentence in a column, it will stay there; the machine will not move that sentence. </li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- Creating a new column automatically "freezes" it, meaning the machine will not assign or remove sentences to and from that column. Frozen columns have black names.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>- <b>Renaming:</b> You can also freeze a column by double-clicking its name, typing a new one, and pressing Enter.</li>
-      </ul></ul>}
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word. This column is now frozen and will not change when the Grid is updated.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> ...</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter. Renaming a column also freezes it.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns to move them. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Seeding columns:</b> If you drag a sentence between unfrozen columns, the sentence will stay in its new column when the Grid is updated.</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Update Grid:</b> Clicking this button will ask the machine to reorganize the Grid. It will generate new columns from the sentences that you have not previously frozen or seeded.</li>
+      </ul>
+      }
       </div>
       : <div/>}
       </div>
@@ -194,7 +195,7 @@ function App({apiUrl, edit, training, timeLimit}) {
         display: "flex",
         flexDirection: "column"
       }}>
-      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'3em'}}><u>Interview context</u></div>
+      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'3em'}}><u>Sentence context</u></div>
        <div style={{display:'inline', width:'350px'}}>
       {context[0]} <b>{context[1]}</b> {context[2]}
       </div>
