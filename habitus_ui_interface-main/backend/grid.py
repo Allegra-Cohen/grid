@@ -222,6 +222,9 @@ class Grid():
 	def freeze_cluster(self, cluster_index):
 		self.clusters[cluster_index].freeze()
 
+	def delete_cluster(self, cluster_index):
+		self.clusters.pop(cluster_index)
+
 	def get_clicked_documents(self, column_index, row_index) -> list[Document]:
 		if column_index == None or row_index == None or \
 				column_index not in range(len(self.clusters)) or \

@@ -108,9 +108,18 @@ function App({apiUrl, edit, training, timeLimit}) {
             console.log('onfooter:', evt);
             setGridRows({...evt.grid});
             setColNumToName({...evt.col_num_to_name});
-            setFrozenColumns([...evt.frozen_columns]);
-        }
+            setFrozenColumns([...evt.frozen_columns])}
        }
+
+       onDeleteFrozen={
+         (evt) => {
+             console.log('delete frozen:', evt);
+             setCorpus(evt.clicked_sentences);
+             setGridRows({...evt.grid});
+             setColNumToName({...evt.col_num_to_name});
+             setFrozenColumns([...evt.frozen_columns])}
+        }
+
        edit={edit}
     apiUrl={apiUrl} userID = {userID}/>
     {edit === true ?
@@ -154,7 +163,7 @@ function App({apiUrl, edit, training, timeLimit}) {
       {flag === 'control' ?
       <ul>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> ...</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> Click the wastebasket beneath the column you want to delete. This will return the sentences in that column to the beginning column.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Update Grid:</b> Clicking this button will remove the contents of new columns from the beginning column.</li>
@@ -162,7 +171,7 @@ function App({apiUrl, edit, training, timeLimit}) {
       : 
       <ul>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word. This column is now frozen and will not change when the Grid is updated.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> ...</li>
+      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> Click the wastebasket beneath the column you want to delete. You must update the Grid to return the sentences in the deleted column to the Grid.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter. Renaming a column also freezes it.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns to move them. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
       <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Seeding columns:</b> If you drag a sentence between unfrozen columns, the sentence will stay in its new column when the Grid is updated.</li>
