@@ -70,7 +70,7 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
     </tr>)
 }
 
-function Footer({id, colName, frozenColumns, onFooter, apiUrl}){
+function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiUrl}){
     
     return (
     <td key={id}><div style={{
@@ -93,12 +93,19 @@ function Footer({id, colName, frozenColumns, onFooter, apiUrl}){
                     evt.target.value = '';
                     evt.target.blur();
                 }
-                }}/></div>
+                }}/>
+    {frozenColumns.includes(id) ? <div> <button onClick={(evt) => {
+                    fetch(`${apiUrl}/deleteFrozenColumn/${id}`)
+                    .then( response => response.json())
+                    .then( response => {onDeleteFrozen(response);
+                    });
+                }} >🗑</button> </div> :<div/>}
+    </div>
     </td>)
 
 }
 
-export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, apiUrl}){
+export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, onDeleteFrozen, apiUrl}){
     const [activeCell, setActiveCell] = useState();
     const activateCell = (item) => setActiveCell(item);
     console.log(activeCell)
@@ -114,7 +121,7 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
         let colNames = colIDs.map((colID) => col_num_to_name[colID]);
         // console.log('grid here');
         // console.log(col_num_to_name)
-        footer = colNames.map((name, ix) => <Footer key = {ix} id={ix} colName={name} frozenColumns={frozen_columns} onFooter={onFooter} apiUrl={apiUrl} />)
+        footer = colNames.map((name, ix) => <Footer key = {ix} id={ix} colName={name} frozenColumns={frozen_columns} onFooter={onFooter} onDeleteFrozen={onDeleteFrozen} apiUrl={apiUrl} />)
     }
 
 

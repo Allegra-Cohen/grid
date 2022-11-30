@@ -172,6 +172,13 @@ class UvicornFrontend(Frontend):
         [self.update_track_actions([self.round, 'human', 'freeze', t, 'sentence', doc.readable, 'cluster_' + text]) for doc in frozen_docs]
         return self.show_grid()
 
+    def delete_frozen(self, col_index: int) -> dict:
+        t = time.time()
+        name = self.grid.clusters[col_index].name
+        self.grid.clusters.pop(col_index)
+        self.update_track_actions([self.round, 'human', 'delete_cluster', t, 'cluster', name, None])
+        return self.show_grid()
+
     def click(self, row_name: str, col_index: int) -> list[str]:
         t = time.time()
         row_index = next(index for index, row in enumerate(self.grid.rows) if row.name == row_name)
@@ -265,6 +272,11 @@ async def sentenceClick(text: str):
 async def editName(ix: int, newName: str):
     print("editName", ix, newName)
     return frontend.set_name(int(ix), newName)
+
+@app.get("/deleteFrozenColumn/{ix}")
+async def deleteFrozenColumn(ix: int):
+    print("deleteFrozen", ix)
+    return frontend.delete_frozen(int(ix))
 
 @app.get("/textInput/{text}")
 async def textInput(text: str):

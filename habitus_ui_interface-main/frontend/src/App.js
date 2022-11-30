@@ -97,8 +97,16 @@ function App({apiUrl}) {
             console.log('onfooter:', evt);
             setGridRows({...evt.grid});
             setColNumToName({...evt.col_num_to_name});
-            setFrozenColumns([...evt.frozen_columns]);
+            setFrozenColumns([...evt.frozen_columns]);}
         }
+
+        onDeleteFrozen={
+        (evt) => {
+            console.log('delete frozen:', evt);
+            setCorpus(evt.clicked_sentences);
+            setGridRows({...evt.grid});
+            setColNumToName({...evt.col_num_to_name});
+            setFrozenColumns([...evt.frozen_columns]);}
        }
     apiUrl={apiUrl} />
     <div style={{display:"flex", flexDirection:"column"}}>
