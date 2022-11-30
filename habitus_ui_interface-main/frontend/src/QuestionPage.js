@@ -14,6 +14,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     const [clicked, setClicked] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [start, setStart] = useState(Date.now());
+    const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
 
     const timer = ({ hours, minutes, seconds, completed }) => {
       if (completed || disabled) {
@@ -25,18 +26,20 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     };
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/`)
+        let user = JSON.parse(localStorage.getItem('userID'));
+        setUserID(user);
+        fetch(`${apiUrl}/data/${userID}`)
             .then(console.log(questionSet))
             .then( response => response.json())
             .then( data => {
                 setQuestions([...data['question_sets'][questionSet]['listDict']]);
             });
-    }, [])
+    }, [userID])
 
 
     const handleAnswerOptionClick = (questionIndex, answerText) => {
         console.log(questionSet);
-        fetch(`${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${answerText}`)
+        fetch(`${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${answerText}/${userID}`)
             .then( response => response.json())
             .then( data => {
                 if (data instanceof Array) {
@@ -48,7 +51,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     };
 
     const handleLinkClick = () => {
-        fetch(`${apiUrl}/recordAnswers/${questionSet}`).then( response => response.json());
+        fetch(`${apiUrl}/recordAnswers/${questionSet}/${userID}`).then( response => response.json());
         setClicked([]);
         console.log(questionSet)
     }

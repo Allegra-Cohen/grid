@@ -12,7 +12,7 @@ function ConsentPage({apiUrl}) {
 
     const handleConsentClick = (consent) => {
         if (consent){
-            fetch(`${apiUrl}/recordConsent/`).then( response => response.json());
+            fetch(`${apiUrl}/recordConsent/${JSON.parse(localStorage.getItem('userID'))}`).then( response => response.json());
             setDisabled(false)
         } else {
             setDisabled(true)

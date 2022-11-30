@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 
-export default function InputBox({text, onKeyPress, apiUrl}){
+export default function InputBox({text, onKeyPress, apiUrl, userID}){
     const [textInput, setTextInput] = useState([]);
 
 	  return (
@@ -12,7 +12,7 @@ export default function InputBox({text, onKeyPress, apiUrl}){
      	        if (evt.key === "Enter") {
      	        	let text = evt.target.value;
      	        	if (evt.target.value.length > 0){
-			        fetch(`${apiUrl}/textInput/${text}`)
+			        fetch(`${apiUrl}/textInput/${text}/${userID}`)
 			            .then( response => response.json())
 			            .then( response => {console.log(response);
 			                console.log(response);

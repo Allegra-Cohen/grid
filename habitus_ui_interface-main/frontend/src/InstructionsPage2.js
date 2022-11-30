@@ -8,7 +8,7 @@ import './info.css';
 function InstructionsPage2({apiUrl}) {
 
 	const handleToTest = () => {
-	        fetch(`${apiUrl}/loadTestGrid/`).then( response => response.json());
+	        fetch(`${apiUrl}/loadTestGrid/${JSON.parse(localStorage.getItem('userID'))}`).then( response => response.json());
 	    }
 
      return (

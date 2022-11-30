@@ -36,6 +36,7 @@ function App({apiUrl, edit, training, timeLimit}) {
     const [synonymBook, setSynonymBook] = useState([])
     const [disabled, setDisabled] = useState(false);
     const [start, setStart] = useState(Date.now());
+    const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
 
     const timer = ({ hours, minutes, seconds, completed }) => {
       if (completed || disabled) {
@@ -47,11 +48,14 @@ function App({apiUrl, edit, training, timeLimit}) {
     };
 
     const handleLinkClick = () => {
-        fetch(`${apiUrl}/saveGrid/${anchor}`).then( response => response.json());
+        fetch(`${apiUrl}/saveGrid/${anchor}/${userID}`).then( response => response.json());
     }
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/`)
+        let user = JSON.parse(localStorage.getItem('userID'));
+        setUserID(user);
+        console.log('app for user: ', user);
+        fetch(`${apiUrl}/data/${userID}`)
             .then( response => response.json())
             .then( data => {
                 setFlag(data.flag);
@@ -64,7 +68,7 @@ function App({apiUrl, edit, training, timeLimit}) {
                 setAnchorBook(data.anchor_book);
                 setSynonymBook(data.synonym_book);
             });
-    }, [])
+    }, [userID])
 
 
   return (
@@ -108,7 +112,7 @@ function App({apiUrl, edit, training, timeLimit}) {
         }
        }
        edit={edit}
-    apiUrl={apiUrl} />
+    apiUrl={apiUrl} userID = {userID}/>
     {edit === true ?
     <div style={{display:"flex", flexDirection:"column"}}>
     <div style={{display:"flex", flexDirection:"row"}}>
@@ -122,7 +126,7 @@ function App({apiUrl, edit, training, timeLimit}) {
           setColNumToName(evt.col_num_to_name);
           setFrozenColumns(evt.frozen_columns)}
       }
-      apiUrl={apiUrl}/>
+      apiUrl={apiUrl} userID={userID}/>
 
       </div>
 
@@ -134,12 +138,12 @@ function App({apiUrl, edit, training, timeLimit}) {
           setColNumToName(evt.col_num_to_name);
           setFrozenColumns(evt.frozen_columns)}
       }
-      apiUrl={apiUrl}/>
+      apiUrl={apiUrl} userID={userID}/>
 
       <CopyButton className="CopyButton" onClick={(evt) => {
           console.log("copy button: ", evt)}
       }
-      apiUrl={apiUrl}/>
+      apiUrl={apiUrl} userID={userID}/>
 
        </div>
 
@@ -189,7 +193,7 @@ function App({apiUrl, edit, training, timeLimit}) {
                           console.log('sentence click!');
                           setContext(evt)}}
        edit={edit} training={training}
-       apiUrl={apiUrl} />
+       apiUrl={apiUrl} userID={userID}/>
        </div>
               <div style={{
         display: "flex",

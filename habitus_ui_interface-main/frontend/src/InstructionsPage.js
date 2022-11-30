@@ -8,7 +8,7 @@ import './info.css';
 function InstructionsPage({apiUrl}) {
 
 	const handleToCuration = () => {
-	        fetch(`${apiUrl}/loadCurationGrid/`).then( response => response.json());
+	        fetch(`${apiUrl}/loadCurationGrid/${JSON.parse(localStorage.getItem('userID'))}`).then( response => response.json());
 	    }
 
      return (

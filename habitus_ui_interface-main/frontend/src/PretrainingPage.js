@@ -8,7 +8,7 @@ import './info.css';
 function PretrainingPage({apiUrl}) {
 
 	const handleToTraining = () => {
-	        fetch(`${apiUrl}/loadTrainingGrid/`).then( response => response.json());
+	        fetch(`${apiUrl}/loadTrainingGrid/${JSON.parse(localStorage.getItem('userID'))}`).then( response => response.json());
 	    }
 
      return (

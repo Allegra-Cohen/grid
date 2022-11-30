@@ -21,7 +21,9 @@ function LoginPage({apiUrl}) {
 		.then(response => response.json())
 		.then(data => {
 				setValid(data);
-			});
+		});
+		localStorage.setItem('userID', JSON.stringify(userID));
+		console.log("AAAAA", JSON.parse(localStorage.getItem('userID')));
 		}
 	}
 

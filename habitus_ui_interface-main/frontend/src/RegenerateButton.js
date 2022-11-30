@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 
-export default function RegenerateButton({onClick, apiUrl}){
+export default function RegenerateButton({onClick, apiUrl, userID}){
 
     const [disabled, setDisabled] = useState([]);
     useEffect(() => { setDisabled(false)}, [false] )
@@ -18,7 +18,7 @@ export default function RegenerateButton({onClick, apiUrl}){
     return(
     <div className={"RegenerateButton"}>
     <button style={{height:'2.5em', width:'8em', background:'#90c5e1', fontSize:'20px', fontFamily: "InaiMathi"}}
-    onClick={ (evt) => {fetch(`${apiUrl}/regenerate/`)
+    onClick={ (evt) => {fetch(`${apiUrl}/regenerate/${userID}`)
                         .then( response => response.json())
                         .then( response => {console.log(response);
                                             console.log('regenerate click!');

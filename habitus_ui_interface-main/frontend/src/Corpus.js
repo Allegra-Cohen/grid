@@ -2,7 +2,7 @@ import {useDrag} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import "./Corpus.css"
 
-function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
+function Sentence({text, onChange, activateSentence, isActive, apiUrl, userID}) {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'sentence',
         item: { text },
@@ -14,7 +14,8 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
                 style={{border: isActive ? '2px solid #BE1C06' : null}}
 
                 onClick={(evt) => {
-                        fetch(`${apiUrl}/sentenceClick/${text}`)
+                    console.log(userID);
+                        fetch(`${apiUrl}/sentenceClick/${text}/${userID}`)
                         .then( response => response.json())
                         .then( response => {onChange(response)} );
                         activateSentence(text);
@@ -24,12 +25,12 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
     >{text} {isDragging}</li>
 }
 
-export default function Corpus({sentences, onChange, edit, training, apiUrl}) {
+export default function Corpus({sentences, onChange, edit, training, apiUrl, userID}) {
 
     const [activeSentence, setActiveSentence] = useState();
     const activateSentence = (item) => setActiveSentence(item);
 
-    let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} />)
+    let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} userID={userID}/>)
     return (
 
             <ul className = 'corpus' id='style-3'style={{

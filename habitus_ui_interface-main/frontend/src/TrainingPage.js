@@ -10,19 +10,22 @@ import Countdown from 'react-countdown';
 function TrainingPage({step, apiUrl}) {
 
     const [flag, setFlag] = useState();
+    const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
 
     useEffect(() => {
-        fetch(`${apiUrl}/data/`)
+        let user = JSON.parse(localStorage.getItem('userID'));
+        setUserID(user);
+        fetch(`${apiUrl}/data/${userID}`)
             .then( response => response.json())
             .then( data => {
                 setFlag(data['flag']);
                 console.log(flag)
             });
-    }, [])
+    }, [userID])
 
 
     const handleLinkClick = () => {
-        fetch(`${apiUrl}/toggleTraining/`).then( response => response.json());
+        fetch(`${apiUrl}/toggleTraining/${userID}`).then( response => response.json());
     }
 
      return (
