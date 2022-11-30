@@ -27,6 +27,7 @@ class SoftKMeans(ClusterGenerator):
 		self.clusters = []
 		self.matrix = None
 		self.seed = seed # Should I use this here?
+		self.rndgen = random.Random(self.seed)
 
 
 	def initialize_clusters_plus_plus(self):
@@ -47,7 +48,7 @@ class SoftKMeans(ClusterGenerator):
 
 	def initialize_clusters_random_pair(self, seeded_clusters: list[list[Document]]):
 		self.clusters = seeded_clusters.copy()
-		initial = random.sample(range(0, len(self.documents)), (self.k-len(seeded_clusters))*2)
+		initial = self.rndgen.sample(range(0, len(self.documents)), (self.k-len(seeded_clusters))*2)
 		for i in range(0, len(initial), 2):
 			pair = self.documents[initial[i:i+2]]
 			self.clusters.append(pair)
@@ -99,8 +100,8 @@ class SoftKMeans(ClusterGenerator):
 		best_model = None
 		scores = []
 
-		for i in range(2, self.k_max):
-			self.k = i
+		for i in range(2, self.k_max + 1): # Must be inclusive
+			self.k = max(i, len(seeded_document_clusters)) # If the user has seeded more clusters than the k you're considering, then you can't reduce that number
 
 			if seeded_document_clusters:
 				d2s_extended = np.concatenate((doc_to_seeded, np.zeros((doc_to_seeded.shape[0], self.k - doc_to_seeded.shape[1]))), axis = 1)
