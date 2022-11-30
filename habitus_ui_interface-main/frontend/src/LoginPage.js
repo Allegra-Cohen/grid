@@ -16,15 +16,15 @@ function LoginPage({apiUrl}) {
 
 	const handleClick = (evt) => {
 		if (userID) {
-		console.log(userID);
-		fetch(`${apiUrl}/setUser/${userID}`)
-		.then(response => response.json())
-		.then(data => {
-				setValid(data);
-		});
-		localStorage.setItem('userID', JSON.stringify(userID));
-		console.log("AAAAA", JSON.parse(localStorage.getItem('userID')));
+			fetch(`${apiUrl}/setUser/${userID}`)
+			.then(response => response.json())
+			.then(data => {
+					setValid(data);
+					console.log(valid);
+					console.log(data)
+			})
 		}
+		localStorage.setItem('userID', JSON.stringify(userID));
 	}
 
 	  return (

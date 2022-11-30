@@ -303,9 +303,12 @@ async def setUser(userID: int):
     print("setting user: ", userID)
     user = User(condition_filename, userID)
     user.assign_flag()
-    frontends[userID] = UvicornFrontend(user, '../process_files/', 'results/tracking', treatment_clustering)
     print("corresponding condition: ", user.flag)
-    return user.flag
+    if user.flag:
+        frontends[userID] = UvicornFrontend(user, '../process_files/', 'results/tracking', treatment_clustering)
+        return True
+    else:
+        return False
 
 @app.get("/loadTrainingGrid/{userID}")
 async def loadTrainingGrid(userID: int):
