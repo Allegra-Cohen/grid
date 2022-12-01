@@ -15,6 +15,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     const [disabled, setDisabled] = useState(false);
     const [start, setStart] = useState(Date.now());
     const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
+    const [openAnswers, setOpenAnswers] = useState({});
 
     const timer = ({ hours, minutes, seconds, completed }) => {
       if (completed || disabled) {
@@ -36,6 +37,10 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     }, [userID])
 
 
+    const handleOpenAnswerTyping = (questionIndex, answerText) => {
+        setOpenAnswers(openAnswers => ({...openAnswers,[questionIndex]: answerText}));
+    }
+
     const handleAnswerOptionClick = (questionIndex, answerText) => {
         fetch(`${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${answerText}/${userID}`)
             .then( response => response.json())
@@ -49,6 +54,9 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     };
 
     const handleLinkClick = () => {
+        if (openAnswers){
+            Object.keys(openAnswers).forEach(function(key, index) {handleAnswerOptionClick(key, openAnswers[key])} );
+        }
         fetch(`${apiUrl}/recordAnswers/${questionSet}/${userID}`).then( response => response.json());
         setClicked([]);
     }
@@ -68,7 +76,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
             <ul className='question-content' style={{columns: questionSet === 'test' ? 2 : 1}}> {questions.map((question, i) => (
                 <div style={{marginBottom:'3%'}}>
                 <div>{question.questionText}</div>
-                {question.questionType === 'open_answer' ? <div><textarea style={{width:'50%', height:'10em', marginTop:'1%'}} onChange={(evt) => handleAnswerOptionClick(i, evt.target.value)}/></div>
+                {question.questionType === 'open_answer' ? <div><textarea style={{width:'50%', height:'10em', marginTop:'1%'}} onKeyUp={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></div>
                 :
                 <ul className='answer-section'>
                         {question.answerOptions.map((answerOption, j) => (
