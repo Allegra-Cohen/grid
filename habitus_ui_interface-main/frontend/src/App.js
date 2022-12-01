@@ -79,9 +79,7 @@ function App({apiUrl}) {
     
 
     <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
-      (evt) => {console.log(evt);
-                console.log('app!');
-                setCorpus(evt);
+      (evt) => {setCorpus(evt);
                 setContext('')}
        }
        onDrop={
@@ -90,7 +88,8 @@ function App({apiUrl}) {
                   console.log('drop!');
                   setCorpus(evt.clicked_sentences);
                   setGridRows(evt.grid);
-                  setColNumToName(evt.col_num_to_name)}
+                  setColNumToName(evt.col_num_to_name);
+                  setContext('')}
        }
        onFooter={
         (evt) => {
