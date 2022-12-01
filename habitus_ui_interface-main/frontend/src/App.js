@@ -89,13 +89,15 @@ function App({apiUrl, edit, training, timeLimit}) {
     
 
     <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
-      (evt) => {setCorpus(evt);}
+      (evt) => {setCorpus(evt);
+                setContext('')}
        }
        onDrop={
         (evt) => {
                   setCorpus(evt.clicked_sentences);
                   setGridRows(evt.grid);
-                  setColNumToName(evt.col_num_to_name);}
+                  setColNumToName(evt.col_num_to_name);
+                  setContext('')}
        }
        onFooter={
         (evt) => {

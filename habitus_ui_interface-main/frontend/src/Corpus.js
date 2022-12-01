@@ -10,14 +10,22 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl, userID}) 
             isDragging: monitor.isDragging()
         })
     })
-    return <li ref={dragRef} 
+    return <li ref={dragRef} onDrag={(evt) => {activateSentence()}}
                 style={{border: isActive ? '2px solid #BE1C06' : null}}
 
                 onClick={(evt) => {
                         fetch(`${apiUrl}/sentenceClick/${text}/${userID}`)
                         .then( response => response.json())
-                        .then( response => {onChange(response)} );
-                        activateSentence(text);
+                        .then( response => {
+                        if (isActive){
+                            activateSentence();
+                            onChange([]);
+                        } else {
+                            activateSentence(text);
+                            onChange(response);
+                        }
+                    }
+                        );
                     }
         }
 
@@ -28,6 +36,10 @@ export default function Corpus({sentences, onChange, edit, training, apiUrl, use
 
     const [activeSentence, setActiveSentence] = useState();
     const activateSentence = (item) => setActiveSentence(item);
+
+    useEffect(()=>{
+        setActiveSentence();
+    },[sentences])
 
     let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} userID={userID}/>)
     return (
