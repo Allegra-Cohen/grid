@@ -57,7 +57,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
         if (openAnswers){
             Object.keys(openAnswers).forEach(function(key, index) {handleAnswerOptionClick(key, openAnswers[key])} );
         }
-        fetch(`${apiUrl}/recordAnswers/${questionSet}/${userID}`).then( response => response.json());
+        fetch(`${apiUrl}/recordAnswers/${questionSet}/${userID}`);
         setClicked([]);
     }
 

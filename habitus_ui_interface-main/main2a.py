@@ -432,12 +432,16 @@ async def answerQuestion(questionSet: str, questionIndex: int, selectedAnswerTex
 @app.get("/recordAnswers/{questionSet}/{userID}")
 async def recordAnswers(questionSet: str, userID: int):
     print("writing out for ", questionSet)
-    return frontends[userID].write_out_answers(questionSet)
+    frontends[userID].write_out_answers(questionSet)
+    if questionSet == 'feedback':
+        print("logging out ", userID)
+        frontends.pop(userID)
 
 @app.get("/recordConsent/{userID}")
 async def recordConsent(userID: int):
     print("consent for ", userID)
     return frontends[userID].write_consent()
+
 
 
 
