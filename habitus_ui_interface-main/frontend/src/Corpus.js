@@ -46,11 +46,12 @@ export default function Corpus({sentences, onChange, edit, training, apiUrl, use
 
             <ul className = 'corpus' id='style-3'style={{
                 marginLeft:".2em",
+                marginRight:"2em",
                 height: edit & !training ? "75em" : "35em",
                 overflowY: "scroll"
-            }}><div class="force-overflow">
+            }}>
                 {items}
-                </div>
+                
             </ul>
 
     )
