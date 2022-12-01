@@ -1,4 +1,5 @@
 import ast
+import numpy as np
 import pandas as pd
 
 class QA():
@@ -50,7 +51,7 @@ class Question():
 		self.given_answer_IDs = [] # This is because of how the formatting gets done in the front end
 
 	def update_given_answers(self, answer):
-		if self.question_type == 'select_all':
+		if self.question_type == 'select_all' and "Don't know" not in answer and np.any(["Don't know" not in a for a in self.given_answers]):
 			# Toggling an existing answer
 			if answer in self.given_answers:
 				self.given_answers.remove(answer)
