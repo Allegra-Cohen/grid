@@ -27,10 +27,8 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
                 fetch(`${apiUrl}/drag/${rowName}/${colName}/${item.text}/${userID}`)
                 .then( response => response.json())
                 .then( data => {
-                    console.log('data', data);
                     onDrop(data)
                 });
-                console.log([rowName, colName, item]);
             }
         },
         collect: (monitor) => ({
@@ -50,12 +48,10 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
       (evt) => {
         fetch(`${apiUrl}/click/${rowName}/${colName}/${edit}/${userID}`)
             .then( response => response.json())
-            .then( response => {console.log(response);
-                console.log(colName);
+            .then( response => {
                 onChange(response);
             });
             activateCell(id);
-            console.log("evt",id);
                }
            }>
            { isOver && "Drop"}
@@ -73,8 +69,6 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
 }
 
 function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, edit, apiUrl, userID}){
-
-    console.log("frozen cols", frozenColumns)
     
     return (
     <td key={id}><div style={{
@@ -92,7 +86,6 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, edit, api
                     fetch(`${apiUrl}/editName/${id}/${text}/${userID}`)
                     .then( response => response.json())
                     .then( response => {onFooter(response);
-                        console.log("!!!", response.frozen_columns)
                     });
                     evt.target.value = '';
                     evt.target.blur();
@@ -113,7 +106,6 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, edit, api
 export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, onDeleteFrozen, edit, apiUrl, userID}){
     const [activeCell, setActiveCell] = useState();
     const activateCell = (item) => setActiveCell(item);
-    console.log(activeCell)
 
     let gridRows = Object.entries(data).map(([name, cells], ix) => <GridRow key={ix} rowName={name} rowContents={row_contents} data={cells} onChange={onChange} onDrop={onDrop} activateCell={activateCell} activeCell={activeCell} edit={edit} apiUrl={apiUrl} userID={userID}/>)
     // Get the col names from the first row
@@ -124,8 +116,6 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
         let row = rows[0];
         let colIDs = Object.keys(row);
         let colNames = colIDs.map((colID) => col_num_to_name[colID]);
-        // console.log('grid here');
-        // console.log(col_num_to_name)
         footer = colNames.map((name, ix) => <Footer key = {ix} id={ix} colName={name} frozenColumns={frozen_columns} onFooter={onFooter} onDeleteFrozen={onDeleteFrozen} edit={edit} apiUrl={apiUrl} userID={userID} />)
     }
 

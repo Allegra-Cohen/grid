@@ -29,7 +29,6 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
         let user = JSON.parse(localStorage.getItem('userID'));
         setUserID(user);
         fetch(`${apiUrl}/data/${userID}`)
-            .then(console.log(questionSet))
             .then( response => response.json())
             .then( data => {
                 setQuestions([...data['question_sets'][questionSet]['listDict']]);
@@ -38,7 +37,6 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
 
 
     const handleAnswerOptionClick = (questionIndex, answerText) => {
-        console.log(questionSet);
         fetch(`${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${answerText}/${userID}`)
             .then( response => response.json())
             .then( data => {
@@ -53,7 +51,6 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     const handleLinkClick = () => {
         fetch(`${apiUrl}/recordAnswers/${questionSet}/${userID}`).then( response => response.json());
         setClicked([]);
-        console.log(questionSet)
     }
 
      return (

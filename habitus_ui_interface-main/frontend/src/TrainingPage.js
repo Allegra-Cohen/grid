@@ -19,7 +19,6 @@ function TrainingPage({step, apiUrl}) {
             .then( response => response.json())
             .then( data => {
                 setFlag(data['flag']);
-                console.log(flag)
             });
     }, [userID])
 
@@ -57,7 +56,7 @@ function TrainingPage({step, apiUrl}) {
       :
       <div><b>Training task: </b>Please click around the Grid for a moment to get a feel for the rows and columns. For example, click on the cell in the "processes" row and "seed | season" column. Note that the sentences here talk about the beginning, end, and overlap of events, and these events are largely about season.</div>}
       <br/><br/>
-      <div style={{'fontSize': '14pt'}}><Link to="/training2">Done! Next: Part 2</Link></div><br/><br/> </div> : <div/> }
+      <div style={{'fontSize': '14pt'}}><Link to="/training2" onClick = {() => window.scrollTo(0, 0)}>Done! Next: Part 2</Link></div><br/><br/> </div> : <div/> }
 
       {step ===2 ? <div>
         {flag !== 'control' ? <div> The columns you see here are pre-generated for you. You may disagree with the organization of sentences; for example, sometimes columns contain too many topics.
@@ -102,7 +101,7 @@ function TrainingPage({step, apiUrl}) {
         }
 
         <b>Training task: </b> Freeze two more columns for keywords of your choice (click around the cells for inspiration!) and update the Grid.<br/><br/>
-        <div style={{'fontSize': '14pt'}}><Link to="/training3">Done! Next: Part 3</Link></div><br/><br/>
+        <div style={{'fontSize': '14pt'}}><Link to="/training3" onClick = {() => window.scrollTo(0, 0)}>Done! Next: Part 3</Link></div><br/><br/>
 
         </div>
         : <div/>}
@@ -120,7 +119,7 @@ function TrainingPage({step, apiUrl}) {
         <b>Training task: </b> Click on any unfrozen column (blue text) and find two or more sentences to move. Drag these sentences into another unfrozen column. 
         Note that the name of this column may change to reflect the new sentences. Next, click "Update Grid." The sentences you dragged together will stay together when the machine reorganizes.<br/><br/> 
 
-        Seeding only works with documents that are not already part of a frozen column. Suppose you drag a sentence out of a frozen column A and into an unfrozen target column B;
+        Seeding only works with sentences that are not already part of a frozen column. Suppose you drag a sentence out of a frozen column A and into an unfrozen target column B;
         it will not remain there during reorganizing unless you freeze column B. Sentences dragged between frozen columns will stay in their target column.<br/><br/> 
             
         <b>Copying:</b> If you want to put a sentence in multiple columns, you can click the "Copy" button before you drag. Don't forget to turn it off when you're done!<br/><br/>
@@ -137,7 +136,7 @@ function TrainingPage({step, apiUrl}) {
         }<br/>
 
 
-        <div style={{'fontSize': '14pt'}}><Link to="/training4">Done!</Link></div><br/><br/>
+        <div style={{'fontSize': '14pt'}}><Link to="/training4" onClick = {() => window.scrollTo(0, 0)}>Done!</Link></div><br/><br/>
         </div>
         : <div/>}
 

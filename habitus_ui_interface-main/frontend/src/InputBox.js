@@ -14,8 +14,7 @@ export default function InputBox({text, onKeyPress, apiUrl, userID}){
      	        	if (evt.target.value.length > 0){
 			        fetch(`${apiUrl}/textInput/${text}/${userID}`)
 			            .then( response => response.json())
-			            .then( response => {console.log(response);
-			                console.log(response);
+			            .then( response => {
 			                onKeyPress(response);
 			                        })
 			            .then(evt.target.value = '')

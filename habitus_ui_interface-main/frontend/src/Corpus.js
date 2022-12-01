@@ -14,7 +14,6 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl, userID}) 
                 style={{border: isActive ? '2px solid #BE1C06' : null}}
 
                 onClick={(evt) => {
-                    console.log(userID);
                         fetch(`${apiUrl}/sentenceClick/${text}/${userID}`)
                         .then( response => response.json())
                         .then( response => {onChange(response)} );

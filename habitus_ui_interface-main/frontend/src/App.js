@@ -54,7 +54,6 @@ function App({apiUrl, edit, training, timeLimit}) {
     useEffect(() => {
         let user = JSON.parse(localStorage.getItem('userID'));
         setUserID(user);
-        console.log('app for user: ', user);
         fetch(`${apiUrl}/data/${userID}`)
             .then( response => response.json())
             .then( data => {
@@ -90,22 +89,16 @@ function App({apiUrl, edit, training, timeLimit}) {
     
 
     <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
-      (evt) => {console.log(evt);
-                console.log('app!');
-                setCorpus(evt);
-                setContext('')}
+      (evt) => {setCorpus(evt);}
        }
        onDrop={
         (evt) => {
-                  console.log(evt);
-                  console.log('drop!');
                   setCorpus(evt.clicked_sentences);
                   setGridRows(evt.grid);
-                  setColNumToName(evt.col_num_to_name)}
+                  setColNumToName(evt.col_num_to_name);}
        }
        onFooter={
         (evt) => {
-            console.log('onfooter:', evt);
             setGridRows({...evt.grid});
             setColNumToName({...evt.col_num_to_name});
             setFrozenColumns([...evt.frozen_columns])}
@@ -113,11 +106,11 @@ function App({apiUrl, edit, training, timeLimit}) {
 
        onDeleteFrozen={
          (evt) => {
-             console.log('delete frozen:', evt);
              setCorpus(evt.clicked_sentences);
              setGridRows({...evt.grid});
              setColNumToName({...evt.col_num_to_name});
-             setFrozenColumns([...evt.frozen_columns])}
+             setFrozenColumns([...evt.frozen_columns]);
+             }
         }
 
        edit={edit}
@@ -129,7 +122,6 @@ function App({apiUrl, edit, training, timeLimit}) {
     
        <div style={{display:"flex", flexDirection:"row", marginLeft:"3em", marginTop:"1em"}}>
         <RegenerateButton className="RegenerateButton" onClick={(evt) => {
-          console.log(evt);
           setCorpus(evt.clicked_sentences);
           setGridRows(evt.grid);
           setColNumToName(evt.col_num_to_name);
@@ -141,7 +133,6 @@ function App({apiUrl, edit, training, timeLimit}) {
 
     <InputBox data={gridRows} col_num_to_name={colNumToName} 
       onKeyPress={(evt) => {
-          console.log(evt);
           setCorpus(evt.clicked_sentences);
           setGridRows(evt.grid);
           setColNumToName(evt.col_num_to_name);
@@ -149,8 +140,7 @@ function App({apiUrl, edit, training, timeLimit}) {
       }
       apiUrl={apiUrl} userID={userID}/>
 
-      <CopyButton className="CopyButton" onClick={(evt) => {
-          console.log("copy button: ", evt)}
+      <CopyButton className="CopyButton" onClick={(evt) => {}
       }
       apiUrl={apiUrl} userID={userID}/>
 
@@ -198,9 +188,7 @@ function App({apiUrl, edit, training, timeLimit}) {
       }}>
       <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'7em'}}><u>Sentences</u></div>
       <Corpus sentences={corpus}
-      onChange={(evt) => {console.log(evt);
-                          console.log('sentence click!');
-                          setContext(evt)}}
+      onChange={(evt) => {setContext(evt)}}
        edit={edit} training={training}
        apiUrl={apiUrl} userID={userID}/>
        </div>

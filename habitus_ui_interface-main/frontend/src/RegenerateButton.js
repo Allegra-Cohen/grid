@@ -20,9 +20,7 @@ export default function RegenerateButton({onClick, apiUrl, userID}){
     <button style={{height:'2.5em', width:'8em', background:'#90c5e1', fontSize:'20px', fontFamily: "InaiMathi"}}
     onClick={ (evt) => {fetch(`${apiUrl}/regenerate/${userID}`)
                         .then( response => response.json())
-                        .then( response => {console.log(response);
-                                            console.log('regenerate click!');
-                                            onClick(response);
+                        .then( response => {onClick(response);
                                             });
                         onLaunchClicked(evt);
                }

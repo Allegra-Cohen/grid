@@ -18,9 +18,7 @@ export default function CopyButton({onClick, apiUrl, userID}){
     <button style={{height:'2.5em', width:'8em', background: clicked ? '#FFFFFF' : '#48e3d0', fontSize:'20px', fontFamily: "InaiMathi"}}
     onClick={ (evt) => {fetch(`${apiUrl}/copyToggle/${userID}`)
                         .then( response => response.json())
-                        .then( response => {console.log(response);
-                                            console.log('copy click!');
-                                            onClick(response);
+                        .then( response => {onClick(response);
                                             });
                         onLaunchClicked(evt);
                }
