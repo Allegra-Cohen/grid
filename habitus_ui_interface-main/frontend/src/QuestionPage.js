@@ -81,7 +81,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
                 <ul className='answer-section'>
                         {question.answerOptions.map((answerOption, j) => (
                             <div>
-                            {answerOption.answerText === "d. Other" ? <li style ={{background:'white'}}><textarea placeholder="Other" onChange={(evt) => handleAnswerOptionClick(i, evt.target.value)}/></li>
+                            {answerOption.answerText === "d. Other" ? <li style ={{background:'white'}}><textarea placeholder="Other" onChange={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></li>
                             : <li style ={{background:'white'}}><button style={{fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white' }} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
                             }
                             </div>
