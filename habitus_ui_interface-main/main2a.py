@@ -90,7 +90,6 @@ class UvicornFrontend(Frontend):
         }
 
     def load_new_grid(self, newAnchor: str, k: int):
-        print("OVER HERE")
         self.grid = self.backend.get_grid(self.user.flag, k, newAnchor, newAnchor, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
@@ -304,8 +303,6 @@ treatment_clustering = 'kmeans'
 
 @app.get("/data/{userID}")
 def root(userID: int): # Depends( my function that changes data for front end )
-    print("\n!!!!!!!!!!!!!!!\n")
-    print(frontends)
     data = frontends[userID].show_grid()
     print("Root called ", frontends[userID].grid.anchor, " ----------------------------------------------------------------------")
     return data # returns to front end
@@ -362,11 +359,8 @@ async def drag(row: str, col: str, sent: str, userID: int):
 
 @app.get("/click/{row}/{col}/{edit}/{userID}")
 async def click(row: str, col: str, edit: bool, userID: int):
-    print("\n!!!!!!!!!!!!!!!\n")
-    print(frontends)
     print("click", row, col)
     row, col = row, int(col)
-    print(userID, type(userID), frontends[userID])
     return frontends[userID].click(row, col, edit)
 
 @app.get("/sentenceClick/{text}/{userID}")

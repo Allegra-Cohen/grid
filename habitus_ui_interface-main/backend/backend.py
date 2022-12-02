@@ -39,6 +39,7 @@ class Backend():
 		print("New grid -- processing documents ... ")
 		clean_corpus_filename = 'cleaned_docs.csv'
 		self.set_up_corpus(filename, clean_corpus_filename, anchor)
+		print(filename, "FILENAME GET GRID")
 		grid = Grid.generate(flag, self.path, filename, self.corpus, k, self.synonym_book, clustering_algorithm)
 		return grid
 
@@ -54,7 +55,8 @@ class Backend():
 			else:
 				clean_corpus_filename = "cleaned_docs.csv"
 				anchor = list(pd.read_csv(self.path + filename + '_anchor.csv')['anchor'])[0]
-				self.set_up_corpus(filename, clean_corpus_filename, anchor)
+				anchor = anchor.split('_')[0]
+				self.set_up_corpus(anchor, clean_corpus_filename, anchor)
 
 			cells = pd.read_csv(self.path + filename + '_cells.csv')
 			col_names = pd.unique(cells['col'])
