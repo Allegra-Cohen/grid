@@ -47,7 +47,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
             .then( data => {
                 if (data instanceof Array) {
                     setClicked(data);
-                } else{
+                } else {
                     setClicked([]);
                 }
             });

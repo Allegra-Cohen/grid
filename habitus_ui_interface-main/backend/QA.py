@@ -28,10 +28,9 @@ class QA():
 	def return_dataframe(self):
 		sets, questions, answers = [], [], []
 		for question in self.questions:
-			for answer in question.given_answers:
-				sets.append(self.name)
-				questions.append(question.question_text)
-				answers.append(answer)
+			sets.append(self.name)
+			questions.append(question.question_text)
+			answers.append(question.given_answers)
 		return pd.DataFrame({'set': sets, 'question': questions, 'answer': answers})
 
 	def clear_answers(self):
@@ -60,6 +59,10 @@ class Question():
 				self.given_answers.append(answer)
 				self.given_answer_IDs.append(str(self.index) + answer)
 		else:
-			self.given_answers = [answer]
-			self.given_answer_IDs = [str(self.index) + answer]
+			if answer in self.given_answers:
+				self.given_answers = []
+				self.given_answer_IDs = []
+			else:
+				self.given_answers = [answer]
+				self.given_answer_IDs = [str(self.index) + answer]
 
