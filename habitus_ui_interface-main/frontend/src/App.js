@@ -38,12 +38,16 @@ function App({apiUrl, edit, training, timeLimit}) {
     const [start, setStart] = useState(Date.now());
     const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
 
+    function makeMeTwoDigits(n){
+        return (n < 10 ? "0" : "") + n;
+    }
+
     const timer = ({ hours, minutes, seconds, completed }) => {
       if (completed || disabled) {
         setDisabled(true);
         return "Done!";
       } else {
-        return <span>{minutes}:{seconds}</span>;
+        return <span>{makeMeTwoDigits(minutes)}:{makeMeTwoDigits(seconds)}</span>;
       }
     };
 

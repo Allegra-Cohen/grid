@@ -16,13 +16,18 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     const [start, setStart] = useState(Date.now());
     const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
     const [openAnswers, setOpenAnswers] = useState({});
+    const [noQuestionsLeft, setNoQuestionsLeft] = useState(false);
+
+    function makeMeTwoDigits(n){
+        return (n < 10 ? "0" : "") + n;
+    }
 
     const timer = ({ hours, minutes, seconds, completed }) => {
       if (completed || disabled) {
         setDisabled(true);
         return "Done!";
       } else {
-        return <span>{minutes}:{seconds}</span>;
+        return <span>{makeMeTwoDigits(minutes)}:{makeMeTwoDigits(seconds)}</span>;
       }
     };
 
@@ -46,7 +51,8 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
             .then( response => response.json())
             .then( data => {
                 if (data instanceof Array) {
-                    setClicked(data);
+                    setClicked(data[0]);
+                    setNoQuestionsLeft(data[1]);
                 } else {
                     setClicked([]);
                 }
@@ -66,7 +72,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
       {questionSet === 'test' ?
       <div className="info" style={{marginLeft:'84%'}}>
       Time left: <Countdown date={start + timeLimit} renderer={timer} /> <br/>
-      <Link to="/instructions3" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
+      <Link to="/instructions3" style={((noQuestionsLeft | disabled) | questionSet !== 'test') ? {}: {pointerEvents: "none", opacity: "0.4"}} onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
       </div>
         : <div/>}
       {questionSet === 'survey' ? <div className = 'info' style = {{width: 'max-content', marginTop:'1%', marginLeft:'1%', fontSize:'14pt'}}> Please answer these questions about your professional background: </div> : <div/>}
@@ -74,7 +80,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
       {questionSet === 'test' ? <div style={disabled ? {pointerEvents: "none", opacity: "0.4"}:{}}><App apiUrl="." edit={false} training={false} timeLimitGrid={timeLimit}/></div>: <div/>}
       <div className='question-section' style = {disabled ? {pointerEvents: "none", opacity: "0.4", marginTop:'1%', marginLeft:'1.2%', fontSize:'12pt'} : {marginTop:'1%', marginLeft:'1.2%', fontSize:'12pt'}}>
             <ul className='question-content' style={{columns: questionSet === 'test' ? 2 : 1}}> {questions.map((question, i) => (
-                <div style={{marginBottom:'3%'}}>
+                <div style={{marginBottom:'3%'}} className = 'keep_together'>
                 <div>{question.questionText}</div>
                 {question.questionType === 'open_answer' ? <div><textarea style={{width:'50%', height:'10em', marginTop:'1%'}} onKeyUp={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></div>
                 :
@@ -82,7 +88,7 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
                         {question.answerOptions.map((answerOption, j) => (
                             <div>
                             {answerOption.answerText === "d. Other" ? <li style ={{background:'white'}}><textarea placeholder="Other" onChange={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></li>
-                            : <li style ={{background:'white'}}><button style={{fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white' }} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
+                            : <li style ={{background:'white'}}><button style={{textAlign:'left', width:'max-content', fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white' }} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
                             }
                             </div>
                         ))}
@@ -93,9 +99,9 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
             </ul>
        </div>
       <div style = {{marginBottom:'10%'}}>
-      {questionSet === 'survey' ? <Link to="/instructions" className="info" style={{marginLeft:'80%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
-      {questionSet === 'test' ? <Link to="/instructions3" className="info" style={{marginLeft:'80%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
-      {questionSet === 'feedback' ? <Link to="/thanks" className="info" style={{marginLeft:'70%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to submit your feedback. </Link> : <div/>}
+      {questionSet === 'survey' ? <Link to="/instructions" className="info" style={((noQuestionsLeft | disabled) | questionSet !== 'test') ? {marginLeft:'80%', fontSize:'16pt'}: {pointerEvents: "none", opacity: "0.4", marginLeft:'80%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
+      {questionSet === 'test' ? <Link to="/instructions3" className="info" style={((noQuestionsLeft | disabled) | questionSet !== 'test') ? {marginLeft:'80%', fontSize:'16pt'}: {pointerEvents: "none", opacity: "0.4", marginLeft:'80%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to move on. </Link> : <div/>}
+      {questionSet === 'feedback' ? <Link to="/thanks" className="info" style={((noQuestionsLeft | disabled) | questionSet !== 'test') ? {marginLeft:'80%', fontSize:'16pt'}: {pointerEvents: "none", opacity: "0.4", marginLeft:'70%', fontSize:'16pt'}} onClick = {() => handleLinkClick()}> Click here to submit your feedback. </Link> : <div/>}
       </div>
     
       </DndProvider>

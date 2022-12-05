@@ -21,9 +21,12 @@ class QA():
 
 	def return_active_answers(self):
 		active = []
+		are_all_questions_answered = True
 		for question in self.questions:
+			if question.given_answer_IDs == []:
+				are_all_questions_answered = False
 			active += question.given_answer_IDs
-		return active
+		return [active, are_all_questions_answered]
 
 	def return_dataframe(self):
 		sets, questions, answers = [], [], []

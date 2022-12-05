@@ -280,9 +280,9 @@ class UvicornFrontend(Frontend):
         question_set = self.question_sets[questionSet]
         question = question_set.questions[questionIndex]
         question.update_given_answers(selectedAnswerText)
-        currently_active = question_set.return_active_answers()
+        currently_active, all_answered = question_set.return_active_answers()
         self.update_track_actions([question_set.name, 'human', 'answer', t, question.question_text, question.given_answers, None])
-        return currently_active
+        return [currently_active, all_answered]
 
     def write_consent(self):
         consent = "Participant " + str(self.user.user_id) + " consented to participate in this study on " + str(date.today()) # Put ID number in string

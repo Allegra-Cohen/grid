@@ -28,7 +28,7 @@
 		},
 {
 			'questionType': 'choose_one',
-			'questionText': "4. Which is a role that cooperatives play in farmers' lives:",
+			'questionText': "4. Which is a role that cooperatives play in farmers' lives?",
 			'answerOptions': [
 				{ 'answerText': 'a. Providing weather forecasts'},
 				{ 'answerText': 'b. Managing loan repayment'},

@@ -2,11 +2,11 @@
 			'questionType': 'choose_one',
 			'questionText': '1. How was your experience using the Grid?',
 			'answerOptions': [
-				{ 'answerText': 'a. Very poor'},
-				{ 'answerText': 'b. Poor'},
+				{ 'answerText': 'a. Excellent'},
+				{ 'answerText': 'b. Good'},
 				{ 'answerText': 'c. Neutral'},
-				{ 'answerText': "d. Good"},
-				{ 'answerText': "e. Excellent"},
+				{ 'answerText': "d. Poor"},
+				{ 'answerText': "e. Very poor"},
 			]
 		},
 {
