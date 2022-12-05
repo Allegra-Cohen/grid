@@ -94,6 +94,7 @@ class UvicornFrontend(Frontend):
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
         self.update_track_actions([self.round, 'human', 'new_grid', t, 'grid', newAnchor, None])
+        self.update_grid_record('load', 'load', time.time())
         return self.show_grid()
 
     def update_anchor_book(self, key: str, value: str, add_or_remove: str):
