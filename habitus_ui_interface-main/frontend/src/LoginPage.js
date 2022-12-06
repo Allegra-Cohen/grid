@@ -11,7 +11,7 @@ function LoginPage({apiUrl}) {
 	const [userID, setUserID] = useState();
 
 	const handleTyping = (evt) => {
-		setUserID(evt.target.value);
+		setUserID(evt.target.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""));
 	}
 
 	const handleClick = (evt) => {

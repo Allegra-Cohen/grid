@@ -82,7 +82,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, edit, api
     onKeyDown={
             (evt) => {
                 if(evt.key=="Enter"){
-                    let text = evt.target.value.replace("\/", " | ");
+                    let text = evt.target.value.replace("\/", " | ").replace(/[.,#!$%\^&\*;:{}=\-_`~()]/g," ");
                     fetch(`${apiUrl}/editName/${id}/${text}/${userID}`)
                     .then( response => response.json())
                     .then( response => {onFooter(response);

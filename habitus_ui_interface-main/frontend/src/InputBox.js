@@ -10,7 +10,7 @@ export default function InputBox({text, onKeyPress, apiUrl, userID}){
 	      onKeyPress={
       	     (evt) => {
      	        if (evt.key === "Enter") {
-     	        	let text = evt.target.value;
+     	        	let text = evt.target.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g," ");
      	        	if (evt.target.value.length > 0){
 			        fetch(`${apiUrl}/textInput/${text}/${userID}`)
 			            .then( response => response.json())
