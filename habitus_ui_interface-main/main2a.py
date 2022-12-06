@@ -420,8 +420,12 @@ async def toggleTraining(userID: int):
     print("training off")
     return frontends[userID].toggle_training()
 
-@app.get("/answerQuestion/{questionSet}/{questionIndex}/{selectedAnswerText}/{userID}")
-async def answerQuestion(questionSet: str, questionIndex: int, selectedAnswerText: str, userID: int):
+def fromHex(hex: str) -> str:
+    return "".join([chr(int(hex[i:i+4], 16)) for i in range(0, len(hex), 4)])
+
+@app.get("/answerQuestion/{questionSet}/{questionIndex}/{hexSelectedAnswerText}/{userID}")
+async def answerQuestion(questionSet: str, questionIndex: int, hexSelectedAnswerText: str, userID: int):
+    selectedAnswerText = fromHex(hexSelectedAnswerText)
     return frontends[userID].update_question_answers(questionSet, questionIndex, selectedAnswerText)
 
 @app.get("/recordAnswers/{questionSet}/{userID}")
