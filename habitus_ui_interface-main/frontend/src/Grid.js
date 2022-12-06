@@ -78,7 +78,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, edit, api
         width: "5em",
         padding:".1em"
     }}>
-    {id}.<br/> {colName}<textarea placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}} 
+    {id}.<br/> {colName}<input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}} 
     onKeyDown={
             (evt) => {
                 if(evt.key=="Enter"){
