@@ -92,12 +92,12 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
             <ul className='question-content' style={{columns: questionSet === 'test' ? 2 : 1}}> {questions.map((question, i) => (
                 <div style={{marginBottom:'3%'}} className = 'keep_together'>
                 <div>{question.questionText}</div>
-                {question.questionType === 'open_answer' ? <div><textarea style={{width:'50%', height:'10em', marginTop:'1%'}} onKeyUp={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></div>
+                {question.questionType === 'open_answer' ? <div><textarea maxlength='2500' style={{width:'50%', height:'10em', marginTop:'1%'}} onKeyUp={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></div>
                 :
                 <ul className='answer-section'>
                         {question.answerOptions.map((answerOption, j) => (
                             <div>
-                            {answerOption.answerText === "d. Other" ? <li style ={{background:'white'}}><textarea placeholder="Other" onChange={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></li>
+                            {answerOption.answerText === "d. Other" ? <li style ={{background:'white'}}><textarea maxlength='2500' placeholder="Other" onChange={(evt) => handleOpenAnswerTyping(i, evt.target.value)}/></li>
                             : <li style ={{background:'white'}}><button style={{textAlign:'left', width:'max-content', fontSize: '12pt', background: clicked.includes("" + i + answerOption.answerText) ? '#f0f799' : 'white' }} onClick={() => handleAnswerOptionClick(i, answerOption.answerText)}>{answerOption.answerText}</button></li>
                             }
                             </div>
