@@ -18,6 +18,13 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     const [openAnswers, setOpenAnswers] = useState({});
     const [noQuestionsLeft, setNoQuestionsLeft] = useState(false);
 
+    function toHex(string) {
+        var array = [];
+        for (var i = 0; i < string.length; i++)
+            array[i] = ("000" + string.charCodeAt(i).toString(16)).slice(-4);
+        return array.join("");
+    }
+
     function makeMeTwoDigits(n){
         return (n < 10 ? "0" : "") + n;
     }
@@ -47,7 +54,10 @@ function QuestionPage({apiUrl, questionSet, timeLimit}) {
     }
 
     const handleAnswerOptionClick = (questionIndex, answerText) => {
-        fetch(`${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${answerText}/${userID}`)
+        let hexAnswerText = toHex(answerText);
+        let url = `${apiUrl}/answerQuestion/${questionSet}/${questionIndex}/${hexAnswerText}/${userID}`
+
+        fetch(url)
             .then( response => response.json())
             .then( data => {
                 if (data instanceof Array) {
