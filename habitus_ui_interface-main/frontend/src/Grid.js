@@ -80,11 +80,11 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiUrl}){
         width: "5em",
         padding:".1em"
     }}>
-    {id}.<br/> {colName}<textarea placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}} 
+    {id}.<br/> {colName}<input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}} 
     onKeyDown={
             (evt) => {
                 if(evt.key=="Enter"){
-                    let text = evt.target.value.replace("\/", " | ");
+                    let text = evt.target.value.replace("\/", " | ").replace(/[.,#!$%\^&\*;:{}=\-_`~()]/g," ");
                     fetch(`${apiUrl}/editName/${id}/${text}`)
                     .then( response => response.json())
                     .then( response => {onFooter(response);
