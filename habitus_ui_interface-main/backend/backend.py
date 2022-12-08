@@ -48,7 +48,8 @@ class Backend():
 		print("Loading grid from root filename ", filename)
 		try:
 			anchor = list(pd.read_csv(self.path + filename + '_anchor.csv')['anchor'])[0]
-			self.set_up_corpus(filename, anchor)
+			anchor = anchor.split('_')[0].strip()
+			self.set_up_corpus(anchor, anchor)
 
 			cells = pd.read_csv(self.path + filename + '_cells.csv')
 			col_names = pd.unique(cells['col'])

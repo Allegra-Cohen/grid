@@ -105,6 +105,7 @@ class UvicornFrontend(Frontend):
         return self.copy_on
 
     def load_grid(self, anchor):
+        print(anchor)
         t = time.time()
         self.round = 0
         grid = self.backend.load_grid(anchor, self.clustering_algorithm)
@@ -240,6 +241,14 @@ frontend = UvicornFrontend('../process_files/', 6, 'harvest', 'allegra_tracking_
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
     return data # returns to front end
 
+@app.get("/showGrids/")
+async def showGrids():
+    grids = []
+    for file in os.listdir(frontend.path):
+        if file.endswith("anchor.csv"): # All Grids write out an anchor file
+            gridName = file.rsplit('_', 1)# But not all Grids are named by the anchor, they have their own filenames
+            grids.append(gridName[0])
+    return grids
 
 @app.get("/loadNewGrid/{newAnchor}")
 async def loadNewGrid(newAnchor: str):
