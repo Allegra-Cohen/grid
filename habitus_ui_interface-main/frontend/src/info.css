@@ -1,0 +1,22 @@
+.info {
+  margin: 0.5%;
+  padding: 1%;
+  background-color: #f0f7fd;
+  border-style: solid;
+  border-color: #060e4e;
+  border-width: 1pt;
+  border-top-left-radius: 5% 35%;
+  border-top-right-radius: 5% 35%;
+  border-bottom-left-radius: 5% 35%;
+  border-bottom-right-radius: 5% 35%;
+}
+
+.gallery {
+  margin: 2%;
+  padding: 2%;
+  background-color: #a9d3ff;
+  border-style: solid;
+  border-width: 1pt;
+  border-color: #060e4e;
+  width:  max-content;
+}
