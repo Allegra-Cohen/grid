@@ -433,6 +433,7 @@ async def recordAnswers(questionSet: str, userID: int):
     print("writing out for ", questionSet)
     frontends[userID].write_out_answers(questionSet)
     if questionSet == 'feedback':
+        time.sleep(1200) # Wait 20 minutes before removing the front end
         print("logging out ", userID)
         frontends.pop(userID)
 
