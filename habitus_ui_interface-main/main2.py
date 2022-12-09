@@ -28,15 +28,15 @@ class UvicornFrontend(Frontend):
         super().__init__(path)
         self.path = path
         self.clustering_algorithm = clustering_algorithm
-        self.grid = self.backend.get_grid(k, anchor, anchor, self.clustering_algorithm)
+        # self.grid = self.backend.get_grid(k, anchor, anchor, self.clustering_algorithm)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
-        self.show_grid()
+        # self.show_grid()
         self.track_actions = {'round': [], 'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
         self.tracking_filename = tracking_filename
         self.round = 0
-        self.update_grid_record()
+        # self.update_grid_record()
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -84,8 +84,8 @@ class UvicornFrontend(Frontend):
             "synonym_book": self.grid.synonym_book
         }
 
-    def load_new_grid(self, newAnchor: str):
-        k = self.grid.k
+    def load_new_grid(self, newFilename: str, newAnchor: str):
+        k = 5
         self.grid = self.backend.get_grid(k, newAnchor, newAnchor, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
         t = time.time()
@@ -248,12 +248,12 @@ async def showGrids():
         if file.endswith("anchor.csv"): # All Grids write out an anchor file
             gridName = file.rsplit('_', 1)# But not all Grids are named by the anchor, they have their own filenames
             grids.append(gridName[0])
-    return grids
+    return {'grids': grids, 'supercorpus': frontend.backend.corpus_filename}
 
-@app.get("/loadNewGrid/{newAnchor}")
-async def loadNewGrid(newAnchor: str):
-    print("loadNewGrid", newAnchor)
-    return frontend.load_new_grid(newAnchor)
+@app.get("/loadNewGrid/{corpusFilename}/{newFilename}/{newAnchor}")
+async def loadNewGrid(corpusFilename: str, newFilename: str, newAnchor: str):
+    print("loadNewGrid", newFilename, newAnchor)
+    return frontend.load_new_grid(newFilename, newAnchor)
 
 @app.get("/updateAnchorBook/{key}/{value}/{add_or_remove}")
 async def updateAnchorBook(key: str, value: str, add_or_remove: str):

@@ -19,6 +19,7 @@ import Trash from './Trash'
 import {useEffect, useState} from "react";
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Link } from "react-router-dom";
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
@@ -51,6 +52,7 @@ function App({apiUrl}) {
 
   return (
       <DndProvider backend={HTML5Backend}>
+      <div style={{background: "#a9d3ff", padding:"1%"}}><Link style={{color:'black'}} to="/">Back to Gallery</Link></div>
       <div style={{display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}} 
           contenteditable="true" onInput={
                 (evt) => {
@@ -178,14 +180,25 @@ function App({apiUrl}) {
         flexDirection: "row",
         fontFamily: 'InaiMathi'
       }}>
-
+      <div style={{
+        display: "flex",
+        flexDirection: "column"
+      }}>
+      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'7em'}}><u>Sentences</u></div>
       <Corpus sentences={corpus}
       onChange={(evt) => {console.log(evt);
                           console.log('sentence click!');
                           setContext(evt)}}
        apiUrl={apiUrl} />
+       </div>
+       <div style={{
+        display: "flex",
+        flexDirection: "column"
+      }}>
+       <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'5em'}}><u>Context</u></div>
        <div style={{display:'inline', width:'350px'}}>
       {context[0]} <b>{context[1]}</b> {context[2]}
+      </div>
       </div>
       </div>
       </div>

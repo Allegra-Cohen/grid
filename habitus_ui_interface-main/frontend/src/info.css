@@ -19,4 +19,8 @@
   border-width: 1pt;
   border-color: #060e4e;
   width:  max-content;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;           /* Theoretically FF 20+ */
+  break-inside: avoid-column;         /* Chrome, Safari, IE 11 */
+  display:table; 
 }
