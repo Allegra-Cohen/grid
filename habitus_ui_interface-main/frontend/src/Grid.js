@@ -4,17 +4,8 @@ import "./Corpus.css"
 import "./Grid.css"
 
 function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiUrl}){
-    // const gradientArray = ["#fafa6e","#c4ec74","#92dc7e","#64c987","#39b48e","#089f8f","#00898a","#08737f","#215d6e","#2a4858"];
-    // const gradientArray = ["#d4a1ff", "#cb99f8","#c292f2","#b88aeb","#af83e5","#a67bde","#9d74d8","#936dd1","#8a66cb","#815fc5","#7758be","#6d51b8","#644bb2","#5a44ac","#4f3ea5", "#44379f", "#393199", "#2c2b93", "#1c268d", "#002087"]; 
-    // const gradientArray = ["#fafa6e","#c4ec74","#92dc7e","#64c987","#39b48e","#089f8f","#00898a","#08737f","#215d6e","#2a4858", '#2a4858','#28475b','#28455f','#2a4261','#2f4063','#363d63',
-    // '#3e3963','#463561','#4f305d','#572a58', "#48257a","#521047", "#52102d", "#4a0725"]
-    // const gradientArray = ["#dabbf8","#d4b4f5","#ceacf2","#c8a5f0","#c29eed","#bc97ea","#b690e7","#b089e5","#aa82e2","#a37bdf","#9c74dc","#966dda","#8f66d7","#8860d4","#8059d2","#7952cf","#714ccd","#6945ca","#603fc7","#5738c5","#4d32c2","#412cc0","#3425bd","#231fbb","#0218b8"]
-    // const gradientArray = ["#bbe9f8","#94d2ed","#87caea","#6dbae3","#54aadd","#47a2da","#399ad6","#2b92d3","#1a8acf","#0081cc","#0079c8","#0071c3","#0068bf","#0060ba","#0057b5","#004faf","#0046a9","#003da3","#00349c","#022a95","#111f8d"]
-    // const gradientArray = ["#bbe9f8","#98d5ee","#76c0e5","#54aadd","#3095d4","#007fca","#0068bf","#0052b1","#003aa0","#111f8d"]
-    // const gradientArray = ["#e7f5f9","#90c5e1","#4091cd", "#6dbae3","#54aadd","#47a2da", "#399ad6","#2b92d3","#1a8acf","#0081cc","#0079c8","#0060ba","#0057b5","#004faf","#0046a9","#003da3","#00349c","#3425bd","#231fbb","#0218b8","#111f8d", "#09156e","#0e1e93", "#0d1b84", "#0a166f", "#071053"]
+  
     const gradientArray = ['#f0f7fd','#cce6fe','#a9d3ff','#87c1ff','#65adff','#4099ff','#0084ff','#0084ff','#117bf3','#1972e6','#1e69da','#2160ce','#2258c2','#234fb6','#2247aa','#213f9f','#203793','#1e2f88','#1b277d','#182071','#151867','#11115c', '#0f1159','#0c1057','#0a0f54','#080f51','#060e4e','#040e4c','#030d49','#020c46','#010b43','#010941','#01083e','#01063b','#020439','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236','#020236']
-    //['#ffe4d3', '#fec2ee', '#fe9be0', '#fd7ad4', '#f56bf7', '#d759f1', '#c038f7', '#9522fb', '#7b23fb', '#6823fb', '#6022fb', '#3e24fb', '#4019de', '#3f0fc2', '#3b05a7', '#350796', '#32058a', '#2f037f']
-    //["#feac5e","#ffa066","#ff9571","#ff8b7d","#ff828b","#ff7b9a","#fb77a9","#ee76b7","#dc77c4","#c779d0","#aa7dd5","#8c80d5","#6d81d1","#4d81c9","#2a80be","#007eb0","#007aa1","#007691","#007180","#106b71"]
 
     const [validRow, setValidRow] = useState();
 
@@ -74,13 +65,14 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiUrl}){
     
     return (
     <td key={id}><div style={{
-        color: frozenColumns.includes(id) ? 'black' : 'blue',
+        color: colName.includes('Unassigned') ? '#616160' : (frozenColumns.includes(id) ? 'black' : 'blue'),
         textAlign: "center",
         verticalAlign:"top",
         width: "5em",
         padding:".1em"
     }}>
-    {id}.<br/> {colName}<input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}} 
+    {id}.<br/> {colName}
+    {colName.includes('Unassigned') ? <div/> : <input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}} 
     onKeyDown={
             (evt) => {
                 if(evt.key=="Enter"){
@@ -93,7 +85,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiUrl}){
                     evt.target.value = '';
                     evt.target.blur();
                 }
-                }}/>
+                }}/>}
     {frozenColumns.includes(id) ? <div> <button onClick={(evt) => {
                     fetch(`${apiUrl}/deleteFrozenColumn/${id}`)
                     .then( response => response.json())

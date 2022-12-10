@@ -14,6 +14,7 @@ class Grid():
 		self.corpus = corpus
 		self.synonym_book = synonym_book
 		self.clusters = clusters
+		self.unassigned = []
 
 		self.supercorpus_filename = supercorpus_filename
 		self.unique_filename = unique_filename
@@ -99,6 +100,14 @@ class Grid():
 		return biglist
 
 
+	def get_unlabeled_docs(self, documents, labels):
+		unlabeled = []
+		for document_index, label in enumerate(labels):
+			if not label:
+				unlabeled.append(documents[document_index])
+		return unlabeled
+
+
 	def generate_clusters(self):
 		print("K: ", self.k)
 		print("Generating grid ... ")
@@ -117,6 +126,9 @@ class Grid():
 		if len(documents) > 0:
 			labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists, all_frozen_docs)
 
+			self.unassigned = self.get_unlabeled_docs(documents, labels)
+			print(self.unassigned, "-------")
+
 			# The frozen ones will not be updated.
 			self.update_seeded_clusters(documents, labels)
 			seeded_clusters = [cluster for cluster in self.clusters if cluster.is_seeded()] # Need to recalculate this list because you may have lost a seeded cluster or two if they were composed of only documents frozen elsewhere
@@ -124,7 +136,7 @@ class Grid():
 			new_machine_clusters = self.create_machine_clusters(documents, labels, num_clusters)
 			# Replace any machine clusters that already exist, remove extraneous, add any extra.
 			# For now, just remove old and put new on the end, but in the future, preserve order if possible.
-			new_clusters = frozen_clusters + seeded_clusters + new_machine_clusters
+			new_clusters = frozen_clusters + seeded_clusters + new_machine_clusters + [Cluster('Unassigned', self.unassigned, False)]
 			self.clusters = new_clusters
 
 	def export_for_evaluation(self, filename):
@@ -148,14 +160,15 @@ class Grid():
 		if cluster_from_index != cluster_to_index:
 			cluster_from = self.clusters[cluster_from_index]
 			cluster_to = self.clusters[cluster_to_index]
-			cluster_to.insert(document)
-			cluster_from.remove(document)
-			if not cluster_from:
-				print(cluster_from.name, " will be removed.")
-				self.clusters.pop(cluster_from_index)
-			if not cluster_to.frozen:
-				name = self.name_cluster(cluster_to.documents)
-				cluster_to.set_name(name, cluster_to.frozen)
+			if cluster_to.name != 'Unassigned':
+				cluster_to.insert(document)
+				cluster_from.remove(document)
+				if not cluster_from:
+					print(cluster_from.name, " will be removed.")
+					self.clusters.pop(cluster_from_index)
+				if not cluster_to.frozen:
+					name = self.name_cluster(cluster_to.documents)
+					cluster_to.set_name(name, cluster_to.frozen)
 
 	def move_document_by_index(self, doc_num, cluster_from_index, cluster_to_index):
 		document = self.clusters[cluster_from_index].documents[doc_num]
@@ -180,7 +193,6 @@ class Grid():
 		cluster.insert(document)
 
 	def create_human_cluster(self, concept):
-		print(concept)
 		documents = self.linguist.find_relevant_docs(self.documents, concept)
 		if len(documents) > 0:
 			cluster = Cluster(concept, documents, frozen = True)
@@ -188,6 +200,7 @@ class Grid():
 		return documents
 
 	def delete_cluster(self, cluster_index):
+		self.unassigned += self.clusters[cluster_index].documents
 		self.clusters.pop(cluster_index)
 
 	def freeze_cluster(self, cluster_index):
