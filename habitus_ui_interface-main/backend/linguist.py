@@ -62,16 +62,30 @@ class Linguist():
 
 	def find_relevant_docs(self, documents: list[Document], anchor: str) -> list[Document]:
 
-		anchor = self.nlp(anchor)[0].lemma_
+		anchorType = None
 
-		def has_anchor(document: Document) -> bool:
+		if '&' in anchor:
+			anchors = anchor.replace(' ','').split('&')
+			anchorType = '&'
+		else: 
+			anchors = anchor.replace(' ','').split('|') # Ok so the default here is or, and it will only work for one type of boolean
+			anchorType = '|'
+
+		anchors = [self.nlp(anchor)[0].lemma_ for anchor in anchors]
+
+		def has_anchor(anchor: str, document: Document) -> bool:
 			words = self.tokenize(document.get_vector_text())
 			return any(anchor in word for word in words)
 
 		if anchor == None:
 			return documents.copy()
 		else:
-			result = [document for document in documents if has_anchor(document)]
+			possible_docs = [[document.get_index() for document in documents if has_anchor(anchor, document)] for anchor in anchors]
+			if anchorType == "&":
+				result = list(set.intersection(*map(set, possible_docs)))
+			else:
+				result = list(set.union(*map(set, possible_docs)))
+			result = [doc for doc in documents if doc.get_index() in result] # Not a great way to handle this
 			return result
 
 	def get_cluster_name(self, n, documents: list[Document], tfidf, pmi, anchor_word, anchor_index, tfidf_pmi_weight):

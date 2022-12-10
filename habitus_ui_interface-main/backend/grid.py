@@ -180,6 +180,7 @@ class Grid():
 		cluster.insert(document)
 
 	def create_human_cluster(self, concept):
+		print(concept)
 		documents = self.linguist.find_relevant_docs(self.documents, concept)
 		if len(documents) > 0:
 			cluster = Cluster(concept, documents, frozen = True)

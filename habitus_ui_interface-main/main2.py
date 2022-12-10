@@ -221,6 +221,9 @@ class UvicornFrontend(Frontend):
 
 frontend = UvicornFrontend('../process_files/', 6,'kmeans')
 
+def fromHex(hex: str) -> str:
+    return "".join([chr(int(hex[i:i+4], 16)) for i in range(0, len(hex), 4)])
+
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
 # - log the event for debugging and bookkeeping purposes
@@ -306,8 +309,9 @@ async def deleteFrozenColumn(ix: int):
     print("deleteFrozen", ix)
     return frontend.delete_frozen(int(ix))
 
-@app.get("/textInput/{text}")
-async def textInput(text: str):
+@app.get("/textInput/{hexText}")
+async def textInput(hexText: str):
+    text = fromHex(hexText)
     print("textInput", text)
     return frontend.create_cluster(text)
 
