@@ -4,16 +4,20 @@ import {useId, useEffect, useState} from "react";
 export default function Trash({onChange, onDrop, apiUrl}){
  
     const [{ isOver }, dropRef] = useDrop({
-        accept: 'sentence',
+        accept: 'grid',
         drop: (item) => {
-            fetch(`${apiUrl}/trash/${item.text}`)
-            .then( response => response.json())
-            .then( data => {
-                console.log(data);
-                onDrop(data)
-            });
+            let answer = window.confirm("Delete Grid? This cannot be undone")
+            console.log(answer)
+            if (answer) {
+                fetch(`${apiUrl}/deleteGrid/${item.gridName}`)
+                .then( response => response.json())
+                .then( data => {
+                    console.log(data);
+                    onDrop(data)
+                });
+            }
             console.log([item]);
-        },
+            },
         collect: (monitor) => ({
             isOver: monitor.isOver()
         })
@@ -23,8 +27,6 @@ export default function Trash({onChange, onDrop, apiUrl}){
 
         style={{
             background: isOver ? 'skyblue' : "white",
-            marginLeft: '1em',
-            marginTop: '0.35em',
             fontSize: '40pt'}}
             >
            🗑

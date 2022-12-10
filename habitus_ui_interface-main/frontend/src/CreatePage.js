@@ -67,6 +67,7 @@ function CreatePage({apiUrl}) {
 
 	return (
       <DndProvider backend={HTML5Backend}>
+      <div style={{background: "#a9d3ff", padding:"1%"}}><Link style={{color:'black'}} to="/">Back to Gallery</Link></div>
       <div style={{marginTop:'5%'}}>
       <h1 style={{marginLeft:'40%'}}>Create a new Grid</h1>
       <div style={{display: "flex", flexDirection: "row"}}>

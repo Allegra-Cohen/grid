@@ -6,7 +6,7 @@ export default function KButton({apiUrl}){
 
 	  return (
 	    <div className={"KButton"}>
-	      <input style={{height:"2em", width:"2em", fontSize:'20px', border: '1.5px solid #90c5e1'}}
+	      <input style={{height:"2em", width:"60%", fontSize:'20px', border: '1.5px solid #90c5e1'}}
 	      onInput={
       	     (evt) => {
  	        	let k = evt.target.value;
@@ -14,7 +14,7 @@ export default function KButton({apiUrl}){
 		        fetch(`${apiUrl}/setK/${k}`)
 		            .then( response => response.json())}
            }
-           placeholder=" # "
+           placeholder=" Max. columns "
            />
 	    </div>
 	  );

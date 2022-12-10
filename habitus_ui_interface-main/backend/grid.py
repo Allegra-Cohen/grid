@@ -8,13 +8,15 @@ from surdeanu2005 import Surdeanu2005
 from soft_kmeans import SoftKMeans
 
 class Grid():
-	def __init__(self, path: str, root_filename: str, corpus, k: int, synonym_book, clustering_algorithm, clusters: list[Cluster] = []):
+	def __init__(self, path: str, supercorpus_filename: str, unique_filename: str, corpus, k: int, synonym_book, clustering_algorithm, clusters: list[Cluster] = []):
 		self.path = path
-		self.root_filename = root_filename
 		self.k = k
 		self.corpus = corpus
 		self.synonym_book = synonym_book
 		self.clusters = clusters
+
+		self.supercorpus_filename = supercorpus_filename
+		self.unique_filename = unique_filename
 
 		self.documents = self.corpus.documents
 		self.anchor = self.corpus.anchor
@@ -29,8 +31,8 @@ class Grid():
 			self.cluster_generator = SoftKMeans(self.corpus, self.linguist)
 
 	@classmethod
-	def generate(cls, path: str, root_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
-		grid = cls(path, root_filename, corpus, k, synonym_book, clustering_algorithm)
+	def generate(cls, path: str, supercorpus_filename: str, grid_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
+		grid = cls(path, supercorpus_filename, grid_filename, corpus, k, synonym_book, clustering_algorithm)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		grid.generate_clusters()
 		return grid
@@ -200,7 +202,7 @@ class Grid():
 			return [document for document in clicked_cluster.documents if document.is_member(row_index)]
 
 
-	def dump(self, filename, write = True):
+	def dump(self, write = True):
 
 		def dump_documents():
 			records = []
@@ -218,22 +220,22 @@ class Grid():
 			}
 			for row in self.rows:
 				data[row.name] = [record['map'][row.name] for record in records]
-			pd.DataFrame(data).to_csv(self.path + filename + '_documents.csv')
+			pd.DataFrame(data).to_csv(self.path + self.unique_filename + '_documents.csv')
 
-		def dump_anchor(): # This is stupid right now, but we might have complicated anchors in the future (e.g., '(tomatoes OR onions) AND seed')
-			pd.DataFrame({'anchor':[self.anchor]}).to_csv(self.path + filename + '_anchor.csv')
+		def dump_specs(): # This is stupid right now, but we might have complicated anchors in the future (e.g., '(tomatoes OR onions) AND seed')
+			pd.DataFrame({'anchor':[self.anchor], 'corpus':[self.supercorpus_filename], 'filename':[self.unique_filename]}).to_csv(self.path + self.unique_filename + '_specs.csv')
 
 		def dump_tokens():
 			tokens = []
 			for document_index, document in enumerate(self.documents):
 				tokens.append(document.tokens)
-			pd.DataFrame({'tokens': tokens}).to_csv(self.path + filename + '_tokens.csv')
+			pd.DataFrame({'tokens': tokens}).to_csv(self.path + self.unique_filename + '_tokens.csv')
 
 		def dump_vectors():
 			vectors = []
 			for document_index, document in enumerate(self.documents):
 				vectors.append(document.vector)
-			pd.DataFrame({'vectors': vectors}).to_csv(self.path + filename + '_vectors.csv')
+			pd.DataFrame({'vectors': vectors}).to_csv(self.path + self.unique_filename + '_vectors.csv')
 
 		def dump_cells():
 			records = []
@@ -256,11 +258,11 @@ class Grid():
 				'seeded_doc': [record['seeded_doc'] for record in records]
 			}
 			if write:
-				pd.DataFrame(data).to_csv(self.path + filename + '_cells.csv')
+				pd.DataFrame(data).to_csv(self.path + self.unique_filename + '_cells.csv')
 			else:
 				return pd.DataFrame(data)
 		if write:
-			dump_anchor()
+			dump_specs()
 			dump_documents()
 			dump_tokens()
 			dump_vectors()

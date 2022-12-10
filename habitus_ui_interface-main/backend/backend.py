@@ -47,24 +47,24 @@ class Backend():
 	#       Suggest that filename should be provided when the user creates the Grid (a process which isn't supported yet.)
 	def get_grid(self, k: int, anchor: str, grid_filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
-		print(anchor)
 		self.set_up_corpus(grid_filename, anchor)
-		grid = Grid.generate(self.path, grid_filename, self.corpus, k, self.synonym_book, clustering_algorithm)
+		grid = Grid.generate(self.path, self.clean_supercorpus_filename.split(".")[0], grid_filename.split(".")[0], self.corpus, k, self.synonym_book, clustering_algorithm)
 		return grid
 
 
-	def load_grid(self, filename: str, clustering_algorithm: str) -> Grid:
-		print("Loading grid from root filename ", filename)
+	def load_grid(self, unique_filename: str, clustering_algorithm: str) -> Grid:
+		print("Loading grid from root filename ", unique_filename)
 		try:
-			anchor = list(pd.read_csv(self.path + filename + '_anchor.csv')['anchor'])[0]
-			anchor = anchor.split('_')[0].strip()
-			self.set_up_corpus(anchor, anchor)
+			specs = pd.read_csv(self.path + unique_filename + '_specs.csv')
+			anchor = list(specs['anchor'])[0]
+			self.clean_supercorpus_filename = list(specs['corpus'])[0]
+			self.set_up_corpus(unique_filename, anchor)
 
-			cells = pd.read_csv(self.path + filename + '_cells.csv')
+			cells = pd.read_csv(self.path + unique_filename + '_cells.csv')
 			col_names = pd.unique(cells['col'])
 			clusters = self.load_clusters(cells, col_names)
 			k = len(col_names)
-			grid = Grid(self.path, filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
+			grid = Grid(self.path, self.clean_supercorpus_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
 		except FileNotFoundError:
 			print("That grid doesn't exist. Try creating it and saving it.")
 			grid = None

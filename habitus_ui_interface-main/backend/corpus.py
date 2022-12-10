@@ -14,12 +14,11 @@ from mathematician import get_pmi
 from row import Row
 
 class Corpus():
-	def __init__(self, path: str, clean_supercorpus_filename: str, row_labels_filename: str, grid_filename: str, rows: list[Row], anchor: str, anchor_book: dict[list[str]], linguist: Linguist, tfidf_pmi_weight: float, recalculate_pmi = False, recalculate_vectors = False):
+	def __init__(self, path: str, clean_supercorpus_filename: str, row_labels_filename: str, unique_filename: str, rows: list[Row], anchor: str, anchor_book: dict[list[str]], linguist: Linguist, tfidf_pmi_weight: float, recalculate_pmi = False, recalculate_vectors = False):
 		self.path = path
 		self.clean_supercorpus_filename = clean_supercorpus_filename.split(".")[0]
 		self.anchor = anchor
-		self.grid_filename = grid_filename.split(".")[0]
-		self.unique_filename = self.clean_supercorpus_filename + '_' + self.anchor + '_' + self.grid_filename
+		self.unique_filename = unique_filename.split(".")[0]
 
 		self.row_labels_filename = row_labels_filename
 		self.rows = rows
@@ -32,10 +31,6 @@ class Corpus():
 		self.initialize(recalculate_pmi, recalculate_vectors)
 
 	def initialize(self, recalculate_pmi, recalculate_vectors):
-		print(self.clean_supercorpus_filename)
-		print(self.anchor)
-		print(self.grid_filename)
-		print(self.documents)
 		vector_texts = [document.get_vector_text() for document in self.documents]
 		self.counts = self.linguist.word_vectorizer.fit_transform(vector_texts).toarray()
 		self.words = self.linguist.word_vectorizer.get_feature_names_out()
@@ -49,18 +44,18 @@ class Corpus():
 		self.load_vectors(self.documents)
 		self.doc_distances = self.load_distances(self.unique_filename + '_doc_distances_lem.npy')
 
-	# def load_pmi(self, filename: str, recalculate: bool):
-	# 	if (not os.path.isfile(self.path + filename)) or recalculate:
-	# 		pmi = self.save_pmi(self.documents)
-	# 	pmi = np.load(self.path + filename)
-	# 	pmi[np.isnan(pmi)] = 0
-	# 	pmi[pmi == np.inf] = 0
-	# 	pmi[pmi == -1 * np.inf] = 0
-	# 	return pmi
+	def load_pmi(self, filename: str, recalculate: bool):
+		if (not os.path.isfile(self.path + filename)) or recalculate:
+			pmi = self.save_pmi(self.documents)
+		pmi = np.load(self.path + filename)
+		pmi[np.isnan(pmi)] = 0
+		pmi[pmi == np.inf] = 0
+		pmi[pmi == -1 * np.inf] = 0
+		return pmi
 
-	# def save_pmi(self, documents: list[Document]):
-	# 	print("Calculating PMI matrix ... \n")
-	# 	return get_pmi(self.path, documents, self.words, k = 0, grid_filename = self.grid_filename, window = 1)  
+	def save_pmi(self, documents: list[Document]):
+		print("Calculating PMI matrix ... \n")
+		return get_pmi(self.path, documents, self.words, k = 0, grid_filename = self.grid_filename, window = 1)  
 
 	def load_distances(self, filename: str):
 		doc_distances = np.load(self.path + filename)
@@ -157,7 +152,8 @@ class Corpus():
 						documents.append(document)
 						doc_i += 1 # Need to keep this separate because might be a subset of label file
 					except IndexError:
-						print("Line not found in row_labels: ", readable)
+						continue
+						# print("Line not found in row_labels: ", readable)
 		return documents
 	
 
