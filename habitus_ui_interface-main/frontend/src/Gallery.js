@@ -69,7 +69,9 @@ function Gallery({apiUrl}) {
                 }
        }
        apiUrl={apiUrl}/>
-      </div></div>
+      </div>
+      </div>
+      <div className = 'info' style={{width:'max-content', marginLeft:'6%'}}><Link to="/changeCorpus" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Upload or update corpus </Link></div>
 
       </DndProvider>
   );
