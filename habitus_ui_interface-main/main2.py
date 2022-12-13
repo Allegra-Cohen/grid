@@ -104,6 +104,7 @@ class UvicornFrontend(Frontend):
         grid = self.backend.load_grid(unique_filename, self.clustering_algorithm)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
+        print(self.grid)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
@@ -242,16 +243,16 @@ async def showGrids():
         if file.endswith("specs.csv"): # All Grids write out an anchor file
             gridName = file.rsplit('_', 1) # But not all Grids are named by the anchor, they have their own filenames
             grids.append(gridName[0])
-    return {'grids': grids}
+    return {'grids': grids, 'filepath': frontend.path}
 
-@app.get("/setSupercorpus/{filename}")
-async def setSupercorpus(filename: str):
-    return frontend.backend.set_supercorpus(filename)
+@app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
+async def setSuperfiles(corpusFilename: str, rowFilename: str):
+    return frontend.backend.set_superfiles(corpusFilename, rowFilename)
 
-@app.get("/loadNewGrid/{corpusFilename}/{newFilename}/{newAnchor}")
-async def loadNewGrid(corpusFilename: str, newFilename: str, newAnchor: str):
+@app.get("/loadNewGrid/{corpusFilename}/{rowFilename}/{newFilename}/{newAnchor}")
+async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     print("loadNewGrid", newFilename, newAnchor)
-    if frontend.backend.set_supercorpus(corpusFilename):
+    if frontend.backend.set_superfiles(corpusFilename, rowFilename):
         return frontend.load_new_grid(newFilename, newAnchor)
     else:
         return False

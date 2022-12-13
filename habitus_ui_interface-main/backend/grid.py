@@ -8,7 +8,7 @@ from surdeanu2005 import Surdeanu2005
 from soft_kmeans import SoftKMeans
 
 class Grid():
-	def __init__(self, path: str, supercorpus_filename: str, unique_filename: str, corpus, k: int, synonym_book, clustering_algorithm, clusters: list[Cluster] = []):
+	def __init__(self, path: str, supercorpus_filename: str, row_filename: str, unique_filename: str, corpus, k: int, synonym_book, clustering_algorithm, clusters: list[Cluster] = []):
 		self.path = path
 		self.k = k
 		self.corpus = corpus
@@ -17,6 +17,7 @@ class Grid():
 		self.unassigned = []
 
 		self.supercorpus_filename = supercorpus_filename
+		self.row_filename = row_filename
 		self.unique_filename = unique_filename
 
 		self.documents = self.corpus.documents
@@ -32,8 +33,8 @@ class Grid():
 			self.cluster_generator = SoftKMeans(self.corpus, self.linguist)
 
 	@classmethod
-	def generate(cls, path: str, supercorpus_filename: str, grid_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
-		grid = cls(path, supercorpus_filename, grid_filename, corpus, k, synonym_book, clustering_algorithm)
+	def generate(cls, path: str, supercorpus_filename: str,  row_filename: str, grid_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
+		grid = cls(path, supercorpus_filename, row_filename, grid_filename, corpus, k, synonym_book, clustering_algorithm)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		grid.generate_clusters()
 		return grid
@@ -122,12 +123,11 @@ class Grid():
 		# Note: This scraps seeded clusters that haven't been frozen. The alternative is to keep seeded documents
 		#       in their clusters, but not in any other clusters, which gets really complicated in mathematician.
 		all_frozen_docs = self.flatten_lists(frozen_document_lists)
-		documents = [doc for doc in self.documents if doc not in all_frozen_docs]
+		documents = [doc for doc in self.documents if doc not in all_frozen_docs] # Don't cluster stuff that doesn't have vector embeddings, also don't bother with stuff that doesn't have row labels
 		if len(documents) > 0:
 			labels, num_clusters = self.cluster_generator.generate(documents, self.k, frozen_document_lists, seeded_document_lists, all_frozen_docs)
 
 			self.unassigned = self.get_unlabeled_docs(documents, labels)
-			print(self.unassigned, "-------")
 
 			# The frozen ones will not be updated.
 			self.update_seeded_clusters(documents, labels)
@@ -237,7 +237,7 @@ class Grid():
 			pd.DataFrame(data).to_csv(self.path + self.unique_filename + '_documents.csv')
 
 		def dump_specs(): # This is stupid right now, but we might have complicated anchors in the future (e.g., '(tomatoes OR onions) AND seed')
-			pd.DataFrame({'anchor':[self.anchor], 'corpus':[self.supercorpus_filename], 'filename':[self.unique_filename]}).to_csv(self.path + self.unique_filename + '_specs.csv')
+			pd.DataFrame({'anchor':[self.anchor], 'row_filename':[self.row_filename], 'corpus':[self.supercorpus_filename], 'filename':[self.unique_filename]}).to_csv(self.path + self.unique_filename + '_specs.csv')
 
 		def dump_tokens():
 			tokens = []

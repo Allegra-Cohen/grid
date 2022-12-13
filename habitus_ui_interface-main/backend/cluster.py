@@ -44,8 +44,8 @@ class Cluster():
 				self.human_documents.sort(key=lambda x: x.index)
 
 
-	def print_yourself(self, index: int):
-		print(str(index) + ". Cluster ", self.name, " : -----------------")
+	def print_yourself(self, cindex: int):
+		print(str(cindex) + ". Cluster ", self.name, " : -----------------")
 		for index, document in enumerate(self.documents):
 			if document in self.human_documents:
 				print(str(index) + ". ( user - added )   ", document.readable)

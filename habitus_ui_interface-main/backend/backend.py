@@ -12,7 +12,7 @@ class Backend():
 		self.supercorpus_filename = None
 		self.clean_supercorpus_filename = None
 
-		self.row_labels_filename = "row_labels_harvest.csv" # ahhhhhh
+		self.row_labels_filename = None
 		# These things stay here as items that are constant across many Grids
 		self.tfidf_pmi_weight = 0.2
 
@@ -32,10 +32,11 @@ class Backend():
 		}
 
 
-	def set_supercorpus(self, filename):
-		if os.path.isfile(self.path + filename):
-			self.supercorpus_filename = filename
-			self.clean_supercorpus_filename = 'cleaned_' + filename
+	def set_superfiles(self, supercorpus_filename, row_filename):
+		if os.path.isfile(self.path + supercorpus_filename) and os.path.isfile(self.path + row_filename):
+			self.supercorpus_filename = supercorpus_filename
+			self.row_labels_filename = row_filename
+			self.clean_supercorpus_filename = 'cleaned_' + supercorpus_filename
 			if not os.path.isfile(self.path + self.clean_supercorpus_filename):
 				Corpus.clean_corpus(self.path, self.supercorpus_filename, self.clean_supercorpus_filename, self.synonym_book)
 			return True
@@ -48,23 +49,24 @@ class Backend():
 	def get_grid(self, k: int, anchor: str, grid_filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
 		self.set_up_corpus(grid_filename, anchor)
-		grid = Grid.generate(self.path, self.clean_supercorpus_filename.split(".")[0], grid_filename.split(".")[0], self.corpus, k, self.synonym_book, clustering_algorithm)
+		grid = Grid.generate(self.path, self.clean_supercorpus_filename.split(".")[0], self.row_labels_filename.split('.')[0], grid_filename.split(".")[0], self.corpus, k, self.synonym_book, clustering_algorithm)
 		return grid
 
 
 	def load_grid(self, unique_filename: str, clustering_algorithm: str) -> Grid:
 		print("Loading grid from root filename ", unique_filename)
-		try:
+		try: 
 			specs = pd.read_csv(self.path + unique_filename + '_specs.csv')
 			anchor = list(specs['anchor'])[0]
 			self.clean_supercorpus_filename = list(specs['corpus'])[0]
+			self.row_labels_filename = list(specs['row_filename'])[0]
 			self.set_up_corpus(unique_filename, anchor)
 
 			cells = pd.read_csv(self.path + unique_filename + '_cells.csv')
 			col_names = pd.unique(cells['col'])
 			clusters = self.load_clusters(cells, col_names)
 			k = len(col_names)
-			grid = Grid(self.path, self.clean_supercorpus_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
+			grid = Grid(self.path, self.clean_supercorpus_filename, self.row_labels_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
 		except FileNotFoundError:
 			print("That grid doesn't exist. Try creating it and saving it.")
 			grid = None
@@ -74,11 +76,8 @@ class Backend():
 
 	def set_up_corpus(self, grid_filename: str, anchor: str):
 		# Get rows and Linguist set up
-		self.rows = [Row('other'), Row('proportions'), Row('processes'), Row('decisions'), Row('conditions'), Row('causes'), Row('all')]
-		# self.rows = [Row('other'), Row('proportion'), Row('parameter'), Row('sequence'), Row('function'), Row('switch'), Row('condition'), Row('all')]
+		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + self.row_labels_filename + '.csv').columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
 		self.linguist = Linguist()
-
-		print('Does the file with row labels exist? ', os.path.isfile(self.path + self.row_labels_filename))
 
 		# Handling corpus and row label filenames as separate because corpus can span multiple grids and row label is a temporary file until we get a classifier going.
 		# If the right files don't exist for this anchor, corpus will create them using filename.

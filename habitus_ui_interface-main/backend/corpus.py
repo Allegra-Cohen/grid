@@ -66,10 +66,13 @@ class Corpus():
 	def load_vectors(self, documents: list[Document]):
 		suffix = 'doc_vecs_lem.json'
 		if os.path.isfile(self.path + self.unique_filename + '_' +  suffix): # If the embeddings already exist for this Grid, load them
+			print("1. Looking for: ", self.unique_filename)
 			filename = self.path + self.unique_filename + '_' +  suffix
 		elif os.path.isfile(self.path + self.clean_supercorpus_filename + '_' +  suffix): # Or if the embeddings for the supercorpus exist, load those
+			print("2. Looking for: ", self.clean_supercorpus_filename)
 			filename = self.path + self.clean_supercorpus_filename + '_' +  suffix
 			shutil.copy(filename, self.path + self.unique_filename + '_' + suffix)
+			print("Copying ", filename, " to ", self.path + self.unique_filename + '_' + suffix)
 			shutil.copy(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.npy', self.path + self.unique_filename + '_doc_distances_lem.npy')
 		else: # Otherwise, you need to calculate embeddings for the entire supercorpus, and then copy files for this specific Grid.
 			all_documents = self.load_anchored_documents(load_all = True)
@@ -81,12 +84,17 @@ class Corpus():
 		with open(filename, 'r') as file:
 			vectors = json.load(file)
 
+		valid_documents = []
 		for document in documents:
-			vector = vectors[document.get_vector_text()]
-			document.set_vector(vector)
+			if document.memberships:
+				vector = vectors[document.get_vector_text()]
+				if not np.isnan(np.array(vector)).any():
+					document.set_vector(vector)
+					valid_documents.append(document)
+		self.documents = valid_documents
 
 	def save_vectors(self, documents: list[Document]):
-		print("Calculating vector embeddings ... \n ")
+		print("Couldn't find vector files. Calculating vector embeddings ... \n ")
 		# model = api.load('word2vec-google-news-300')
 		filename = "/Users/allegracohen/Documents/Postdoc/habitus/odin_project/keith_glove/glove_to_word2vec.habitus1.300d.txt"
 		model = KeyedVectors.load_word2vec_format(filename)
@@ -119,7 +127,7 @@ class Corpus():
 
 
 	def load_row_labels(self):
-		lines = pd.read_csv(self.path + self.row_labels_filename, header = 0)
+		lines = pd.read_csv(self.path + self.row_labels_filename + '.csv', header = 0)
 		return lines
 
 
@@ -146,14 +154,14 @@ class Corpus():
 					try:
 						label_line = [(i,l) for i,l in labels.iterrows() if l['stripped'] == stripped][0]
 						memberships = [label_line[1][row.name] == 1 for row in self.rows]
-						pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
-						post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
-						document = Document(doc_i, stripped, readable, tokens, pre_context, post_context, memberships = memberships)
-						documents.append(document)
-						doc_i += 1 # Need to keep this separate because might be a subset of label file
 					except IndexError:
-						continue
+						memberships = []
 						# print("Line not found in row_labels: ", readable)
+					pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
+					post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
+					document = Document(doc_i, stripped, readable, tokens, pre_context, post_context, memberships = memberships)
+					documents.append(document)
+					doc_i += 1 # Need to keep this separate because might be a subset of label file
 		return documents
 	
 
