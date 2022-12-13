@@ -76,7 +76,7 @@ class Backend():
 
 	def set_up_corpus(self, grid_filename: str, anchor: str):
 		# Get rows and Linguist set up
-		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + self.row_labels_filename + '.csv').columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
+		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + self.row_labels_filename).columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
 		self.linguist = Linguist()
 
 		# Handling corpus and row label filenames as separate because corpus can span multiple grids and row label is a temporary file until we get a classifier going.

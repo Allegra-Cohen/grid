@@ -20,7 +20,7 @@ class Corpus():
 		self.anchor = anchor
 		self.unique_filename = unique_filename.split(".")[0]
 
-		self.row_labels_filename = row_labels_filename
+		self.row_labels_filename = row_labels_filename.split(".")[0]
 		self.rows = rows
 
 		self.anchor_book = anchor_book
