@@ -60,3 +60,6 @@ class Cluster():
 		self.name = name
 		if freeze:
 			self.frozen = True
+			add_these = [doc for doc in self.documents if doc not in self.human_documents]
+			self.human_documents += add_these
+			self.human_documents.sort(key=lambda x: x.index)
