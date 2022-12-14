@@ -55,21 +55,21 @@ class Backend():
 
 	def load_grid(self, unique_filename: str, clustering_algorithm: str) -> Grid:
 		print("Loading grid from root filename ", unique_filename)
-		# try: 
-		specs = pd.read_csv(self.path + unique_filename + '_specs.csv')
-		anchor = list(specs['anchor'])[0]
-		self.clean_supercorpus_filename = list(specs['corpus'])[0]
-		self.row_labels_filename = list(specs['row_filename'])[0]
-		self.set_up_corpus(unique_filename, anchor)
+		try: 
+			specs = pd.read_csv(self.path + unique_filename + '_specs.csv')
+			anchor = list(specs['anchor'])[0]
+			self.clean_supercorpus_filename = list(specs['corpus'])[0]
+			self.row_labels_filename = list(specs['row_filename'])[0]
+			self.set_up_corpus(unique_filename, anchor)
 
-		cells = pd.read_csv(self.path + unique_filename + '_cells.csv')
-		col_names = pd.unique(cells['col'])
-		clusters = self.load_clusters(cells, col_names)
-		k = len(col_names)
-		grid = Grid(self.path, self.clean_supercorpus_filename, self.row_labels_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
-		# except FileNotFoundError:
-		# 	print("That grid doesn't exist. Try creating it and saving it.")
-		# 	grid = None
+			cells = pd.read_csv(self.path + unique_filename + '_cells.csv')
+			col_names = pd.unique(cells['col'])
+			clusters = self.load_clusters(cells, col_names)
+			k = len(col_names)
+			grid = Grid(self.path, self.clean_supercorpus_filename, self.row_labels_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
+		except FileNotFoundError:
+			print("That grid doesn't exist. Try creating it and saving it.")
+			grid = None
 
 		return grid
 
