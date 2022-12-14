@@ -11,6 +11,7 @@ from fastapi import FastAPI, Depends
 from frontend import Frontend
 from pandas import DataFrame
 from starlette.middleware.cors import CORSMiddleware
+import asyncio
 import time
 import pandas as pd
 import os
@@ -433,7 +434,7 @@ async def recordAnswers(questionSet: str, userID: int):
     print("writing out for ", questionSet)
     frontends[userID].write_out_answers(questionSet)
     if questionSet == 'feedback':
-        time.sleep(60) # Wait 1 minute before removing the front end
+        await asyncio.sleep(60) # Wait 1 minute before removing the front end
         print("logging out ", userID)
         frontends.pop(userID)
 
