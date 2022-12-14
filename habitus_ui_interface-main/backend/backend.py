@@ -55,28 +55,32 @@ class Backend():
 
 	def load_grid(self, unique_filename: str, clustering_algorithm: str) -> Grid:
 		print("Loading grid from root filename ", unique_filename)
-		try: 
-			specs = pd.read_csv(self.path + unique_filename + '_specs.csv')
-			anchor = list(specs['anchor'])[0]
-			self.clean_supercorpus_filename = list(specs['corpus'])[0]
-			self.row_labels_filename = list(specs['row_filename'])[0]
-			self.set_up_corpus(unique_filename, anchor)
+		# try: 
+		specs = pd.read_csv(self.path + unique_filename + '_specs.csv')
+		anchor = list(specs['anchor'])[0]
+		self.clean_supercorpus_filename = list(specs['corpus'])[0]
+		self.row_labels_filename = list(specs['row_filename'])[0]
+		self.set_up_corpus(unique_filename, anchor)
 
-			cells = pd.read_csv(self.path + unique_filename + '_cells.csv')
-			col_names = pd.unique(cells['col'])
-			clusters = self.load_clusters(cells, col_names)
-			k = len(col_names)
-			grid = Grid(self.path, self.clean_supercorpus_filename, self.row_labels_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
-		except FileNotFoundError:
-			print("That grid doesn't exist. Try creating it and saving it.")
-			grid = None
+		cells = pd.read_csv(self.path + unique_filename + '_cells.csv')
+		col_names = pd.unique(cells['col'])
+		clusters = self.load_clusters(cells, col_names)
+		k = len(col_names)
+		grid = Grid(self.path, self.clean_supercorpus_filename, self.row_labels_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
+		# except FileNotFoundError:
+		# 	print("That grid doesn't exist. Try creating it and saving it.")
+		# 	grid = None
 
 		return grid
 
 
 	def set_up_corpus(self, grid_filename: str, anchor: str):
 		# Get rows and Linguist set up
-		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + self.row_labels_filename).columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
+		if '.csv' not in self.row_labels_filename: # This is bad and only exists so I can fix that other bug
+			row_filename = self.row_labels_filename + '.csv'
+		else:
+			row_filename = self.row_labels_filename
+		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + row_filename).columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
 		self.linguist = Linguist()
 
 		# Handling corpus and row label filenames as separate because corpus can span multiple grids and row label is a temporary file until we get a classifier going.
