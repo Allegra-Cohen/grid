@@ -4,7 +4,16 @@ import io
 import os
 import sys
 
-class NltkParser():
+
+class Parser():
+    def parse(self, text: str) -> list[str]:
+        pass
+
+class SpacyParser(Parser):
+    def parse(self, text: str) -> list[str]:
+        pass
+
+class NltkParser(Parser):
 
     def count_leading(self, text: str, sep: str) -> int:
         index = 0
@@ -16,37 +25,37 @@ class NltkParser():
         if text[index] != sep:
             return 0
         else:
-            prefix, suffix = text[0:index], text[index+1:]
-            leading = self.count_leading(prefix[::-1], sep)
-            trailing = self.count_leading(suffix, sep)
-            return leading + 1 + trailing
+            before, after = text[0:index], text[index+1:]
+            before_count = self.count_leading(before[::-1], sep)
+            after_count = self.count_leading(after, sep)
+            return before_count + 1 + after_count
 
     def preprocess(self, text: str) -> str:
         # Replace all \r\n with \n.
         # Replace all \r with \n.
         # Replace lone \n with space.
-        # Two or more probably mark the end of paragraphs.
-        text1 = text.replace("\r\n", "\n")
-        text2 = text1.replace("\r", "\n")
-        adjacent_counts = [self.count_adjacent(text2, index, '\n') for index in range(len(text2)) ]
-        text3 = "".join([" " if count == 1 else text2[index] for index, count in enumerate(adjacent_counts)])
-        return text3
+        # Two or more \n probably mark the ends of paragraphs.
+        text = text.replace("\r\n", "\n")
+        text = text.replace("\r", "\n")
+        adjacent_counts = [self.count_adjacent(text, index, '\n') for index in range(len(text)) ]
+        text = "".join([" " if count == 1 else text[index] for index, count in enumerate(adjacent_counts)])
+        return text
 
     def postprocess_sentence(self, sentence: str) -> str:
         # Replace all \n with space.
         # Replace multiple spaces with single spaces.
         # Trim.
-        sentence1 = sentence.replace("\n", " ")
-        sentence2 = " ".join(sentence1.split())
-        sentence3 = sentence2.strip()
-        return sentence3
+        sentence = sentence.replace("\n", " ")
+        sentence = " ".join(sentence.split())
+        sentence = sentence.strip()
+        return sentence
 
     def postprocess_sentences(self, sentences: list[str]) -> list[str]:
         # Postprocess sentences.
         # Remove empty sentences.
-        sentences1 = [self.postprocess_sentence(sentence) for sentence in sentences]
-        sentences2 = [sentence + "\n" for sentence in sentences1 if len(sentence) > 0]
-        return sentences2
+        sentences = [self.postprocess_sentence(sentence) for sentence in sentences]
+        sentences = [sentence + "\n" for sentence in sentences if len(sentence) > 0]
+        return sentences
 
     def parse(self, text: str) -> list[str]:
         preprocessed = self.preprocess(text)
@@ -67,7 +76,7 @@ if __name__ == '__main__':
     input_extension = ".txt"
     output_extension = ".csv"
     encoding = "utf-8"
-    sentence_parser = NltkParser()
+    parser = NltkParser()
 
     for input_filename in os.listdir(input_dirname):
         input_pathname = os.path.join(input_dirname, input_filename)
@@ -87,7 +96,7 @@ if __name__ == '__main__':
                 input_text = input_file.read()
                 input_file.close()
 
-                output_lines = sentence_parser.parse(input_text)
+                output_lines = parser.parse(input_text)
 
                 output_file = io.open(output_pathname, mode="w", encoding=encoding)
                 output_file.writelines(output_lines)
