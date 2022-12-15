@@ -22,6 +22,7 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
 RUN apt -y install python3.9-dev
 
 # Install Python packages
+# RUN pip3 install wheel==0.38.4
 RUN pip3 install uvicorn==0.18.2
 RUN pip3 install fastapi==0.80.0
 RUN pip3 install gensim==3.8.3
