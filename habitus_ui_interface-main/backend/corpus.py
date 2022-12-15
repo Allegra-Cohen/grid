@@ -6,6 +6,7 @@ import pandas as pd
 import spacy
 import os.path
 import shutil
+import csv
 
 from document import Document
 from linguist import Linguist
@@ -24,6 +25,7 @@ class Corpus():
 		self.rows = rows
 
 		self.anchor_book = anchor_book
+		self.synonym_book = self.load_synonym_book()
 
 		self.linguist = linguist
 		self.tfidf_pmi_weight = tfidf_pmi_weight
@@ -104,6 +106,34 @@ class Corpus():
 			json.dump({k: v.tolist() for k, v in doc_vecs.items()}, file) 
 
 
+	def load_synonym_book(self):
+		sb = []
+		sfile = self.path + self.unique_filename + '_synBook.csv'
+		if os.path.isfile(sfile):
+			with open(sfile, 'r') as sobj:
+				reader = csv.reader(read_obj)
+				sb = list(reader)
+		return sb
+
+	def save_synonym_book(self):
+		with open(self.path + self.unique_filename + "_synBook.csv", "w", newline = "") as file:
+		    writer = csv.writer(file)
+		    writer.writerows(self.synonym_book)
+
+
+
+	def update_synonym_book(self, entry_index, word, add_or_remove):
+		if entry_index < len(self.synonym_book):
+			entry = self.synonym_book[entry_index]
+			if word in entry and add_or_remove == 'remove':
+				entry.remove(word)
+			elif word not in entry and add_or_remove == 'add':
+				entry.append(word)
+			if not entry: # Get rid of empty lists
+				self.synonym_book.pop(entry_index)
+		else:
+			self.synonym_book.append([word])
+		self.save_synonym_book()
 
 	# def adjust_for_anchor(self, key, value, add_or_remove):
 	# 	if add_or_remove == "'add'":

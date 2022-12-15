@@ -4,7 +4,7 @@ import {useId, useEffect, useState} from "react";
 export default function Trash({onChange, onDrop, apiUrl}){
  
     const [{ isOver }, dropRef] = useDrop({
-        accept: 'grid',
+        accept: 'gridIcon',
         drop: (item) => {
             let answer = window.confirm("Delete Grid? This cannot be undone")
             console.log(answer)

@@ -11,7 +11,6 @@ import LoadBox from './LoadBox'
 import './LoadBox.css'
 import KButton from './KButton'
 import './KButton.css'
-import AnchorBook from './AnchorBook'
 import SynonymBook from './SynonymBook'
 import Trash from './Trash'
 import {useEffect, useState} from "react";
@@ -170,7 +169,7 @@ function App({apiUrl}) {
       <KButton className="KButton" apiUrl={apiUrl}/>
 
       </div>
-
+      <SynonymBook synonymBook={synonymBook} onUpdate={(evt) => setSynonymBook(evt.synonym_book)} apiUrl={apiUrl}/>
       </div>
       </div>
 
@@ -210,7 +209,7 @@ function App({apiUrl}) {
 
 
     
-          </DndProvider>
+      </DndProvider>
   );
 }
 

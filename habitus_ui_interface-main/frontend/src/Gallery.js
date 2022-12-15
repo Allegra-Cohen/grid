@@ -8,10 +8,10 @@ import Trash from './Trash'
 import './info.css';
 
 
-function Grid({gridName, handleGridClick, apiUrl}) {
+function GridIcon({gridName, handleGridClick, apiUrl}) {
 
     const [{ isDragging }, dragRef] = useDrag({
-        type: 'grid',
+        type: 'gridIcon',
         item: { gridName },
         collect: (monitor) => ({
             isDragging: monitor.isDragging()
@@ -41,7 +41,7 @@ function Gallery({apiUrl}) {
         setNumCols(grids.length === 1 ? '1':'2')
     }, [numCols])
 
-    let items = grids.map((gridName, i) => (<Grid key={gridName} gridName={gridName} handleGridClick={handleGridClick} />))
+    let items = grids.map((gridName, i) => (<GridIcon key={gridName} gridName={gridName} handleGridClick={handleGridClick} />))
 
 
 	return (

@@ -1,78 +1,83 @@
 import {useEffect, useState} from "react";
 
-export default function SynonymBook({synonymBook, apiUrl}){
 
-	const [items, setItems] = useState(synonymBook);
 
-	useEffect(() => {
-        fetch(`${apiUrl}/data/`)
-            .then( response => response.json())
-            .then( data => {
-                setItems(data.synonym_book);;
+
+function SynonymEntry({entryIndex, entry, onUpdate, apiUrl}){
+
+	const [newWord, setNewWord] = useState();
+
+	const handleInput = (text) => {
+		setNewWord(text);
+	}
+
+	const handleDeleteWord = (entryIndex, word) => {
+		fetch(`${apiUrl}/removeFromSynBook/${entryIndex}/${word}/`)
+			.then( response => response.json())
+            .then( response => {
+            	onUpdate(response);
             });
-    }, [])
+	}
 
-	const [newKey, setNewKey] = useState('');
-	const [newValue, setNewValue] = useState([]);
-
-	const handleAddSynonymClick = () => {
-
-		const newDict = {}
-		newDict[newKey] = newValue;	
-		console.log("NV: ", newValue)	
-		setItems(items => ({...items, ...newDict}));
-		console.log('!!', items);
-		
-	};
+	const handleAddWord = (entryIndex) => {
+		fetch(`${apiUrl}/addToSynBook/${entryIndex}/${newWord}/`)
+			.then( response => response.json())
+            .then( response => {
+            	onUpdate(response);
+            });
+	}
 
 
-	const handleListClick = (plus_or_minus) => {
-
-		const newDict = {}
-
-		if (plus_or_minus == '+'){
-			if (!(items[newKey].includes(newValue))) {
-				newDict[newKey] = items[newKey].concat(newValue);
-			}
-		} else {
-			const index = items[newKey].indexOf(newValue);
-			if (index > -1) {
-			  newDict[newKey] = items[newKey].filter((item, i) => i !== index)
-			}
+	return(
+		<div style={{margin:'5%', padding:'4%', backgroundColor:'#a9d3ff', width: '70%'}}>
+		{
+			entry.map((word, j) => 
+				<div key={word} style={{display:'flex', flexDirection:'row'}}>
+				<button style={{backgroundColor:'#f76a6a'}} onClick={()=> handleDeleteWord(entryIndex, word)}>-</button>
+				<div style={{padding:'1%'}}>{word}</div>
+				</div>
+				)
 		}
-		setItems(items => ({...items, ...newDict}));
-		console.log(items);
+		<div style={{display:'flex', flexDirection:'row'}}>
+		<button style={{backgroundColor:'#74d681'}} onClick={()=> handleAddWord(entryIndex)}>+</button>
+		<input id="wordInput" placeholder="Add synonym" onKeyUp={(evt) => handleInput(evt.target.value)} style={{width:'70%'}}/>
+		</div>
+		</div>
+		);
+
+}
+
+export default function SynonymBook({synonymBook, onUpdate, apiUrl}){
+
+	const [newEntry, setNewEntry] = useState();
+
+	const handleInput = (text) => {
+		setNewEntry(text);
+	}
+
+	const handleAddEntry = () => {
+		fetch(`${apiUrl}/addToSynBook/${synonymBook.length + 1}/${newEntry}/`)
+			.then( response => response.json())
+            .then( response => {
+            	onUpdate(response);
+            });
+	}
+
+
+	let entries = synonymBook.map((entry, i) => <SynonymEntry key={entry} entryIndex={i} entry={entry} onUpdate={onUpdate} apiUrl={apiUrl}/>)
+
+	return (<div style={{padding:'1%', marginTop:'5%', marginLeft: '6%', background:'#f0f7fd', border: 'solid', borderColor: '#87c1ff', borderWidth: '1pt', width: 'max-content'}}>
+				<div style={{fontSize:'18pt', color:'#0c1057'}}> Synonyms </div>
 		
-	};
-
-
-
-	return (<div style={{marginLeft:'10px', paddingLeft:'10px', marginTop:'20px', paddingTop:'10px', paddingBottom:'10px', background:'#dcf6ff', width:'900px'}}>
-				<div className='add-item-box'>
-					<input onChange={(evt) => {setNewKey(evt.target.value); setNewValue([])}} className='add-item-input' placeholder='Add a word...' />
-					<button onClick={(evt) => {handleAddSynonymClick(); setNewKey(''); evt.target.blur()}}>+</button>
-				</div>
-				<h3> Synonym Book </h3>
-				<div className='item-list'>
-					{Object.entries(items).map(([key, value]) => (
-						<div style={{display:'flex', flexDirection:'row'}}>
-						<div className='item-container'>
-							<b>{key}</b>: {value.size == 0 ? value : value.map((val) => <span>{val}, </span>)}
-						</div>
-						<div style={{marginLeft:'10px'}}>
-						<input onChange={(evt) => {setNewKey(key); 
-												setNewValue(evt.target.value)}} 
-							   placeholder='Extend synonym...' />
-						<button onClick={(evt) => {setNewKey(key); handleListClick('+'); setNewKey(''); setNewValue([]); evt.target.blur()}}>+</button>
-						<button onClick={(evt) => {setNewKey(key); handleListClick('-'); setNewKey(''); setNewValue([]); evt.target.blur()}}>-</button>
-						</div>
-						</div>
-
-					))}
-
-				</div>
+			 <ul>{entries}</ul>
+			<div> 
+			<div style={{display:'flex', flexDirection:'row'}}>
+			<button style={{backgroundColor:'#74d681'}} onClick={()=> handleAddEntry()}>+</button>
+			<input id="wordInput" placeholder="Add new entry" onKeyUp={(evt) => handleInput(evt.target.value)} style={{width:'70%'}}/>
+			</div>
 			</div>
 
+			</div>
 	);
 
 }

@@ -8,11 +8,10 @@ from surdeanu2005 import Surdeanu2005
 from soft_kmeans import SoftKMeans
 
 class Grid():
-	def __init__(self, path: str, supercorpus_filename: str, row_filename: str, unique_filename: str, corpus, k: int, synonym_book, clustering_algorithm, clusters: list[Cluster] = []):
+	def __init__(self, path: str, supercorpus_filename: str, row_filename: str, unique_filename: str, corpus, k: int, clustering_algorithm, clusters: list[Cluster] = []):
 		self.path = path
 		self.k = k
 		self.corpus = corpus
-		self.synonym_book = synonym_book
 		self.clusters = clusters
 		self.unassigned = []
 
@@ -33,8 +32,8 @@ class Grid():
 			self.cluster_generator = SoftKMeans(self.corpus, self.linguist)
 
 	@classmethod
-	def generate(cls, path: str, supercorpus_filename: str,  row_filename: str, grid_filename: str, corpus: Corpus, k: int, synonym_book, clustering_algorithm: str):
-		grid = cls(path, supercorpus_filename, row_filename, grid_filename, corpus, k, synonym_book, clustering_algorithm)
+	def generate(cls, path: str, supercorpus_filename: str,  row_filename: str, grid_filename: str, corpus: Corpus, k: int, clustering_algorithm: str):
+		grid = cls(path, supercorpus_filename, row_filename, grid_filename, corpus, k, clustering_algorithm)
 		print("\n\n\nInitializing a Grid for anchor: ", grid.anchor)
 		grid.generate_clusters()
 		return grid
@@ -49,9 +48,9 @@ class Grid():
 	def regenerate(self):
 		self.generate_clusters()
 
-	def update_for_anchor(self, key, value, add_or_remove):
-		self.documents = self.corpus.adjust_for_anchor(key, value, add_or_remove) # Adds or removes docs based on anchor changes, recalculates TFIDF and PMI
-		self.regenerate() # Should preserve existing columns while clustering new docs via machine
+	# def update_for_anchor(self, key, value, add_or_remove):
+	# 	self.documents = self.corpus.adjust_for_anchor(key, value, add_or_remove) # Adds or removes docs based on anchor changes, recalculates TFIDF and PMI
+	# 	self.regenerate() # Should preserve existing columns while clustering new docs via machine
 
 	def create_machine_clusters(self, documents, labels, num_clusters):
 		# Skip the seeded clusters in the labels.

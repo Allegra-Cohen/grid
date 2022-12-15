@@ -49,7 +49,7 @@ class Backend():
 	def get_grid(self, k: int, anchor: str, grid_filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
 		self.set_up_corpus(grid_filename, anchor)
-		grid = Grid.generate(self.path, self.clean_supercorpus_filename.split(".")[0], self.row_labels_filename.split('.')[0], grid_filename.split(".")[0], self.corpus, k, self.synonym_book, clustering_algorithm)
+		grid = Grid.generate(self.path, self.clean_supercorpus_filename.split(".")[0], self.row_labels_filename.split('.')[0], grid_filename.split(".")[0], self.corpus, k, clustering_algorithm)
 		return grid
 
 
@@ -66,7 +66,7 @@ class Backend():
 			col_names = pd.unique(cells['col'])
 			clusters = self.load_clusters(cells, col_names)
 			k = len(col_names)
-			grid = Grid(self.path, self.clean_supercorpus_filename, self.row_labels_filename, unique_filename, self.corpus, k, self.synonym_book, clustering_algorithm, clusters)
+			grid = Grid(self.path, self.clean_supercorpus_filename, self.row_labels_filename, unique_filename, self.corpus, k, clustering_algorithm, clusters)
 		except FileNotFoundError:
 			print("That grid doesn't exist. Try creating it and saving it.")
 			grid = None

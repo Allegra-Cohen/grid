@@ -78,7 +78,7 @@ class UvicornFrontend(Frontend):
             "frozen_columns": frozen_columns,
             "row_contents": row_contents,
             "anchor_book": self.grid.corpus.anchor_book,
-            "synonym_book": self.grid.synonym_book
+            "synonym_book": self.grid.corpus.synonym_book
         }
 
     def load_new_grid(self, newFilename: str, newAnchor: str):
@@ -87,11 +87,14 @@ class UvicornFrontend(Frontend):
         self.clicked_row, self.clicked_col = None, None
         return self.show_grid()
 
-    def update_anchor_book(self, key: str, value: str, add_or_remove: str):
-        self.grid.update_for_anchor(key, value, add_or_remove)
-        self.clicked_col = None
-        self.clicked_row = None
-        self.clicked_documents = self.get_clicked_documents()
+    # def update_anchor_book(self, key: str, value: str, add_or_remove: str):
+    #     self.grid.update_for_anchor(key, value, add_or_remove)
+    #     self.clicked_col = None
+    #     self.clicked_row = None
+    #     self.clicked_documents = self.get_clicked_documents()
+    #     return self.show_grid()
+    def update_synonym_book(self, entry_index: int, word: str, add_or_remove: str):
+        self.grid.corpus.update_synonym_book(entry_index, word, add_or_remove)
         return self.show_grid()
 
 
@@ -278,10 +281,19 @@ async def deleteGrid(text: str):
     print("deleting ", text)
     return frontend.delete_grid(text)
 
-@app.get("/updateAnchorBook/{key}/{value}/{add_or_remove}")
-async def updateAnchorBook(key: str, value: str, add_or_remove: str):
-    print("updateAnchorBook", key, value, add_or_remove)
-    return frontend.update_anchor_book(key, value, add_or_remove)
+# @app.get("/updateAnchorBook/{key}/{value}/{add_or_remove}")
+# async def updateAnchorBook(key: str, value: str, add_or_remove: str):
+#     print("updateAnchorBook", key, value, add_or_remove)
+#     return frontend.update_anchor_book(key, value, add_or_remove)
+
+
+@app.get("/addToSynBook/{entryIndex}/{newWord}")
+async def addToSynBook(entryIndex: int, newWord: str):
+    return frontend.update_synonym_book(entryIndex, newWord, 'add')
+
+@app.get("/removeFromSynBook/{entryIndex}/{word}")
+async def removeFromSynBook(entryIndex: int, word: str):
+    return frontend.update_synonym_book(entryIndex, word, 'remove')
 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):
