@@ -92,12 +92,8 @@ if __name__ == '__main__':
                 print(f"Output: {output_pathname} already exists.\n")
             else:
                 print(f"Output: {output_pathname}\n")
-                input_file = io.open(input_pathname, mode="r", encoding=encoding)
-                input_text = input_file.read()
-                input_file.close()
-
+                with io.open(input_pathname, mode="r", encoding=encoding) as input_file:
+                    input_text = input_file.read()
                 output_lines = parser.parse(input_text)
-
-                output_file = io.open(output_pathname, mode="w", encoding=encoding)
-                output_file.writelines(output_lines)
-                output_file.close()
+                with io.open(output_pathname, mode="w", encoding=encoding) as output_file:
+                    output_file.writelines(output_lines)
