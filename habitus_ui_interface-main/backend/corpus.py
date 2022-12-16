@@ -27,6 +27,8 @@ class Corpus():
 		self.anchor_book = anchor_book
 		self.synonym_book = self.load_synonym_book()
 
+		self.model = None
+		self.model_filename = "/Users/allegracohen/Documents/Postdoc/habitus/odin_project/keith_glove/glove_to_word2vec.habitus1.300d.txt"
 		self.linguist = linguist
 		self.tfidf_pmi_weight = tfidf_pmi_weight
 		self.documents: list[Document] = self.load_anchored_documents(anchor == 'load_all')
@@ -98,12 +100,26 @@ class Corpus():
 	def save_vectors(self, documents: list[Document]):
 		print("Couldn't find vector files. Calculating vector embeddings ... \n ")
 		# model = api.load('word2vec-google-news-300')
-		filename = "/Users/allegracohen/Documents/Postdoc/habitus/odin_project/keith_glove/glove_to_word2vec.habitus1.300d.txt"
-		model = KeyedVectors.load_word2vec_format(filename)
-		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, model, self.tfidf, self.linguist.tfidf_vectorizer, None, self.anchor, None)
+		if not self.model:
+			self.model = KeyedVectors.load_word2vec_format(self.model_filename)
+		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, self.model, self.tfidf, self.linguist.tfidf_vectorizer, None, self.anchor, None)
 		np.save(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.npy', doc_distances)
 		with open(self.path + self.clean_supercorpus_filename + '_doc_vecs_lem.json', 'w') as file:
 			json.dump({k: v.tolist() for k, v in doc_vecs.items()}, file) 
+
+
+	def reset_vectors(self, entry, word):
+		print("Vector resetting doesn't exist yet")
+		# if not self.model:
+		# 	self.model = KeyedVectors.load_word2vec_format(self.model_filename)
+
+	def update_vectors(self, entry, word):
+		print("Vector updating doesn't exist yet")		
+		# if not self.model:
+		# 	self.model = KeyedVectors.load_word2vec_format(self.model_filename)
+		# for doc in self.documents:
+		# 	if word in doc.tokens: # Find the documents that contain the synonym
+
 
 
 	def load_synonym_book(self):
@@ -111,7 +127,7 @@ class Corpus():
 		sfile = self.path + self.unique_filename + '_synBook.csv'
 		if os.path.isfile(sfile):
 			with open(sfile, 'r') as sobj:
-				reader = csv.reader(read_obj)
+				reader = csv.reader(sobj)
 				sb = list(reader)
 		return sb
 
@@ -121,19 +137,22 @@ class Corpus():
 		    writer.writerows(self.synonym_book)
 
 
-
 	def update_synonym_book(self, entry_index, word, add_or_remove):
+		lemmatized = self.linguist.nlp(word)[0].lemma_
 		if entry_index < len(self.synonym_book):
 			entry = self.synonym_book[entry_index]
-			if word in entry and add_or_remove == 'remove':
-				entry.remove(word)
-			elif word not in entry and add_or_remove == 'add':
-				entry.append(word)
+			if lemmatized in entry and add_or_remove == 'remove':
+				entry.remove(lemmatized)
+				self.reset_vectors(entry, lemmatized)
+			elif lemmatized not in entry and add_or_remove == 'add':
+				entry.append(lemmatized)
+				self.update_vectors(entry, lemmatized)
 			if not entry: # Get rid of empty lists
 				self.synonym_book.pop(entry_index)
 		else:
-			self.synonym_book.append([word])
+			self.synonym_book.append([lemmatized])
 		self.save_synonym_book()
+
 
 	# def adjust_for_anchor(self, key, value, add_or_remove):
 	# 	if add_or_remove == "'add'":
@@ -202,11 +221,11 @@ class Corpus():
 
 	# Load the corpus lines and save the clean lines.
 	@staticmethod
-	def clean_corpus(path: str, corpus_filename: str, clean_filename: str, synonym_book: list[list[str]]):
+	def clean_corpus(path: str, corpus_filename: str, clean_filename: str):
 		linguist = Linguist()
 		nlp = spacy.load("en_core_web_sm")
 		corpus_lines = Corpus.load_corpus_lines(path, corpus_filename)
-		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, False, False, True, synonym_book)).reset_index()['sentence'])
+		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, False, False, True, self.synonym_book)).reset_index()['sentence'])
 		readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (nlp, True, False, False, None)).reset_index()['sentence'])
 		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename)
 

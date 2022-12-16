@@ -38,7 +38,7 @@ class Backend():
 			self.row_labels_filename = row_filename
 			self.clean_supercorpus_filename = 'cleaned_' + supercorpus_filename
 			if not os.path.isfile(self.path + self.clean_supercorpus_filename):
-				Corpus.clean_corpus(self.path, self.supercorpus_filename, self.clean_supercorpus_filename, self.synonym_book)
+				Corpus.clean_corpus(self.path, self.supercorpus_filename, self.clean_supercorpus_filename)
 			return True
 		else:
 			return False
