@@ -76,25 +76,13 @@ class UvicornFrontend(Frontend):
             "grid": heat_map,
             "col_num_to_name": col_num_to_name,
             "frozen_columns": frozen_columns,
-            "row_contents": row_contents,
-            "anchor_book": self.grid.corpus.anchor_book,
-            "synonym_book": self.grid.corpus.synonym_book
+            "row_contents": row_contents
         }
 
     def load_new_grid(self, newFilename: str, newAnchor: str):
         k = 5
         self.grid = self.backend.get_grid(k, newAnchor, newFilename, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
-        return self.show_grid()
-
-    # def update_anchor_book(self, key: str, value: str, add_or_remove: str):
-    #     self.grid.update_for_anchor(key, value, add_or_remove)
-    #     self.clicked_col = None
-    #     self.clicked_row = None
-    #     self.clicked_documents = self.get_clicked_documents()
-    #     return self.show_grid()
-    def update_synonym_book(self, entry_index: int, word: str, add_or_remove: str):
-        self.grid.corpus.update_synonym_book(entry_index, word, add_or_remove)
         return self.show_grid()
 
 
@@ -121,15 +109,13 @@ class UvicornFrontend(Frontend):
     def save_as_grid(self, filename) -> dict:
         print("Saving grid at ", self.grid.unique_filename)
         self.grid.dump() # Make sure the old one is saved
-        shutil.copy(self.path + self.grid.unique_filename + '_doc_vecs_lem.json', self.path + filename + '_doc_vecs_lem.json') # First need to copy over the corpus, because each Grid keeps track of its own corpus
-        shutil.copy(self.path + self.grid.unique_filename + '_doc_distances_lem.npy', self.path + filename + '_doc_distances_lem.npy')
         self.grid.unique_filename = filename
         self.grid.dump() # Save grid at the new filename
         return self.show_grid()
 
     def delete_grid(self, filename) -> bool:
         self.grid = None
-        files = [filename + '_' + file for file in ['cells.csv', 'vectors.csv', 'tokens.csv', 'specs.csv', 'documents.csv', 'doc_vecs_lem.json', 'doc_distances_lem.npy']]
+        files = [filename + '_' + file for file in ['cells.csv', 'vectors.csv', 'tokens.csv', 'specs.csv', 'documents.csv']]
         for file in files:
             os.remove(self.path + file)
 
@@ -237,6 +223,7 @@ def fromHex(hex: str) -> str:
 
 @app.get("/data")
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
+    print(data)
     return data # returns to front end
 
 @app.get("/showGrids/")
@@ -247,6 +234,10 @@ async def showGrids():
             gridName = file.rsplit('_', 1) # But not all Grids are named by the anchor, they have their own filenames
             grids.append(gridName[0])
     return {'grids': grids, 'filepath': frontend.path}
+
+@app.get("/processSupercorpus/{supercorpusFilepath}")
+async def processSupercorpus(supercorpusFilepath: str):
+    return frontend.backend.process_supercorpus(fromHex(supercorpusFilepath))
 
 @app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
@@ -280,20 +271,6 @@ async def saveAsGrid(text: str):
 async def deleteGrid(text: str):
     print("deleting ", text)
     return frontend.delete_grid(text)
-
-# @app.get("/updateAnchorBook/{key}/{value}/{add_or_remove}")
-# async def updateAnchorBook(key: str, value: str, add_or_remove: str):
-#     print("updateAnchorBook", key, value, add_or_remove)
-#     return frontend.update_anchor_book(key, value, add_or_remove)
-
-
-@app.get("/addToSynBook/{entryIndex}/{newWord}")
-async def addToSynBook(entryIndex: int, newWord: str):
-    return frontend.update_synonym_book(entryIndex, newWord, 'add')
-
-@app.get("/removeFromSynBook/{entryIndex}/{word}")
-async def removeFromSynBook(entryIndex: int, word: str):
-    return frontend.update_synonym_book(entryIndex, word, 'remove')
 
 @app.get("/drag/{row}/{col}/{sent}")
 async def drag(row: str, col: str, sent: str):

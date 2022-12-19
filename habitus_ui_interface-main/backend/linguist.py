@@ -25,7 +25,7 @@ class Linguist():
 		cleaned = no_digits.lower().translate(str.maketrans(string.punctuation, ' '*len(string.punctuation))).strip()
 		return cleaned
 
-	def clean_text(self, text, readable = False, allow_stopwords = False, lemmatize = False, synonym_book = None):
+	def clean_text(self, text, readable = False, allow_stopwords = False, lemmatize = False):
 
 		stop = set(stopwords.words('english') + list(string.punctuation) + ['', ' ', '…', 'also'])
 
@@ -51,12 +51,6 @@ class Linguist():
 			else:
 				cleaned = ' '.join(w for w in cleaned.split(' ') if w not in stop and w not in junk)
 		cleaned = re.sub(' +', ' ', cleaned)
-
-		if synonym_book:
-			for word_list in synonym_book:
-				head_word = word_list[0]
-				for word in word_list[1:]:
-					cleaned = re.sub(r"\b%s\b" % word, head_word, cleaned)
 
 		return cleaned
 
@@ -88,7 +82,7 @@ class Linguist():
 			result = [doc for doc in documents if doc.get_index() in result] # Not a great way to handle this
 			return result
 
-	def get_cluster_name(self, n, documents: list[Document], tfidf, pmi, anchor_word, anchor_index, tfidf_pmi_weight):
+	def get_cluster_name(self, n, documents: list[Document], tfidf, anchor_word):
 		word_tfidf = {}
 		for doc in documents:
 			di = doc.get_index()
@@ -101,9 +95,5 @@ class Linguist():
 
 		words = [word for document in documents for word in document.tokens]
 		all_words = list(set(words))
-		w = tfidf_pmi_weight
-		if pmi is not None:
-			top_words = sorted((((pmi[i, anchor_index]*w + (1-w)*np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if not np.isnan(pmi[i, anchor_index]) and word != anchor_word), reverse = True)[0:n]
-		else:
-			top_words = sorted((((np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if word != anchor_word), reverse = True)[0:n]
+		top_words = sorted((((np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if word != anchor_word), reverse = True)[0:n]
 		return top_words

@@ -81,10 +81,13 @@ def mean_weighted_vec(document: Document, word_indices, model, tfidf = None, tfi
 		return np.array([np.nan]*len(model['dog']))
 
 # Distance functions ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ Distance functions
-def get_dist_between_docs(documents: list[Document], word_indices, model, tfidf, tfidf_vectorizer, pmi, anchor_word, tfidf_pmi_weight):
+def get_dist_between_docs(documents: list[Document], word_indices, model, tfidf, tfidf_vectorizer, pmi, anchor_word, tfidf_pmi_weight, preexisting = None):
 
 	def get_weight(document: Document):
-		return mean_weighted_vec(document, word_indices, model, tfidf, tfidf_vectorizer, pmi, anchor_word, tfidf_pmi_weight)
+		if document.get_vector_text() not in preexisting.keys() or preexisting is None:
+			return mean_weighted_vec(document, word_indices, model, tfidf, tfidf_vectorizer, pmi, anchor_word, tfidf_pmi_weight)
+		else:
+			return preexisting[document.get_vector_text()]
 
 	# For compatibility, this remains a dict.
 	# To do, only calculate half of these and reuse them.

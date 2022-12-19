@@ -22,7 +22,6 @@ class Grid():
 		self.documents = self.corpus.documents
 		self.anchor = self.corpus.anchor
 		self.rows = self.corpus.rows
-		self.tfidf_pmi_weight = self.corpus.tfidf_pmi_weight
 		self.linguist = self.corpus.linguist
 		self.trash = []
 
@@ -48,9 +47,6 @@ class Grid():
 	def regenerate(self):
 		self.generate_clusters()
 
-	# def update_for_anchor(self, key, value, add_or_remove):
-	# 	self.documents = self.corpus.adjust_for_anchor(key, value, add_or_remove) # Adds or removes docs based on anchor changes, recalculates TFIDF and PMI
-	# 	self.regenerate() # Should preserve existing columns while clustering new docs via machine
 
 	def create_machine_clusters(self, documents, labels, num_clusters):
 		# Skip the seeded clusters in the labels.
@@ -88,10 +84,12 @@ class Grid():
 		
 
 	def name_cluster(self, documents: list[Document]) -> str:
-		names = self.linguist.get_cluster_name(2, documents, self.corpus.tfidf, self.corpus.pmi, self.corpus.anchor,
-				self.corpus.anchor_index, tfidf_pmi_weight = 0.1)
+		names = self.linguist.get_cluster_name(2, documents, self.corpus.tfidf, self.corpus.anchor)
 		name = ' | '.join([c[1] for c in names])
-		return name
+		if name == 'nan' or name == np.nan or name == '':
+			return 'No name'
+		else:
+			return name
 
 	def flatten_lists(self, lists):
 		biglist = []

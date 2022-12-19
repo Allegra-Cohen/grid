@@ -3,6 +3,7 @@ from grid import Grid
 from cluster import Cluster
 from linguist import Linguist
 from row import Row
+import corpus_parser
 import os.path
 import pandas as pd
 
@@ -11,18 +12,8 @@ class Backend():
 		self.path = path
 		self.supercorpus_filename = None
 		self.clean_supercorpus_filename = None
-
 		self.row_labels_filename = None
-		# These things stay here as items that are constant across many Grids
-		self.tfidf_pmi_weight = 0.2
-
-		# Use the synonym book only for local synonyms, e.g., entity acronyms or non-English words, or abbreviations. Note: ask user to provide these?
-		self.synonym_book = [
-			['cooperative', 'coop'],
-			['extension', 'saed'],
-			['bank', 'banque', 'agricole'], # For example, there's no way the embeddings would know that "bank" and "Banque Agricole" are the same word.
-			['research', 'isra']
-		]
+		self.linguist = Linguist()
 
 		# TODO: This should be a boolean anchor provided by the user. For now, we cheat.
 		self.anchor_book = {
@@ -32,12 +23,48 @@ class Backend():
 		}
 
 
+	def process_supercorpus(self, supercorpus_filepath):
+		supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1] # The folder containing the corpus will become the corpus name
+		temporary_clean_supercorpus_filename = 'cleaned_' + supercorpus_name
+		row_labels_filename = supercorpus_name + '_row_labels.csv'
+		can_update = os.path.isfile(self.path + supercorpus_name + '.csv')
+
+		if can_update:
+			preexisting = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped']
+		else:
+			preexisting = None
+		
+		if os.path.isdir(supercorpus_filepath):
+			corpus_parser.parse_supercorpus(supercorpus_name, supercorpus_filepath, self.path) # Preprocess the corpus
+			
+			if not os.path.isfile(self.path + temporary_clean_supercorpus_filename): # Clean the corpus if you need to
+				Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename + '.csv')
+
+			stripped = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped'] # Need to add "stripped" column to row labels
+			row_labels = pd.read_csv(self.path + row_labels_filename)
+			row_labels['stripped'] = stripped
+			row_labels.to_csv(self.path + row_labels_filename)
+
+			if can_update:
+				print(f"Updating files associated with corpus {supercorpus_name}") # If there's already an embedding file, update the existing corpus embedding file, don't recalculate everything.
+			else:
+				print(f"Creating vector embeddings for corpus {supercorpus_name}") # Otherwise, you have to make the embeddings files.
+
+			Corpus(self.path, temporary_clean_supercorpus_filename, '', [], 'load_all', self.anchor_book, self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
+
+			return {'success': True, 'corpus_file': supercorpus_name, 'rows_file': row_labels_filename}
+
+		else:
+			print(f"Corpus path {supercorpus_filepath} doesn't exist")
+			return {'success': False, 'corpus_file': None, 'rows_file': None}
+
+
 	def set_superfiles(self, supercorpus_filename, row_filename):
 		if os.path.isfile(self.path + supercorpus_filename) and os.path.isfile(self.path + row_filename):
-			self.supercorpus_filename = supercorpus_filename
-			self.row_labels_filename = row_filename
-			self.clean_supercorpus_filename = 'cleaned_' + supercorpus_filename
-			if not os.path.isfile(self.path + self.clean_supercorpus_filename):
+			self.supercorpus_filename = supercorpus_filename.split(".")[0]
+			self.row_labels_filename = row_filename.split(".")[0]
+			self.clean_supercorpus_filename = 'cleaned_' + self.supercorpus_filename
+			if not os.path.isfile(self.path + self.clean_supercorpus_filename): # This line should be redundant if the user relied on us for corpus pre-processing, but they may want to provide their own corpus (e.g., different delimiters)
 				Corpus.clean_corpus(self.path, self.supercorpus_filename, self.clean_supercorpus_filename)
 			return True
 		else:
@@ -48,8 +75,9 @@ class Backend():
 	#       Suggest that filename should be provided when the user creates the Grid (a process which isn't supported yet.)
 	def get_grid(self, k: int, anchor: str, grid_filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
-		self.set_up_corpus(grid_filename, anchor)
-		grid = Grid.generate(self.path, self.clean_supercorpus_filename.split(".")[0], self.row_labels_filename.split('.')[0], grid_filename.split(".")[0], self.corpus, k, clustering_algorithm)
+		unique_filename = grid_filename.split(".")[0]
+		self.set_up_corpus(anchor)
+		grid = Grid.generate(self.path, self.clean_supercorpus_filename, self.row_labels_filename, grid_filename, self.corpus, k, clustering_algorithm)
 		return grid
 
 
@@ -60,7 +88,7 @@ class Backend():
 			anchor = list(specs['anchor'])[0]
 			self.clean_supercorpus_filename = list(specs['corpus'])[0]
 			self.row_labels_filename = list(specs['row_filename'])[0]
-			self.set_up_corpus(unique_filename, anchor)
+			self.set_up_corpus(anchor)
 
 			cells = pd.read_csv(self.path + unique_filename + '_cells.csv')
 			col_names = pd.unique(cells['col'])
@@ -74,18 +102,9 @@ class Backend():
 		return grid
 
 
-	def set_up_corpus(self, grid_filename: str, anchor: str):
-		# Get rows and Linguist set up
-		if '.csv' not in self.row_labels_filename: # This is bad and only exists so I can fix that other bug
-			row_filename = self.row_labels_filename + '.csv'
-		else:
-			row_filename = self.row_labels_filename
-		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + row_filename).columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
-		self.linguist = Linguist()
-
-		# Handling corpus and row label filenames as separate because corpus can span multiple grids and row label is a temporary file until we get a classifier going.
-		# If the right files don't exist for this anchor, corpus will create them using filename.
-		self.corpus = Corpus(self.path, self.clean_supercorpus_filename, self.row_labels_filename, grid_filename, self.rows, anchor, self.anchor_book, self.linguist, self.tfidf_pmi_weight)
+	def set_up_corpus(self, anchor: str):
+		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + self.row_labels_filename + '.csv').columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
+		self.corpus = Corpus(self.path, self.clean_supercorpus_filename, self.row_labels_filename, self.rows, anchor, self.anchor_book, self.linguist)
 
 	# Not sure if this should be in backend, or a method of Grid
 	def load_clusters(self, cells, col_names: list[str]):

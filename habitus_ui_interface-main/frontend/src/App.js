@@ -30,8 +30,6 @@ function App({apiUrl}) {
     const [colNumToName, setColNumToName] = useState({})
     const [frozenColumns, setFrozenColumns] = useState([])
     const [rowContents, setRowContents] = useState({})
-    const [anchorBook, setAnchorBook] = useState({})
-    const [synonymBook, setSynonymBook] = useState([])
     const [waiting, setWaiting] = useState(false)
     const [saveAs, setSaveAs] = useState()
 
@@ -47,8 +45,6 @@ function App({apiUrl}) {
                 setColNumToName(data.col_num_to_name);
                 setFrozenColumns(data.frozen_columns);
                 setRowContents(data.row_contents);
-                setAnchorBook(data.anchor_book);
-                setSynonymBook(data.synonym_book);
                 setWaiting(false);
             });
     }, [])
@@ -169,7 +165,6 @@ function App({apiUrl}) {
       <KButton className="KButton" apiUrl={apiUrl}/>
 
       </div>
-      <SynonymBook synonymBook={synonymBook} onUpdate={(evt) => setSynonymBook(evt.synonym_book)} apiUrl={apiUrl}/>
       </div>
       </div>
 
