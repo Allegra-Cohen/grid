@@ -223,7 +223,6 @@ def fromHex(hex: str) -> str:
 
 @app.get("/data")
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
-    print(data)
     return data # returns to front end
 
 @app.get("/showGrids/")

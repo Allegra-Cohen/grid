@@ -2,6 +2,7 @@ import numpy as np
 import re
 import string
 import spacy
+from eldar import Query
 
 from document import Document
 from nltk.corpus import stopwords
@@ -56,30 +57,24 @@ class Linguist():
 
 	def find_relevant_docs(self, documents: list[Document], anchor: str) -> list[Document]:
 
-		anchorType = None
+		def prep_for_eldar(anchor: str):
+			anchors = ''.join(['"' + self.nlp(a)[0].lemma_ + '"' if a not in ['AND', 'OR', 'NOT', '(', ')', '', ' '] else a for a in re.split(r'(\(|\)| )', anchor)])
+			print(anchors)
+			return anchors
 
-		if '&' in anchor:
-			anchors = anchor.replace(' ','').split('&')
-			anchorType = '&'
-		else: 
-			anchors = anchor.replace(' ','').split('|') # Ok so the default here is or, and it will only work for one type of boolean
-			anchorType = '|'
+		def has_anchor(query, document: Document) -> bool:
+			print(document.get_vector_text(), query(document.get_vector_text()))
+			return query(document.get_vector_text())
+			# words = self.tokenize(document.get_vector_text())
+			# return any(anchor in word for word in words)
 
-		anchors = [self.nlp(anchor)[0].lemma_ for anchor in anchors]
-
-		def has_anchor(anchor: str, document: Document) -> bool:
-			words = self.tokenize(document.get_vector_text())
-			return any(anchor in word for word in words)
+		query = Query(prep_for_eldar(anchor))
+		print(query)
 
 		if anchor == None:
 			return documents.copy()
 		else:
-			possible_docs = [[document.get_index() for document in documents if has_anchor(anchor, document)] for anchor in anchors]
-			if anchorType == "&":
-				result = list(set.intersection(*map(set, possible_docs)))
-			else:
-				result = list(set.union(*map(set, possible_docs)))
-			result = [doc for doc in documents if doc.get_index() in result] # Not a great way to handle this
+			result = [document for document in documents if has_anchor(query, document)]
 			return result
 
 	def get_cluster_name(self, n, documents: list[Document], tfidf, anchor_word):
