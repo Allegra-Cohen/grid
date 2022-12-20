@@ -55,26 +55,29 @@ class Linguist():
 
 		return cleaned
 
-	def find_relevant_docs(self, documents: list[Document], anchor: str) -> list[Document]:
-
-		def prep_for_eldar(anchor: str):
+	def prep_for_eldar(self, anchor: str):
 			anchors = []
 			for a in re.split(r'(\(|\)| )', anchor):
 				next_part = a
-				if len(anchors) > 0:
-					last_part = anchors[next(a for a in range(len(anchors) - 1, -1, -1) if anchors[a] != ' ')]
-					if next_part not in ['AND', 'OR', 'NOT', '(', ')', '', ' '] and last_part not in ['AND', 'OR', 'NOT', '(', ')', '', ' ']:
-						next_part = last_part + ' AND ' + next_part
-						anchors.remove(last_part)
+				if next_part not in ['AND', 'OR', 'NOT', '(', ')', '', ' ']:
+					next_part = self.clean_text(a, lemmatize = True)
+					if len(anchors) > 0 and next_part != '' and next_part != ' ':
+						last_part = anchors[next(a for a in range(len(anchors) - 1, -1, -1) if anchors[a] != ' ')]
+						if last_part not in ['AND', 'OR', 'NOT', '(', ')', '', ' ']:
+							next_part = last_part + ' AND ' + next_part
+							anchors.remove(last_part)
 				anchors.append(next_part)
 			anchors = re.sub(r'\(\s*', '(', ''.join(anchors))
-			anchors = re.sub(r'\s*\)', ')', anchors).strip()
+			anchors = re.sub(r'\s*\)', ')', anchors)
+			anchors = re.sub(' +', ' ', anchors).strip()
 			return anchors
+
+	def find_relevant_docs(self, documents: list[Document], anchor: str) -> list[Document]:
 
 		def has_anchor(query, document: Document) -> bool:
 			return query(document.get_vector_text())
 
-		query = Query(prep_for_eldar(anchor))
+		query = Query(self.prep_for_eldar(anchor))
 
 		if anchor == None:
 			return documents.copy()

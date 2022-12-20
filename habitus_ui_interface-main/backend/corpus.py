@@ -93,6 +93,8 @@ class Corpus():
 		lines = self.load_corpus_lines(self.path, self.clean_supercorpus_filename)
 		labels = self.load_row_labels()
 		documents = []
+
+		query = Query(self.linguist.prep_for_eldar(self.anchor))
 	
 		doc_i = 0
 		for index, line in lines.iterrows():
@@ -101,18 +103,7 @@ class Corpus():
 				readable = line['readable']
 				tokens = self.linguist.tokenize(stripped)
 
-
-
-				# TODO: This should be replaced by something sensible like getting a boolean from the user OR finding close-enough words via embeddings.
-				if self.anchor in list(self.anchor_book.keys()): # Look for the relevant list that has words related to the anchor
-					or_list = self.anchor_book[self.anchor] + [self.anchor]
-					relevant = any([any(or_word in word for word in tokens) for or_word in or_list])
-				else:
-					relevant = any(self.anchor in word for word in tokens)
-					
-
-
-
+				relevant = query(stripped)
 
 				if relevant or load_all: # If there is no anchor, load the whole thing
 					try:
