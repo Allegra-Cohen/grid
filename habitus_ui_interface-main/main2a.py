@@ -7,6 +7,7 @@ sys.path.append("./backend")
 from QA import QA
 from user import User
 from document import Document
+from cluster import Cluster
 from fastapi import FastAPI, Depends
 from frontend import Frontend
 from pandas import DataFrame
@@ -193,13 +194,17 @@ class UvicornFrontend(Frontend):
         cluster = self.grid.clusters[col_index]
         t = time.time()
         if self.user.flag == 'control':
-            original_column = [c for c in self.grid.clusters if not c.is_frozen()][0] # There should only be one non-frozen cluster in the control condition
-            og_docs = original_column.documents.copy()
-            original_column.documents += [d for d in cluster.documents if d not in og_docs] # Put back the frozen cluster into the original cluster
-            new_name = self.grid.name_cluster(original_column.documents)
-            original_column.set_name(new_name, False)
+            try:
+                original_column = [c for c in self.grid.clusters if not c.is_frozen()][0] # There should only be one non-frozen cluster in the control condition
+                og_docs = original_column.documents.copy()
+                original_column.documents += [d for d in cluster.documents if d not in og_docs]
+                original_column.documents.sort(key=lambda x: x.index)
+                self.grid.delete_cluster(col_index)
+            except IndexError:
+                self.grid.delete_cluster(col_index)
+                self.grid.clusters.insert(0, Cluster(self.grid.anchor, cluster.documents, False))
+
         self.update_track_actions([self.round, 'human', 'delete_cluster', t, 'cluster', cluster.name, None])
-        self.grid.delete_cluster(col_index)
         return self.show_grid()
 
     def click(self, row_name: str, col_index: int, edit: bool) -> list[str]:
