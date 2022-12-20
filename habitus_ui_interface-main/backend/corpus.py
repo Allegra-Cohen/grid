@@ -7,6 +7,7 @@ import spacy
 import os.path
 import shutil
 import csv
+from eldar import Query
 
 from document import Document
 from linguist import Linguist
@@ -100,6 +101,8 @@ class Corpus():
 				readable = line['readable']
 				tokens = self.linguist.tokenize(stripped)
 
+
+
 				# TODO: This should be replaced by something sensible like getting a boolean from the user OR finding close-enough words via embeddings.
 				if self.anchor in list(self.anchor_book.keys()): # Look for the relevant list that has words related to the anchor
 					or_list = self.anchor_book[self.anchor] + [self.anchor]
@@ -107,6 +110,10 @@ class Corpus():
 				else:
 					relevant = any(self.anchor in word for word in tokens)
 					
+
+
+
+
 				if relevant or load_all: # If there is no anchor, load the whole thing
 					try:
 						label_line = [(i,l) for i,l in labels.iterrows() if l['stripped'] == stripped][0]
