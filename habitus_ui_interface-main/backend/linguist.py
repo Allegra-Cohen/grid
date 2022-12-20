@@ -59,8 +59,7 @@ class Linguist():
 
 		def prep_for_eldar(anchor: str):
 			anchors = []
-			components = re.split(r'(\(|\)| )', self.clean_text(anchor, lemmatize = True))
-			for a in components:
+			for a in re.split(r'(\(|\)| )', anchor):
 				next_part = a
 				if len(anchors) > 0:
 					last_part = anchors[next(a for a in range(len(anchors) - 1, -1, -1) if anchors[a] != ' ')]
@@ -69,8 +68,8 @@ class Linguist():
 						anchors.remove(last_part)
 				anchors.append(next_part)
 			anchors = re.sub(r'\(\s*', '(', ''.join(anchors))
-			anchors = re.sub(r'\s*\)', ')', anchors)
-			return anchors.strip()
+			anchors = re.sub(r'\s*\)', ')', anchors).strip()
+			return anchors
 
 		def has_anchor(query, document: Document) -> bool:
 			return query(document.get_vector_text())
