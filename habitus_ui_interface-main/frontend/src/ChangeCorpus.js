@@ -55,7 +55,7 @@ export default function ChangeCorpus({apiUrl}) {
       <div>
       {error ? <div style={{textAlign:'center', padding: '1%', color: 'red'}}>Cannot locate {errorPath}.</div> : <div/> }
       {error === false ? <div style={{marginLeft: '-8%', margin: '0.5%', padding: '1%', textAlign:'center'}}>All done! Your corpus is now ready to be used. <br/>The corpus name is <b>{corpusFile}</b> and its associated default row labels are stored in <b>{rowsFile}</b>.</div> : <div/> }
-      {waiting ? <div><div style={{marginLeft:'34%', marginTop:'2%', marginBottom:'1%'}}>Preparing corpus...If this is a new corpus, this step can take a long time.</div><div className='spinner' style={{marginLeft:'44%'}}></div></div>: <div/>}
+      {waiting ? <div><div style={{textAlign: 'center', marginTop:'2%', marginBottom:'1%'}}>Preparing corpus...If this is a new corpus, this step can take a long time.</div><div className='spinner'></div></div>: <div/>}
       </div>
       </DndProvider>
   );

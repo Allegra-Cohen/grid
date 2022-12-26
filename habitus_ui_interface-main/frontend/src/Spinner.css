@@ -6,6 +6,7 @@
     border-color: #a9d3ff transparent #a9d3ff transparent;
     border-radius: 50%;
     animation: spin-anim 1.2s linear infinite;
+    margin: auto;
 }
 
 @keyframes spin-anim {
