@@ -33,6 +33,7 @@ class UvicornFrontend(Frontend):
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
+        self.track_actions = {'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -83,6 +84,7 @@ class UvicornFrontend(Frontend):
         k = 5
         self.grid = self.backend.get_grid(k, newAnchor, newFilename, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
+        self.update_track_actions(['human', 'new_grid', time.time(), 'grid', newAnchor, None])
         return self.show_grid()
 
 
@@ -95,19 +97,21 @@ class UvicornFrontend(Frontend):
         grid = self.backend.load_grid(unique_filename, self.clustering_algorithm)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
-        print(self.grid)
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
+        self.update_track_actions(['human', 'load', time.time(), 'grid', unique_filename, None])
         return self.show_grid()
 
     def save_grid(self) -> bool:
         print("Saving grid at ", self.grid.unique_filename)
         self.grid.dump()
+        self.update_track_actions(['human', 'save', time.time(), 'grid', unique_filename, None])
         return True
 
     def save_as_grid(self, filename) -> dict:
         print("Saving grid at ", self.grid.unique_filename)
+        self.update_track_actions(['human', 'save_as', time.time(), 'grid', filename, "old_" + self.grid.unique_filename])
         self.grid.dump() # Make sure the old one is saved
         self.grid.unique_filename = filename
         self.grid.dump() # Save grid at the new filename
@@ -118,12 +122,13 @@ class UvicornFrontend(Frontend):
         files = [filename + '_' + file for file in ['cells.csv', 'vectors.csv', 'tokens.csv', 'specs.csv', 'documents.csv']]
         for file in files:
             os.remove(self.path + file)
-
+        self.update_track_actions(['human', 'delete', time.time(), 'grid', filename, None])
 
     def trash(self, text: str) -> dict:
         document = self.find_document(text)
         self.grid.delete_document(document)
         self.save_grid()
+        self.update_track_actions(['human', 'trash', time.time(), 'sentence', text, None])
         return self.show_grid()
 
     def regenerate(self) -> dict:
@@ -132,27 +137,33 @@ class UvicornFrontend(Frontend):
         self.clicked_row = None
         self.clicked_documents = self.get_clicked_documents()
         self.save_grid()
+        self.update_track_actions(['human', 'update', time.time(), 'grid', self.grid.unique_filename, None])
         return self.show_grid()
 
     def set_name(self, col_index: int, name: str) -> dict:
         cluster = self.grid.clusters[col_index]
         cluster.set_name(name, True)
         self.save_grid()
+        self.update_track_actions(['human', 'rename_cluster', time.time(), 'cluster', name, 'old_' + cluster.name])
         return self.show_grid()
 
     def set_k(self, k: int) -> dict:
         self.grid.set_k(k)
+        self.update_track_actions(['human', 'set_k', time.time(), 'k', k, None])
         return self.show_grid()
 
     def create_cluster(self, text: str) -> dict:
         frozen_docs = self.grid.create_human_cluster(text)
         self.save_grid()
+        self.update_track_actions(['human', 'create_cluster', time.time(), 'cluster', text, None])
+        [self.update_track_actions(['human', 'freeze', time.time(), 'sentence', doc.readable, 'cluster_' + text]) for doc in frozen_docs]
         return self.show_grid()
 
     def delete_frozen(self, col_index: int) -> dict:
         name = self.grid.clusters[col_index].name
         self.grid.delete_cluster(col_index)
         self.save_grid()
+        self.update_track_actions(['human', 'delete_cluster', time.time(), 'cluster', name, None])
         return self.show_grid()
 
     def click(self, row_name: str, col_index: int) -> list[str]:
@@ -161,10 +172,12 @@ class UvicornFrontend(Frontend):
         self.clicked_col = col_index
         documents = self.get_clicked_documents()
         texts = [document.readable for document in documents]
+        self.update_track_actions(['human', 'click', time.time(), 'cell', str(row_index) + '_' + str(col_index), None])
         return texts
 
     def sentence_click(self, text: str):
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
+        self.update_track_actions(['human', 'click', time.time(), 'sentence', text, None])
         return [document.pre_context, text.split('.',1)[1], document.post_context]
 
     # This moves the sentence from the currently clicked_col and clicked_row to
@@ -174,13 +187,15 @@ class UvicornFrontend(Frontend):
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
         if self.copy_on:
             self.grid.copy_document(document, self.clicked_col, col_index)
+            self.update_track_actions(['human', 'copy', time.time(), 'sentence', text, 'from_'+str(self.clicked_col)+'_to_'+str(col_index)])
         else:
             self.grid.move_document(document, self.clicked_col, col_index)
+            self.update_track_actions(['human', 'move', time.time(), 'sentence', text, 'from_'+str(self.clicked_col)+'_to_'+str(col_index)])
         self.save_grid()
         return self.show_grid()
 
 
-    # Old tracking stuff that should be saved for experiment branches ================================================================================================================================================================
+    # If you want to turn tracking off, here's where to look  ================================================================================================================================================================
     # def record_machine_moves(self, t):
     #     for i, c in enumerate(self.grid.clusters):
     #         if not c.is_frozen():
@@ -188,24 +203,23 @@ class UvicornFrontend(Frontend):
     #                 if d not in c.human_documents: # Only look at docs the machine moves, which aren't seeded and aren't frozen
     #                     self.update_track_actions([self.round, 'machine', 'move', t, 'sentence', d.readable, 'to_' + str(i)]) # Can't say which column something has been moved from during reclustering
 
-
-
     # def update_grid_record(self):
-        # grid_path = self.path + 'grid_' + self.tracking_filename
-        # df = self.grid.dump(grid_path, write = False)
-        # df['round'] = self.round
-        # df.to_csv(grid_path, mode = 'a', header = not os.path.exists(grid_path))
+    #     grid_path = self.path + 'grid_' + self.tracking_filename
+    #     df = self.grid.dump(grid_path, write = False)
+    #     df['round'] = self.round
+    #     df.to_csv(grid_path, mode = 'a', header = not os.path.exists(grid_path))
 
-    # def update_track_actions(self, info):
-    #     self.track_actions['round'].append(info[0])
-    #     self.track_actions['actor'].append(info[1])
-    #     self.track_actions['action'].append(info[2])
-    #     self.track_actions['time'].append(info[3])
-    #     self.track_actions['object_type'].append(info[4])
-    #     self.track_actions['object_value'].append(info[5])
-    #     self.track_actions['other_details'].append(info[6])
+    def update_track_actions(self, info, on = True): # Just set this to on = False if you don't want to be tracked
+        self.track_actions['actor'].append(info[0])
+        self.track_actions['action'].append(info[1])
+        self.track_actions['time'].append(info[2])
+        self.track_actions['object_type'].append(info[3])
+        self.track_actions['object_value'].append(info[4])
+        self.track_actions['other_details'].append(info[5])
 
-    #     pd.DataFrame(self.track_actions).to_csv(self.path + self.tracking_filename) # Just rewrite every time. Slower than appending?
+        if on:
+            pd.DataFrame(self.track_actions).to_csv(self.path + 'action_report.csv') # Just rewrite every time. Slower than appending?
+
     # ==================================================================================================================================================================================================================================
 
 
