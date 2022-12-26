@@ -24,39 +24,41 @@ class Backend():
 
 
 	def process_supercorpus(self, supercorpus_filepath):
-		supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1] # The folder containing the corpus will become the corpus name
-		temporary_clean_supercorpus_filename = 'cleaned_' + supercorpus_name
-		row_labels_filename = supercorpus_name + '_row_labels.csv'
-		can_update = os.path.isfile(self.path + supercorpus_name + '.csv')
-
-		if can_update:
-			preexisting = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped']
-		else:
-			preexisting = None
-		
-		if os.path.isdir(supercorpus_filepath):
-			corpus_parser.parse_supercorpus(supercorpus_name, supercorpus_filepath, self.path) # Preprocess the corpus
-			
-			if not os.path.isfile(self.path + temporary_clean_supercorpus_filename): # Clean the corpus if you need to
-				Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename + '.csv')
-
-			stripped = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped'] # Need to add "stripped" column to row labels
-			row_labels = pd.read_csv(self.path + row_labels_filename)
-			row_labels['stripped'] = stripped
-			row_labels.to_csv(self.path + row_labels_filename)
+		try:
+			supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1] # The folder containing the corpus will become the corpus name
+			temporary_clean_supercorpus_filename = 'cleaned_' + supercorpus_name
+			row_labels_filename = supercorpus_name + '_row_labels.csv'
+			can_update = os.path.isfile(self.path + supercorpus_name + '.csv')
 
 			if can_update:
-				print(f"Updating files associated with corpus {supercorpus_name}") # If there's already an embedding file, update the existing corpus embedding file, don't recalculate everything.
+				preexisting = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped']
 			else:
-				print(f"Creating vector embeddings for corpus {supercorpus_name}") # Otherwise, you have to make the embeddings files.
+				preexisting = None
+			
+			if os.path.isdir(supercorpus_filepath):
+				corpus_parser.parse_supercorpus(supercorpus_name, supercorpus_filepath, self.path) # Preprocess the corpus
+				
+				if not os.path.isfile(self.path + temporary_clean_supercorpus_filename): # Clean the corpus if you need to
+					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename + '.csv')
 
-			Corpus(self.path, temporary_clean_supercorpus_filename, '', [], 'load_all', self.anchor_book, self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
+				stripped = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped'] # Need to add "stripped" column to row labels
+				row_labels = pd.read_csv(self.path + row_labels_filename)
+				row_labels['stripped'] = stripped
+				row_labels.to_csv(self.path + row_labels_filename)
 
-			return {'success': True, 'corpus_file': supercorpus_name, 'rows_file': row_labels_filename}
+				if can_update:
+					print(f"Updating files associated with corpus {supercorpus_name}") # If there's already an embedding file, update the existing corpus embedding file, don't recalculate everything.
+				else:
+					print(f"Creating vector embeddings for corpus {supercorpus_name}") # Otherwise, you have to make the embeddings files.
 
-		else:
-			print(f"Corpus path {supercorpus_filepath} doesn't exist")
-			return {'success': False, 'corpus_file': None, 'rows_file': None}
+				Corpus(self.path, temporary_clean_supercorpus_filename, '', [], 'load_all', self.anchor_book, self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
+
+				return {'success': True, 'corpus_file': supercorpus_name, 'rows_file': row_labels_filename}
+		except IndexError:
+			print(f"String {supercorpus_filepath} is not a path")
+
+		print(f"Corpus path {supercorpus_filepath} doesn't exist")
+		return {'success': False, 'corpus_file': None, 'rows_file': None}
 
 
 	def set_superfiles(self, supercorpus_filename, row_filename):
