@@ -15,15 +15,13 @@ from mathematician import get_dist_between_docs
 from row import Row
 
 class Corpus():
-	def __init__(self, path: str, clean_supercorpus_filename: str, row_labels_filename: str, rows: list[Row], anchor: str, anchor_book: dict[list[str]], linguist: Linguist, preexisting = None):
+	def __init__(self, path: str, clean_supercorpus_filename: str, row_labels_filename: str, rows: list[Row], anchor: str, linguist: Linguist, preexisting = None):
 		self.path = path
 		self.clean_supercorpus_filename = clean_supercorpus_filename
 		self.anchor = anchor
 
 		self.row_labels_filename = row_labels_filename
 		self.rows = rows
-
-		self.anchor_book = anchor_book
 
 		self.model = None
 		self.model_filename = "/Users/allegracohen/Documents/Postdoc/habitus/odin_project/keith_glove/glove_to_word2vec.habitus1.300d.txt"

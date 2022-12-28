@@ -9,7 +9,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
 
     const [validRow, setValidRow] = useState();
 
-    let ix = Math.floor(colorValue * 100)
+    let ix = Math.ceil(colorValue * 100)
 
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
