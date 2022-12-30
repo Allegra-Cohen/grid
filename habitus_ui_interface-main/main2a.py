@@ -192,6 +192,7 @@ class UvicornFrontend(Frontend):
 
     def delete_frozen(self, col_index: int) -> dict:
         cluster = self.grid.clusters[col_index]
+        print(cluster)
         t = time.time()
         if self.user.flag == 'control':
             try:
@@ -203,6 +204,8 @@ class UvicornFrontend(Frontend):
             except IndexError:
                 self.grid.delete_cluster(col_index)
                 self.grid.clusters.insert(0, Cluster(self.grid.anchor, cluster.documents, False))
+        else:
+            self.grid.delete_cluster(col_index)
 
         self.update_track_actions([self.round, 'human', 'delete_cluster', t, 'cluster', cluster.name, None])
         return self.show_grid()
