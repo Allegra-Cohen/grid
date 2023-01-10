@@ -99,8 +99,10 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
 
     rows = pd.DataFrame({'readable': all_lines, 'label': row_labels})
     df = pd.concat([rows.drop('label', 1), pd.get_dummies(rows.label)], axis = 1)
-    if 'Unnamed: 0' in df.columns:
-        df.drop('Unnamed: 0')
+    for col in df.columns:
+        if 'Unnamed:' in col:
+            df.drop(col)
+    df['all'] = 1
     df.to_csv(output_file + '_row_labels.csv')
 
     print(f"Output: {output_file}\n")

@@ -59,6 +59,7 @@ class UvicornFrontend(Frontend):
         # The order will not be the same as with main.py.
         delta = 1.0 / len(sentences)
         row_contents = {}
+        
         # map of row name to map of col index to number of sentences in that row and col
         heat_map: dict[str, dict[int, float]] = {row.name: {} for row in rows}
         for row_index, row in enumerate(rows):
@@ -68,7 +69,6 @@ class UvicornFrontend(Frontend):
                 row_contents[row.name] += cell_documents
                 count = len(cell_documents)
                 heat_map[row.name][col_index] = delta * count
-
         return {
             "filename": self.grid.unique_filename,
             "anchor": self.grid.anchor,
@@ -106,7 +106,7 @@ class UvicornFrontend(Frontend):
     def save_grid(self) -> bool:
         print("Saving grid at ", self.grid.unique_filename)
         self.grid.dump()
-        self.update_track_actions(['human', 'save', time.time(), 'grid', unique_filename, None])
+        self.update_track_actions(['human', 'save', time.time(), 'grid', self.grid.unique_filename, None])
         return True
 
     def save_as_grid(self, filename) -> dict:
@@ -246,6 +246,7 @@ async def showGrids():
         if file.endswith("specs.csv"): # All Grids write out an anchor file
             gridName = file.rsplit('_', 1) # But not all Grids are named by the anchor, they have their own filenames
             grids.append(gridName[0])
+    grids.sort()
     return {'grids': grids, 'filepath': frontend.path}
 
 @app.get("/processSupercorpus/{supercorpusFilepath}")

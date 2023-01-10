@@ -105,14 +105,16 @@ class Backend():
 		frozen_clusters, seeded_clusters, machine_clusters = [], [], []
 
 		for name in col_names:
-			cell_docs = pd.unique(list(cells.loc[cells['col'] == name, 'readable']))
-			seeded_docs = pd.unique(list(cells.loc[(cells['seeded_doc']) & (cells['col'] == name), 'readable']))
+			# Gotta split the numbers because different corpora may have different indices
+			cell_docs = [d.split('.')[1] for d in pd.unique(list(cells.loc[cells['col'] == name, 'readable']))]
+			seeded_docs = [d.split('.')[1] for d in pd.unique(list(cells.loc[(cells['seeded_doc']) & (cells['col'] == name), 'readable']))]
 
 			documents, seeded_documents = [], []
 			for doc_object in self.corpus.documents:
-				if doc_object.readable in cell_docs:
+				corpus_doc = doc_object.readable.split('.')[1]
+				if corpus_doc in cell_docs:
 					documents.append(doc_object)
-				if doc_object.readable in seeded_docs:
+				if corpus_doc in seeded_docs:
 					seeded_documents.append(doc_object)
 
 			if True in list(cells.loc[cells['col'] == name, 'frozen_col']): # If the col is frozen, all docs go in the human_document list
