@@ -226,8 +226,9 @@ class UvicornFrontend(Frontend):
     def sentence_click(self, text: str):
         t = time.time()
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
+        beliefs = "Keith believes to have been here."
         self.update_track_actions([self.round, 'human', 'click', t, 'sentence', text, None])
-        return [document.pre_context, text.split('.',1)[1], document.post_context]
+        return [document.pre_context, text.split('.',1)[1], document.post_context, beliefs]
 
     # This moves the sentence from the currently clicked_col and clicked_row to
     # the new row and column.

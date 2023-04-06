@@ -37,7 +37,7 @@ function App({apiUrl, edit, training, timeLimit}) {
     const [disabled, setDisabled] = useState(false);
     const [start, setStart] = useState(Date.now());
     const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
-
+  
     function makeMeTwoDigits(n){
         return (n < 10 ? "0" : "") + n;
     }
@@ -192,25 +192,35 @@ function App({apiUrl, edit, training, timeLimit}) {
         display: "flex",
         flexDirection: "column"
       }}>
-      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'7em'}}><u>Sentences</u></div>
+      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center'}}><u>Sentences</u></div>
       <Corpus sentences={corpus}
       onChange={(evt) => {setContext(evt)}}
        edit={edit} training={training}
        apiUrl={apiUrl} userID={userID}/>
        </div>
-              <div style={{
+       <div style={{
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        marginRight: "2em"
       }}>
-      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'3em'}}><u>Sentence context</u></div>
-       <div style={{display:'inline', width:'350px'}}>
+      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Sentence context</u></div>
+       <div style={{display:'inline', width:'300px', paddingTop:'.3em'}}>
       {context[0]} <b>{context[1]}</b> {context[2]}
       </div>
       </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column"
+      }}>
+      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Beliefs</u></div>
+       <div style={{display:'inline', width:'300px', paddingTop:'.3em'}}>
+      {<b>{context[3]}</b>}
       </div>
       </div>
       </div>
-    
+      </div>
+      </div>
+
           </DndProvider>
   );
 }
