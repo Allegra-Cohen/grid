@@ -17,6 +17,7 @@ import time
 import pandas as pd
 import os
 from datetime import date
+from beliefs import Beliefs
 
 app = FastAPI()
 
@@ -42,6 +43,8 @@ class UvicornFrontend(Frontend):
         self.track_actions = {'user_id':[], 'training':[], 'condition':[], 'round': [], 'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
         self.tracking_prefix = tracking_prefix
         self.round = 0
+        self.beliefs = Beliefs(path, "beliefs.tsv")
+        print("Keith was here!")
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
