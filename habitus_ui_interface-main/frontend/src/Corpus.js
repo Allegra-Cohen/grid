@@ -44,7 +44,7 @@ export default function Corpus({sentences, onChange, edit, training, apiUrl, use
     let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} userID={userID}/>)
     return (
 
-            <ul className = 'corpus' id='style-3'style={{
+            <ul className = 'corpus style-3' style={{
                 marginLeft:".2em",
                 marginRight:"2em",
                 height: edit & !training ? "75em" : "35em",

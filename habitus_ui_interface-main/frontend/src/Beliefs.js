@@ -20,7 +20,7 @@ export default function Beliefs({beliefs, edit, training}) {
         <div style={{display: "flex", flexDirection: "column"}}>
             <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Beliefs</u></div>
             <div style={{display:'inline', width:'300px'}}>
-                <ul className = 'beliefs' id='style-3' style={{
+                <ul className = 'beliefs style-3' style={{
                     "margin-top": "0",
                     "padding-left": "0",
                     height: edit & !training ? "75em" : "35em",

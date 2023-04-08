@@ -12,3 +12,4 @@ ul.beliefs li {
     padding-left: 0;
     padding-right: 0;
 }
+ul.beliefs li:nth-child(odd) { background: #F8F8F8; }
