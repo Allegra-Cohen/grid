@@ -44,7 +44,6 @@ class UvicornFrontend(Frontend):
         self.tracking_prefix = tracking_prefix
         self.round = 0
         self.beliefs = Beliefs(path, "beliefs.tsv")
-        print("Keith was here!")
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -229,9 +228,17 @@ class UvicornFrontend(Frontend):
     def sentence_click(self, text: str):
         t = time.time()
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
-        beliefs = "Keith believes to have been here."
+        beliefs = self.beliefs.ground(text, 5)
         self.update_track_actions([self.round, 'human', 'click', t, 'sentence', text, None])
-        return [document.pre_context, text.split('.',1)[1], document.post_context, beliefs]
+        metadata = {
+            "context": {
+                "pre": document.pre_context,
+                "at": text.split('.',1)[1],
+                "post": document.post_context
+            },
+            "beliefs": [belief.to_json() for belief in beliefs]
+        }
+        return metadata
 
     # This moves the sentence from the currently clicked_col and clicked_row to
     # the new row and column.

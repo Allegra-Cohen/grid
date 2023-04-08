@@ -22,12 +22,34 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from "react-router-dom";
 import Countdown from 'react-countdown';
+import Beliefs from './Beliefs'
 
 function App({apiUrl, edit, training, timeLimit}) {
+    const noMetadata = {
+        context: {
+            pre: "",
+            at: "",
+            post: ""
+        },
+        beliefs: [ {
+            id: 0,
+            belief: "The top one.",
+            title: "title",
+            author: "author",
+            year: 2001
+        }, {
+            id: 1,
+            belief: "The bottom one.",
+            title: "title",
+            author: "author",
+            year: 2002
+        }
+        ]
+    }
     const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
-    const [context, setContext] = useState([]);
+    const [metadata, setMetadata] = useState(noMetadata);
     const [gridRows, setGridRows] = useState({})
     const [colNumToName, setColNumToName] = useState({})
     const [frozenColumns, setFrozenColumns] = useState([])
@@ -43,12 +65,13 @@ function App({apiUrl, edit, training, timeLimit}) {
     }
 
     const timer = ({ hours, minutes, seconds, completed }) => {
-      if (completed || disabled) {
-        setDisabled(true);
-        return "Done!";
-      } else {
-        return <span>{makeMeTwoDigits(minutes)}:{makeMeTwoDigits(seconds)}</span>;
-      }
+        if (completed || disabled) {
+            setDisabled(true);
+            return "Done!";
+        }
+        else {
+            return <span>{makeMeTwoDigits(minutes)}:{makeMeTwoDigits(seconds)}</span>;
+        }
     };
 
     const handleLinkClick = () => {
@@ -73,156 +96,161 @@ function App({apiUrl, edit, training, timeLimit}) {
             });
     }, [userID])
 
-
-  return (
-      <DndProvider backend={HTML5Backend}>
-      {edit === true & training === false ?<div className="info" style={{marginLeft:'84%'}}>
-      Time left: <Countdown date={start + timeLimit} renderer={timer} /> <br/>
-      <Link to="/instructions2" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
-      </div>:<div/>}
-      {edit === true ?
-      <div style={disabled ? {pointerEvents: "none", opacity: "0.4", display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}: {display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}}>
-       {anchor} </div> : <div style={{marginBottom:'3em'}}/>}
-
-    <div className="App" style={disabled ? {pointerEvents: "none", opacity: "0.4", display: "flex", flexDirection: "row"} : {display: "flex", flexDirection: "row"}}>
-    <div style={{
-        display: "flex",
-        flexDirection: "column",
-        marginRight:'20px'
-    }}>
-    
-
-    <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
-      (evt) => {setCorpus(evt);
-                setContext('')}
-       }
-       onDrop={
-        (evt) => {
-                  setCorpus(evt.clicked_sentences);
-                  setGridRows(evt.grid);
-                  setColNumToName(evt.col_num_to_name);
-                  setContext('')}
-       }
-       onFooter={
-        (evt) => {
-            setGridRows({...evt.grid});
-            setColNumToName({...evt.col_num_to_name});
-            setFrozenColumns([...evt.frozen_columns])}
-       }
-
-       onDeleteFrozen={
-         (evt) => {
-             setCorpus(evt.clicked_sentences);
-             setGridRows({...evt.grid});
-             setColNumToName({...evt.col_num_to_name});
-             setFrozenColumns([...evt.frozen_columns]);
-             }
+    return (
+        <DndProvider backend={HTML5Backend}>
+        { edit === true & training === false ?
+            <div className="info" style={{marginLeft:'84%'}}>
+                Time left: <Countdown date={start + timeLimit} renderer={timer} /> <br/>
+                <Link to="/instructions2" onClick = {() => handleLinkClick()}>Done? Move on to the next page.</Link>
+            </div>
+            : 
+            <div/>
         }
 
-       edit={edit}
-    apiUrl={apiUrl} userID = {userID}/>
-    {edit === true ?
-    <div style={{display:"flex", flexDirection:"column"}}>
-    <div style={{display:"flex", flexDirection:"row"}}>
+        { edit === true ?
+            <div style={disabled ? {pointerEvents: "none", opacity: "0.4", display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}: {display:'flex', flexDirection:'row', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'0.5em', fontFamily:'InaiMathi', fontSize:'20pt'}}>
+                {anchor}
+            </div>
+            : 
+            <div style={{marginBottom:'3em'}}/>
+        }
 
+        <div className="App" style={disabled ? {pointerEvents: "none", opacity: "0.4", display: "flex", flexDirection: "row"} : {display: "flex", flexDirection: "row"}}>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                marginRight:'20px'
+            }}>
     
-       <div style={{display:"flex", flexDirection:"row", marginLeft:"3em", marginTop:"1em"}}>
-        <RegenerateButton className="RegenerateButton" onClick={(evt) => {
-          setCorpus(evt.clicked_sentences);
-          setGridRows(evt.grid);
-          setColNumToName(evt.col_num_to_name);
-          setFrozenColumns(evt.frozen_columns)}
-      }
-      apiUrl={apiUrl} userID={userID}/>
+                <Grid 
+                    data={gridRows} 
+                    col_num_to_name={colNumToName} 
+                    frozen_columns={frozenColumns} 
+                    row_contents = {rowContents} 
+                    onChange={
+                        (evt) => {
+                            setCorpus(evt);
+                            setMetadata(noMetadata)
+                        }
+                    }
+                    onDrop={
+                        (evt) => {
+                            setCorpus(evt.clicked_sentences);
+                            setGridRows(evt.grid);
+                            setColNumToName(evt.col_num_to_name);
+                            setMetadata(noMetadata)
+                        }
+                    }
+                    onFooter={
+                        (evt) => {
+                            setGridRows({...evt.grid});
+                            setColNumToName({...evt.col_num_to_name});
+                            setFrozenColumns([...evt.frozen_columns])
+                        }
+                    }
+                    onDeleteFrozen={
+                        (evt) => {
+                            setCorpus(evt.clicked_sentences);
+                            setGridRows({...evt.grid});
+                            setColNumToName({...evt.col_num_to_name});
+                            setFrozenColumns([...evt.frozen_columns]);
+                        }
+                    }
+                    edit={edit}
+                    apiUrl={apiUrl}
+                    userID = {userID}
+                />
+                {edit === true ?
+                    <div style={{display:"flex", flexDirection:"column"}}>
+                        <div style={{display:"flex", flexDirection:"row"}}>
+                            <div style={{display:"flex", flexDirection:"row", marginLeft:"3em", marginTop:"1em"}}>
+                                <RegenerateButton
+                                    className="RegenerateButton"
+                                    onClick={(evt) => {
+                                        setCorpus(evt.clicked_sentences);
+                                        setGridRows(evt.grid);
+                                        setColNumToName(evt.col_num_to_name);
+                                        setFrozenColumns(evt.frozen_columns)}
+                                    }
+                                    apiUrl={apiUrl}
+                                    userID={userID}
+                                />
+                            </div>
 
-      </div>
+                            <InputBox
+                                data={gridRows}
+                                col_num_to_name={colNumToName} 
+                                onKeyPress={(evt) => {
+                                    setCorpus(evt.clicked_sentences);
+                                    setGridRows(evt.grid);
+                                    setColNumToName(evt.col_num_to_name);
+                                    setFrozenColumns(evt.frozen_columns)}
+                                }
+                                apiUrl={apiUrl}
+                                userID={userID}
+                            />
 
-    <InputBox data={gridRows} col_num_to_name={colNumToName} 
-      onKeyPress={(evt) => {
-          setCorpus(evt.clicked_sentences);
-          setGridRows(evt.grid);
-          setColNumToName(evt.col_num_to_name);
-          setFrozenColumns(evt.frozen_columns)}
-      }
-      apiUrl={apiUrl} userID={userID}/>
-
-      <CopyButton className="CopyButton" onClick={(evt) => {}
-      }
-      apiUrl={apiUrl} userID={userID}/>
-
-       </div>
-
-      </div>
-        : <div/>}
-      {edit === true & training === false ?
-      <div style={{marginLeft:'4em', marginTop:'3em', borderColor:'blue'}}><u>Cheat sheet</u>
-      {flag === 'control' ?
-      <ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> Click the wastebasket beneath the column you want to delete. This will return the sentences in that column to the beginning column.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Update Grid:</b> Clicking this button will remove the contents of new columns from the beginning column.</li>
-      </ul>
-      : 
-      <ul>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word. This column is now frozen and will not change when the Grid is updated.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> Click the wastebasket beneath the column you want to delete. You must update the Grid to return the sentences in the deleted column to the Grid.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter. Renaming a column also freezes it.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns to move them. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Seeding columns:</b> If you drag a sentence between unfrozen columns, the sentence will stay in its new column when the Grid is updated.</li>
-      <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Update Grid:</b> Clicking this button will ask the machine to reorganize the Grid. It will generate new columns from the sentences that you have not previously frozen or seeded.</li>
-      </ul>
-      }
-      </div>
-      : <div/>}
-      </div>
-
-      <div style={{
-        display: "flex",
-        flexDirection: "column"
-      }}>
-
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        fontFamily: 'InaiMathi'
-      }}>
-       <div style={{
-        display: "flex",
-        flexDirection: "column"
-      }}>
-      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center'}}><u>Sentences</u></div>
-      <Corpus sentences={corpus}
-      onChange={(evt) => {setContext(evt)}}
-       edit={edit} training={training}
-       apiUrl={apiUrl} userID={userID}/>
-       </div>
-       <div style={{
-        display: "flex",
-        flexDirection: "column",
-        marginRight: "2em"
-      }}>
-      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Sentence context</u></div>
-       <div style={{display:'inline', width:'300px', paddingTop:'.3em'}}>
-      {context[0]} <b>{context[1]}</b> {context[2]}
-      </div>
-      </div>
-      <div style={{
-        display: "flex",
-        flexDirection: "column"
-      }}>
-      <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Beliefs</u></div>
-       <div style={{display:'inline', width:'300px', paddingTop:'.3em'}}>
-      {<b>{context[3]}</b>}
-      </div>
-      </div>
-      </div>
-      </div>
-      </div>
-
-          </DndProvider>
-  );
+                            <CopyButton
+                                className="CopyButton"
+                                onClick={(evt) => {}}
+                                apiUrl={apiUrl}
+                                userID={userID}
+                            />
+                        </div>
+                    </div>
+                    :
+                    <div/>
+                }
+                {edit === true & training === false ?
+                    <div style={{marginLeft:'4em', marginTop:'3em', borderColor:'blue'}}><u>Cheat sheet</u>
+                        {flag === 'control' ?
+                            <ul>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> Click the wastebasket beneath the column you want to delete. This will return the sentences in that column to the beginning column.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Update Grid:</b> Clicking this button will remove the contents of new columns from the beginning column.</li>
+                            </ul>
+                            : 
+                            <ul>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Creating new columns:</b> Type a word into the "Create New Column" box and press Enter to create a column with all sentences that include the word. This column is now frozen and will not change when the Grid is updated.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Deleting columns:</b> Click the wastebasket beneath the column you want to delete. You must update the Grid to return the sentences in the deleted column to the Grid.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Renaming columns:</b> Type a new name below the column you want to rename and press Enter. Renaming a column also freezes it.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Moving sentences:</b> Drag sentences between columns to move them. To copy a sentence to a new column, click the "Copy" button before dragging.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Seeding columns:</b> If you drag a sentence between unfrozen columns, the sentence will stay in its new column when the Grid is updated.</li>
+                                <li style={{background: '#FFFFFF', width: '700px'}}>-<b> Update Grid:</b> Clicking this button will ask the machine to reorganize the Grid. It will generate new columns from the sentences that you have not previously frozen or seeded.</li>
+                            </ul>
+                        }
+                    </div>
+                    :
+                    <div/>
+                }
+            </div>
+            <div style={{display: "flex", flexDirection: "column"}}>
+                <div style={{display: "flex", flexDirection: "row", fontFamily: 'InaiMathi'}}>
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center'}}><u>Sentences</u></div>
+                        <Corpus
+                            sentences={corpus}
+                            onChange={(evt) => {setMetadata(evt)}}
+                            edit={edit}
+                            training={training}
+                            apiUrl={apiUrl}
+                            userID={userID}
+                        />
+                    </div>
+                    <div style={{display: "flex", flexDirection: "column", marginRight: "2em"}}>
+                        <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Sentence context</u></div>
+                        <div style={{display:'inline', width:'300px', paddingTop:'.3em'}}>
+                            {metadata.context.pre}<b>{metadata.context.at}</b>{metadata.context.post}
+                        </div>
+                    </div>
+                    <Beliefs beliefs={metadata.beliefs}/>
+                </div>
+            </div>
+        </div>
+        </DndProvider>
+    );
 }
 
 export default App;
