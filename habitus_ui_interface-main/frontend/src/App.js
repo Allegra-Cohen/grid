@@ -23,16 +23,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from "react-router-dom";
 import Countdown from 'react-countdown';
 import Beliefs from './Beliefs'
+import noMetadata from './Metadata.js'
 
 function App({apiUrl, edit, training, timeLimit}) {
-    const noMetadata = {
-        context: {
-            pre: "",
-            at: "",
-            post: ""
-        },
-        beliefs: [ ]
-    };
     const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
