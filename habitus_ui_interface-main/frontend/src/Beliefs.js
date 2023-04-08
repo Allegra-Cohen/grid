@@ -13,14 +13,19 @@ function Belief({belief_record}) {
     );
 }
 
-export default function Beliefs({beliefs}) {
+export default function Beliefs({beliefs, edit, training}) {
     const items = beliefs.map((belief) => <Belief belief_record={belief}/>);
 
     return (
         <div style={{display: "flex", flexDirection: "column"}}>
             <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Beliefs</u></div>
-            <div style={{display:'inline', width:'300px', paddingTop:'.3em'}}>
-                <ul>
+            <div style={{display:'inline', width:'300px'}}>
+                <ul className = 'beliefs' id='style-3' style={{
+                    "margin-top": "0",
+                    "padding-left": "0",
+                    height: edit & !training ? "75em" : "35em",
+                    overflowY: "scroll"
+                }}>
                     {items}
                 </ul>
             </div>
