@@ -11,7 +11,7 @@ class Belief:
 		self.year: int = self.clean_integer(values[3], -1)
 
 	def clean_string(self, string: str, default_value: str) -> str:
-		bad = string is None or (type(string) == float and math.isnan(string))
+		bad = string is None or string == "None" or (type(string) == float and math.isnan(string))
 		some_string = string if not bad else default_value
 		return some_string
 
