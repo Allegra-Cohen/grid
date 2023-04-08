@@ -232,7 +232,7 @@ function App({apiUrl, edit, training, timeLimit}) {
                             {metadata.context.pre}<b>{metadata.context.at}</b>{metadata.context.post}
                         </div>
                     </div>
-                    <Beliefs beliefs={metadata.beliefs}/>
+                    <Beliefs beliefs={metadata.beliefs} edit={edit} training={training}/>
                 </div>
             </div>
         </div>
