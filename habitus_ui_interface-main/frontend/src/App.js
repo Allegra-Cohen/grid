@@ -31,31 +31,18 @@ function App({apiUrl, edit, training, timeLimit}) {
             at: "",
             post: ""
         },
-        beliefs: [ {
-            id: 0,
-            belief: "The top one.",
-            title: "title",
-            author: "author",
-            year: 2001
-        }, {
-            id: 1,
-            belief: "The bottom one.",
-            title: "title",
-            author: "author",
-            year: 2002
-        }
-        ]
-    }
+        beliefs: [ ]
+    };
     const [flag, setFlag] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
     const [metadata, setMetadata] = useState(noMetadata);
-    const [gridRows, setGridRows] = useState({})
-    const [colNumToName, setColNumToName] = useState({})
-    const [frozenColumns, setFrozenColumns] = useState([])
-    const [rowContents, setRowContents] = useState({})
-    const [anchorBook, setAnchorBook] = useState({})
-    const [synonymBook, setSynonymBook] = useState([])
+    const [gridRows, setGridRows] = useState({});
+    const [colNumToName, setColNumToName] = useState({});
+    const [frozenColumns, setFrozenColumns] = useState([]);
+    const [rowContents, setRowContents] = useState({});
+    const [anchorBook, setAnchorBook] = useState({});
+    const [synonymBook, setSynonymBook] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [start, setStart] = useState(Date.now());
     const [userID, setUserID] = useState(JSON.parse(localStorage.getItem('userID')));
@@ -94,7 +81,7 @@ function App({apiUrl, edit, training, timeLimit}) {
                 setAnchorBook(data.anchor_book);
                 setSynonymBook(data.synonym_book);
             });
-    }, [userID])
+    }, [userID]);
 
     return (
         <DndProvider backend={HTML5Backend}>

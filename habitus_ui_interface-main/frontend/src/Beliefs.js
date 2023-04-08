@@ -1,25 +1,28 @@
 import "./Beliefs.css"
 
 
-function Belief({belief}) {
-    const {id, text, title, author, year} = belief;
+function Belief({belief_record}) {
+    const {id, belief, title, author, year} = belief_record;
+    const cooked_id = id >= 0 ? id : "<id unknown>";
+    const cooked_belief = belief != "" ? belief : "<belief unknown>";
+    const cooked_title = title != "" ? title : "<title unknown>";
+    const cooked_author = author != "" ? author : "<author unknown>";
+    const cooked_year = year >= 0 ? year : "<year unknown>";
     return(
-        <li>{id}. &quot;{text}&quot; in <i>{title}</i> by {author}, {year}.</li>
+        <li>{cooked_id}. &quot;{cooked_belief}&quot; in <i>{cooked_title}</i> by {cooked_author}, {cooked_year}.</li>
     );
 }
 
 export default function Beliefs({beliefs}) {
-    const items = beliefs.map((belief) => <Belief belief={belief}/>);
+    const items = beliefs.map((belief) => <Belief belief_record={belief}/>);
 
     return (
         <div style={{display: "flex", flexDirection: "column"}}>
             <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Beliefs</u></div>
             <div style={{display:'inline', width:'300px', paddingTop:'.3em'}}>
-                Keith was here above list.
                 <ul>
                     {items}
                 </ul>
-                Keith was here below list.
             </div>
         </div>
     );
