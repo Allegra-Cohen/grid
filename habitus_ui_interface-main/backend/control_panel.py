@@ -6,8 +6,11 @@ from frontend import Frontend
 class ControlPanel(Frontend):
 	def __init__(self, path: str, k: int):
 		super().__init__(path)
-		self.anchor = sys.argv[1]
-		self.grid = self.backend.get_grid(k, self.anchor, self.anchor)
+		self.anchor = "load_all"
+		self.backend.supercorpus_filename = 'example'
+		self.backend.clean_supercorpus_filename = 'cleaned_example'
+		self.backend.row_labels_filename = 'example_row_labels'
+		self.grid = self.backend.get_grid(k, self.anchor, "example", 'kmeans')
 		self.copy_on = False
 		self.show_clusters()
 
