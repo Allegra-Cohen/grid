@@ -28,6 +28,7 @@ Here are instructions for installing the libraries and packages you’ll need to
 1. `pip3 install sklearn`
 1. `pip3 install spacy`
 1. `python3 -m spacy download en_core_web_sm`
+1. Go to https://nlp.stanford.edu/projects/glove/ and download glove.6B.zip. Move the file called `glove.6B.300d.txt` to your `grid/process_files/` folder. (For a great introduction to word embeddings, read [Mihai Surdeanu and Marco Valenzuela-Escárcega's book](https://clulab.org/gentlenlp/book/gentlenlp-book-12232022.pdf)).
 1. `cd backend`
 1. `python3 control_panel.py` - Make sure the console version works before continuing with execution of the networked version.
 1. `cd ..`
