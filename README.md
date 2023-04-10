@@ -9,28 +9,28 @@ The Grid’s back end is written in Python. Main2.py connects the front end to t
  
 Here are instructions for installing the libraries and packages you’ll need to run the Grid:
  
-            1. `git clone https://github.com/Allegra-Cohen/grid`
-            2. `cd grid`
-            3. `sudo apt update`
-            4. `node -v` - Check to see that it is installed and version 14+.  If so, the next step is not necessary.
-            5. `sudo apt install nodejs` - If the default version  for your operating system is not new enough, additional [preparations](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04) may be needed.
-            6. `sudo apt install npm`
-            7. `cd habitus_ui_interface-main/frontend`
-            8. `npm install` - This will create the `node_modules` directory.
-            9. `cd ..`
-            10. `python3 --version` - You'll need version 3.9+.  If that's already the case, skip the next step.
-            11. `sudo apt install python3.9` - If this is not available, additional [preparations](https://cloudbytes.dev/snippets/upgrade-python-to-latest-version-on-ubuntu-linux) will again be necessary.
-            12. `pip3 install uvicorn`
-            13. `pip3 install fastapi`
-            14. `pip3 install gensim`
-            15. `pip3 install pandas`
-            16. `pip3 install nltk`
-            17. `pip3 install sklearn`
-            18. `pip3 install spacy`
-            19. `python3 -m spacy download en_core_web_sm`
-            20. `cd backend`
-            21. `python3 control_panel.py harvest` - Make sure the console version works before continuing with execution of the networked version. "harvest" is the Grid anchor term.
-            22. `cd ..`
+1. `git clone https://github.com/Allegra-Cohen/grid`
+1. `cd grid`
+1. `sudo apt update`
+1. `node -v` - Check to see that it is installed and version 14+.  If so, the next step is not necessary.
+1. `sudo apt install nodejs` - If the default version  for your operating system is not new enough, additional [preparations](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04) may be needed.
+1. `sudo apt install npm`
+1. `cd habitus_ui_interface-main/frontend`
+1. `npm install` - This will create the `node_modules` directory.
+1. `cd ..`
+1. `python3 --version` - You'll need version 3.9+.  If that's already the case, skip the next step.
+1. `sudo apt install python3.9` - If this is not available, additional [preparations](https://cloudbytes.dev/snippets/upgrade-python-to-latest-version-on-ubuntu-linux) will again be necessary.
+1. `pip3 install uvicorn`
+1. `pip3 install fastapi`
+1. `pip3 install gensim`
+1. `pip3 install pandas`
+1. `pip3 install nltk`
+1. `pip3 install sklearn`
+1. `pip3 install spacy`
+1. `python3 -m spacy download en_core_web_sm`
+1. `cd backend`
+1. `python3 control_panel.py` - Make sure the console version works before continuing with execution of the networked version.
+1. `cd ..`
  
 ## Starting up the Grid
 Open two tabs in terminal, then:
@@ -90,10 +90,10 @@ All of the files generated during this step will be stored in the `process_files
  
 ### Referring to your corpus
 Once your corpus is processed, you’re ready to use it to create a Grid! Navigate back to the Gallery and click on “Create Grid.” This page asks you for a bunch of filenames, all of which use the `../process_files/` file path:
-- * *Which corpus will you use?* * Use the name of the cleaned corpus file, which should be `cleaned_[your_corpus_name].csv`.
-- * *Which row labels will you use?* * Here you can either put the default, which should be `[your_corpus_name]_row_labels.csv`, or your own labels file (see FAQs).
-- * *Do you want to anchor your Grid?* * Here you can enter an anchor, either a keyword like “harvest” or a Boolean query like “planting OR harvest”. Or you can keep it blank to look at the whole corpus (see “A word about runtime” below.)
-- * *What filename do you want to save your Grid with?* * Self-explanatory. The Grid will save in `process_files/`.
+- * *Which corpus will you use?*  Use the name of the cleaned corpus file, which should be `cleaned_[your_corpus_name].csv`.
+- * *Which row labels will you use?*  Here you can either put the default, which should be `[your_corpus_name]_row_labels.csv`, or your own labels file (see FAQs).
+- * *Do you want to anchor your Grid?*  Here you can enter an anchor, either a keyword like “harvest” or a Boolean query like “planting OR harvest”. Or you can keep it blank to look at the whole corpus (see “A word about runtime” below.)
+- * *What filename do you want to save your Grid with?*  Self-explanatory. The Grid will save in `process_files/`.
  
 Clicking “Ready” will generate a Grid using your corpus! This step should not take as long as the corpus preprocessing, but refer to “A word about runtime” below.
  
@@ -103,10 +103,10 @@ Grids are saved and loaded using four files. The `specs` file records Grid speci
 ## FAQs
 These are primarily pointers to where in the code an excited and industrious person might answer their own question.
  
-- * *What if I want to cluster paragraphs or whole papers instead of sentences?* * Take that up with `habitus_ui_interface-main/backend/corpus_parser.py`. You may also want to change how the average vector embedding of a document is calculated.
-- * *Do you remove stopwords and lemmatize?* * Yes. You can turn this off and on in `linguist.py`.
-- * *I have an opinion about your choice of clustering algorithm.* * Neat! You can write your own class of clustering algorithm that inherits from ClusterGenerator (see ``habitus_ui_interface-main/backend/soft_kmeans.py`` as an example). In order to plug a new ClusterGenerator in, you currently need to change code in two places: 1) The frontend instantiation [here](https://github.com/Allegra-Cohen/grid/blob/3c05c59f734baaf3849b572ef992f097311879ee/habitus_ui_interface-main/main2.py#L226) and 2) Directly call the ClusterGenerator in the Grid instantiation [here](https://github.com/Allegra-Cohen/grid/blob/3c05c59f734baaf3849b572ef992f097311879ee/habitus_ui_interface-main/backend/grid.py#L28).
-- * *What if I want to define my own rows?* * You have a few options! 1) Manually create a row labels file, put it in the `process_files/` folder, and use that filepath when creating your Grid. 2) Assign text to the right text files before creating your corpus. 3) Create a classifier for automatically labeling rows. If you want to do this, make sure you’re using the right input, i.e. the cleaned_[corpus] file generated during the corpus creation process, otherwise it won’t align with what the rest of the Grid is doing.
+- * *What if I want to cluster paragraphs or whole papers instead of sentences?*  Take that up with `habitus_ui_interface-main/backend/corpus_parser.py`. You may also want to change how the average vector embedding of a document is calculated.
+- * *Do you remove stopwords and lemmatize?*  Yes. You can turn this off and on in `linguist.py`.
+- * *I have an opinion about your choice of clustering algorithm.*  Neat! You can write your own class of clustering algorithm that inherits from ClusterGenerator (see ``habitus_ui_interface-main/backend/soft_kmeans.py`` as an example). In order to plug a new ClusterGenerator in, you currently need to change code in two places: 1) The frontend instantiation [here](https://github.com/Allegra-Cohen/grid/blob/3c05c59f734baaf3849b572ef992f097311879ee/habitus_ui_interface-main/main2.py#L226) and 2) Directly call the ClusterGenerator in the Grid instantiation [here](https://github.com/Allegra-Cohen/grid/blob/3c05c59f734baaf3849b572ef992f097311879ee/habitus_ui_interface-main/backend/grid.py#L28).
+- * *What if I want to define my own rows?*  You have a few options! 1) Manually create a row labels file, put it in the `process_files/` folder, and use that filepath when creating your Grid. 2) Assign text to the right text files before creating your corpus. 3) Create a classifier for automatically labeling rows. If you want to do this, make sure you’re using the right input, i.e. the cleaned_[corpus] file generated during the corpus creation process, otherwise it won’t align with what the rest of the Grid is doing.
  
 ## A word about runtime
 The Grid currently runs very slowly for corpora above ~100 documents. This is for two reasons: First, pre-processing the corpus using the vector embedding model costs a lot of time because that model is large. Fortunately you only have to do this once. Second, k-means clustering and many of its variations are actually pretty slow. We vectorize as much as we can but the runtime is not great. Our top priority is decreasing the time costs of a Grid update without making the clustering terrible. Some avenues being considered:
