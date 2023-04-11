@@ -43,7 +43,7 @@ class UvicornFrontend(Frontend):
         self.track_actions = {'user_id':[], 'training':[], 'condition':[], 'round': [], 'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
         self.tracking_prefix = tracking_prefix
         self.round = 0
-        self.beliefs = Beliefs(path, "beliefs.tsv")
+        self.beliefs = Beliefs(path, "beliefs.tsv", "training_beliefs.tsv")
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -228,7 +228,8 @@ class UvicornFrontend(Frontend):
     def sentence_click(self, text: str):
         t = time.time()
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
-        beliefs = self.beliefs.ground(text, 5)
+        text_index = text[0:text.index(".")]
+        beliefs = self.beliefs.ground(int(text_index), text, 5)
         self.update_track_actions([self.round, 'human', 'click', t, 'sentence', text, None])
         metadata = {
             "context": {
