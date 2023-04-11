@@ -2,6 +2,7 @@ import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import "./Corpus.css"
 import "./Grid.css"
+import {toQuery} from "./toEncoding"
 
 function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiUrl}){
   
@@ -14,7 +15,8 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
         drop: (item) => {
-            fetch(`${apiUrl}/drag/${rowName}/${colName}/${item.text}`)
+            var query = toQuery([["row", rowName], ["col", colName], ["sent", item.text]]);
+            fetch(`${apiUrl}/drag/${query}`)
             .then( response => response.json())
             .then( data => {
                 console.log('data', data);

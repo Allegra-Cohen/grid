@@ -3,7 +3,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import {useId, useEffect, useState} from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {toHex} from "./toHex"
+import {toQuery} from "./toEncoding"
 import './info.css';
 import './Spinner.css';
 
@@ -25,16 +25,8 @@ export default function ChangeCorpus({apiUrl}) {
     	if (filepath.length > 0){
 			setWaiting(true);
 			console.log('eee');
-			console.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-//			fetch(`${apiUrl}/processSupercorpus/`, { "method": "POST", "headers": [["Content-Type", "application/json"]], "body": JSON.stringify({ "value": filepath })})
-			var formData = new FormData()
-			formData.append("supercorpusFilepath", filepath)
-			var urlSearchParams = new URLSearchParams();
-			urlSearchParams.append("supercorpusFilepath", filepath)
-			var query = urlSearchParams.toString();
-			var string = `${apiUrl}/processSupercorpus/?${query}`;
-			console.info(string);
-			fetch(`${apiUrl}/processSupercorpus/?${query}`)
+			let query = toQuery([["supercorpusFilepath", filepath]]);
+			fetch(`${apiUrl}/processSupercorpus/${query}`)
 				.then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);

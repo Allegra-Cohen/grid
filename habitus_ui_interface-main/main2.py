@@ -229,9 +229,6 @@ class UvicornFrontend(Frontend):
 
 frontend = UvicornFrontend('../process_files/', 6,'kmeans')
 
-def fromHex(hex: str) -> str:
-    return "".join([chr(int(hex[i:i+4], 16)) for i in range(0, len(hex), 4)])
-
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
 # - log the event for debugging and bookkeeping purposes
@@ -286,12 +283,12 @@ async def saveAsGrid(text: str):
     print("saving grid as ", text)
     return frontend.save_as_grid(text)
 
-@app.get("/deleteGrid/{text}")
+@app.get("/deleteGrid/")
 async def deleteGrid(text: str):
     print("deleting ", text)
     return frontend.delete_grid(text)
 
-@app.get("/drag/{row}/{col}/{sent}")
+@app.get("/drag/")
 async def drag(row: str, col: str, sent: str):
     print("drag", f"Row: {row}\tCol: {col}\tText: {sent}")
     row, col, sent = row, int(col), sent
@@ -318,9 +315,8 @@ async def deleteFrozenColumn(ix: int):
     print("deleteFrozen", ix)
     return frontend.delete_frozen(int(ix))
 
-@app.get("/textInput/{hexText}")
-async def textInput(hexText: str):
-    text = hexText # fromHex(hexText)
+@app.get("/textInput/")
+async def textInput(text: str):
     print("textInput", text)
     return frontend.create_cluster(text)
 
@@ -339,7 +335,7 @@ async def copyToggle():
     print("copyToggle")
     return frontend.toggle_copy()
 
-@app.get("/trash/{text}")
+@app.get("/trash/")
 async def trash(text: str):
     print("trash ", text)
     return frontend.trash(text)
