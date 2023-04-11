@@ -52,5 +52,4 @@ class Beliefs():
 		return beliefs
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
-		# TODO: check index
 		return self.ranked_ground(text_index, text, k)
