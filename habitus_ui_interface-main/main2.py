@@ -253,10 +253,10 @@ async def showGrids():
     grids.sort()
     return {'grids': grids, 'filepath': frontend.path}
 
-@app.post("/processSupercorpus/")
-async def processSupercorpus(supercorpusFilepath: Text):
-    print(supercorpusFilepath.value)
-    return frontend.backend.process_supercorpus(supercorpusFilepath.value)
+@app.get("/processSupercorpus/")
+async def processSupercorpus(supercorpusFilepath: str):
+    print(supercorpusFilepath)
+    return frontend.backend.process_supercorpus(supercorpusFilepath)
 
 @app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
@@ -320,7 +320,7 @@ async def deleteFrozenColumn(ix: int):
 
 @app.get("/textInput/{hexText}")
 async def textInput(hexText: str):
-    text = fromHex(hexText)
+    text = hexText # fromHex(hexText)
     print("textInput", text)
     return frontend.create_cluster(text)
 

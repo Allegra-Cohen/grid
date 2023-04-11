@@ -26,7 +26,15 @@ export default function ChangeCorpus({apiUrl}) {
 			setWaiting(true);
 			console.log('eee');
 			console.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-			fetch(`${apiUrl}/processSupercorpus/`, { "method": "POST", "headers": [["Content-Type", "application/json"]], "body": JSON.stringify({ "value": filepath })})
+//			fetch(`${apiUrl}/processSupercorpus/`, { "method": "POST", "headers": [["Content-Type", "application/json"]], "body": JSON.stringify({ "value": filepath })})
+			var formData = new FormData()
+			formData.append("supercorpusFilepath", filepath)
+			var urlSearchParams = new URLSearchParams();
+			urlSearchParams.append("supercorpusFilepath", filepath)
+			var query = urlSearchParams.toString();
+			var string = `${apiUrl}/processSupercorpus/?${query}`;
+			console.info(string);
+			fetch(`${apiUrl}/processSupercorpus/?${query}`)
 				.then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);
