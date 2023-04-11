@@ -58,7 +58,7 @@ function CreatePage({apiUrl}) {
     		setWaiting(true)
     		setError(false)
 			let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]);
-	    	fetch(`${apiUrl}/loadNewGrid/${query}/`)
+	    	fetch(`${apiUrl}/loadNewGrid/${query}`)
 	            .then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);

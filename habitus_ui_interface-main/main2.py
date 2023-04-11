@@ -236,7 +236,7 @@ frontend = UvicornFrontend('../process_files/', 6,'kmeans')
 # - call into the frontend to perform the action
 # - return the right kind of result, probably forwarded from the frontend
 
-@app.get("/data")
+@app.get("/data/")
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
     return data # returns to front end
 
@@ -255,7 +255,7 @@ async def processSupercorpus(supercorpusFilepath: str):
     print(supercorpusFilepath)
     return frontend.backend.process_supercorpus(supercorpusFilepath)
 
-@app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
+@app.get("/setSuperfiles/")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
     return frontend.backend.set_superfiles(corpusFilename, rowFilename)
 
