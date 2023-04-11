@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {toQuery} from "./toEncoding"
+import {toQuery} from "./toEncoding";
 
 
 export default function InputBox({text, onKeyPress, apiUrl}){

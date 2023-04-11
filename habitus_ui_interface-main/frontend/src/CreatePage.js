@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
 import './info.css';
 import './Spinner.css';
-
+import {toQuery} from "./toEncoding";
 
 function CreatePage({apiUrl}) {
 
@@ -57,7 +57,8 @@ function CreatePage({apiUrl}) {
     		}
     		setWaiting(true)
     		setError(false)
-	    	fetch(`${apiUrl}/loadNewGrid/${supercorpus}/${rowFilename}/${filename}/${text}/`)
+			let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]);
+	    	fetch(`${apiUrl}/loadNewGrid/${query}/`)
 	            .then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);

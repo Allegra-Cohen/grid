@@ -2,7 +2,7 @@ import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import "./Corpus.css"
 import "./Grid.css"
-import {toQuery} from "./toEncoding"
+import {toQuery} from "./toEncoding";
 
 function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiUrl}){
   
@@ -39,7 +39,8 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
 
         onClick={
       (evt) => {
-        fetch(`${apiUrl}/click/${rowName}/${colName}`)
+        let query = toQuery([["row", rowName], ["col", colName]]);
+        fetch(`${apiUrl}/click/${query}`)
             .then( response => response.json())
             .then( response => {console.log(response);
                 console.log(colName);
@@ -78,8 +79,8 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiUrl}){
     onKeyDown={
             (evt) => {
                 if(evt.key=="Enter"){
-                    let text = evt.target.value.replace("\/", " | ").replace(/[.,#!$%\^&\*;:{}=\-_`~()]/g," ");
-                    fetch(`${apiUrl}/editName/${id}/${text}`)
+                    let query = toQuery([["id", id], ["name", evt.target.value]])
+                    fetch(`${apiUrl}/editName/${query}`)
                     .then( response => response.json())
                     .then( response => {onFooter(response);
                         console.log("!!!", response.frozen_columns)
@@ -89,7 +90,8 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiUrl}){
                 }
                 }}/>}
     {frozenColumns.includes(id) ? <div> <button onClick={(evt) => {
-                    fetch(`${apiUrl}/deleteFrozenColumn/${id}`)
+                    let query = toQuery([["id", id]])
+                    fetch(`${apiUrl}/deleteFrozenColumn/${query}`)
                     .then( response => response.json())
                     .then( response => {onDeleteFrozen(response);
                     });

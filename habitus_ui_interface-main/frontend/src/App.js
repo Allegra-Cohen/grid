@@ -18,6 +18,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from "react-router-dom";
 import './Spinner.css';
+import {toQuery} from "./toEncoding";
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
@@ -54,7 +55,8 @@ function App({apiUrl}) {
     }
 
     const handleSaveAs = (saveAs) => {
-        fetch(`${apiUrl}/saveAsGrid/${saveAs}`)
+        let query = toQuery([["text", saveAs]]);
+        fetch(`${apiUrl}/saveAsGrid/${query}`)
                     .then( response => response.json())
                     .then( data => {
                         setFilename(data.filename);

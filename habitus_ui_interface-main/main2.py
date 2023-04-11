@@ -259,7 +259,7 @@ async def processSupercorpus(supercorpusFilepath: str):
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
     return frontend.backend.set_superfiles(corpusFilename, rowFilename)
 
-@app.get("/loadNewGrid/{corpusFilename}/{rowFilename}/{newFilename}/{newAnchor}")
+@app.get("/loadNewGrid/")
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     print("loadNewGrid", newFilename, newAnchor)
     if frontend.backend.set_superfiles(corpusFilename, rowFilename):
@@ -267,7 +267,7 @@ async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, n
     else:
         return False
 
-@app.get("/loadGrid/{text}")
+@app.get("/loadGrid/")
 async def loadGrid(text: str):
     print("loading grid ", text)
     grid = frontend.load_grid(text)
@@ -278,7 +278,7 @@ async def saveGrid():
     print("saving grid")
     return frontend.save_grid()
 
-@app.get("/saveAsGrid/{text}")
+@app.get("/saveAsGrid/")
 async def saveAsGrid(text: str):
     print("saving grid as ", text)
     return frontend.save_as_grid(text)
@@ -289,38 +289,36 @@ async def deleteGrid(text: str):
     return frontend.delete_grid(text)
 
 @app.get("/drag/")
-async def drag(row: str, col: str, sent: str):
+async def drag(row: str, col: int, sent: str):
     print("drag", f"Row: {row}\tCol: {col}\tText: {sent}")
-    row, col, sent = row, int(col), sent
     return frontend.move(row, col, sent)
 
-@app.get("/click/{row}/{col}")
-async def click(row: str, col: str):
+@app.get("/click/")
+async def click(row: str, col: int):
     print("click", row, col)
-    row, col = row, int(col)
     return frontend.click(row, col)
 
-@app.get("/sentenceClick/{text}")
+@app.get("/sentenceClick/")
 async def sentenceClick(text: str):
     print("sentenceClick", text)
     return frontend.sentence_click(text)
 
-@app.get("/editName/{ix}/{newName}")
-async def editName(ix: int, newName: str):
-    print("editName", ix, newName)
-    return frontend.set_name(int(ix), newName)
+@app.get("/editName/")
+async def editName(id: int, newName: str):
+    print("editName", id, newName)
+    return frontend.set_name(id, newName)
 
-@app.get("/deleteFrozenColumn/{ix}")
-async def deleteFrozenColumn(ix: int):
-    print("deleteFrozen", ix)
-    return frontend.delete_frozen(int(ix))
+@app.get("/deleteFrozenColumn/")
+async def deleteFrozenColumn(id: int):
+    print("deleteFrozen", id)
+    return frontend.delete_frozen(id)
 
 @app.get("/textInput/")
 async def textInput(text: str):
     print("textInput", text)
     return frontend.create_cluster(text)
 
-@app.get("/setK/{k}")
+@app.get("/setK/")
 async def setK(k: int):
     print("setK", k)
     return frontend.set_k(k)
