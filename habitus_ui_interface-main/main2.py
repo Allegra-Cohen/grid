@@ -5,6 +5,7 @@ import sys
 sys.path.append("./backend")
 
 from document import Document
+from pydantic import BaseModel
 from fastapi import FastAPI, Depends
 from frontend import Frontend
 from pandas import DataFrame
@@ -23,6 +24,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class Text(BaseModel):
+    value: str
 
 class UvicornFrontend(Frontend):
     def __init__(self, path: str, k: int, clustering_algorithm: str):
@@ -249,9 +253,10 @@ async def showGrids():
     grids.sort()
     return {'grids': grids, 'filepath': frontend.path}
 
-@app.get("/processSupercorpus/{supercorpusFilepath}")
-async def processSupercorpus(supercorpusFilepath: str):
-    return frontend.backend.process_supercorpus(fromHex(supercorpusFilepath))
+@app.post("/processSupercorpus/")
+async def processSupercorpus(supercorpusFilepath: Text):
+    print(supercorpusFilepath.value)
+    return frontend.backend.process_supercorpus(supercorpusFilepath.value)
 
 @app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):

@@ -24,8 +24,9 @@ export default function ChangeCorpus({apiUrl}) {
     const handleButton = () => {
     	if (filepath.length > 0){
 			setWaiting(true);
-			console.log('eee')
-			fetch(`${apiUrl}/processSupercorpus/${toHex(filepath)}/`)
+			console.log('eee');
+			console.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			fetch(`${apiUrl}/processSupercorpus/`, { "method": "POST", "headers": [["Content-Type", "application/json"]], "body": JSON.stringify({ "value": filepath })})
 				.then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);
