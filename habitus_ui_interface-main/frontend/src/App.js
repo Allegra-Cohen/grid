@@ -184,7 +184,7 @@ function App({apiUrl}) {
                 <div style={{display: "flex", flexDirection: "column"}}>
                     <div style={{display: "flex", flexDirection: "row", fontFamily: 'InaiMathi'}}>
                         <div style={{display: "flex", flexDirection: "column"}}>
-                            <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'7em'}}><u>Sentences</u></div>
+                            <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center'}}><u>Sentences</u></div>
                             <Corpus sentences={corpus}
                                 onChange={
                                     (evt) => {
@@ -197,8 +197,8 @@ function App({apiUrl}) {
                             />
                         </div>
                         <div style={{display: "flex", flexDirection: "column"}}>
-                            <div style={{fontFamily:'InaiMathi', fontSize:'18pt', marginLeft:'5em'}}><u>Context</u></div>
-                            <div style={{display:'inline', width:'350px'}}>
+                            <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Context</u></div>
+                            <div style={{display:'inline', width:'300px', marginTop:'4.8px', height: "1200px", overflow: "auto"}}>
                                 {metadata.context.pre} <b>{metadata.context.at}</b> {metadata.context.post}
                             </div>
                         </div>

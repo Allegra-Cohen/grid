@@ -19,10 +19,12 @@ export default function Beliefs({beliefs}) {
     return (
         <div style={{display: "flex", flexDirection: "column"}}>
             <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Beliefs</u></div>
-            <div style={{display:'inline', width:'300px'}}>
+            <div style={{display:'inline', width:'300px', marginLeft:'10px'}}>
                 <ul className = 'beliefs style-3' style={{
                     marginTop: "0",
-                    paddingLeft: "0"
+                    paddingLeft: "0",
+                    height: "1200px",
+                    overflow: "auto"
                 }}>
                     {items}
                 </ul>
