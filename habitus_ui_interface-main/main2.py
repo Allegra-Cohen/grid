@@ -275,6 +275,7 @@ async def setSuperfiles(corpusFilename: str, rowFilename: str):
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     print("loadNewGrid", newFilename, newAnchor)
     if frontend.backend.set_superfiles(corpusFilename, rowFilename):
+        frontend.beliefs = Beliefs(frontend.path, frontend.beliefs, "example") # take corpusFilename - .csv
         return frontend.load_new_grid(newFilename, newAnchor)
     else:
         return False
