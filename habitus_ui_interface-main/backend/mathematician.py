@@ -2,7 +2,6 @@ import itertools
 import numpy as np
 import pandas as pd
 import random
-
 from document import Document
 
 
@@ -84,7 +83,7 @@ def mean_weighted_vec(document: Document, word_indices, model, tfidf = None, tfi
 def get_dist_between_docs(documents: list[Document], word_indices, model, tfidf, tfidf_vectorizer, pmi, anchor_word, tfidf_pmi_weight, preexisting = None):
 
 	def get_weight(document: Document):
-		if document.get_vector_text() not in preexisting.keys() or preexisting is None:
+		if preexisting is None or document.get_vector_text() not in preexisting.keys():
 			return mean_weighted_vec(document, word_indices, model, tfidf, tfidf_vectorizer, pmi, anchor_word, tfidf_pmi_weight)
 		else:
 			return preexisting[document.get_vector_text()]

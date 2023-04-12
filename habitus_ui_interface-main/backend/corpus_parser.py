@@ -82,7 +82,11 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
     row_labels = []
     for input_filename in os.listdir(input_dir):
         if '.' in input_filename:
-            input_extension = input_filename.split('.')[1]
+            split = input_filename.split('.')
+            name = split[0]
+            input_extension = split[1]
+        else:
+            name = input_filename
         input_pathname = os.path.join(input_dir, input_filename)
         if not os.path.isfile(input_pathname):
             print(f" Input: {input_pathname} is not a file.\n")
@@ -93,7 +97,7 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
             input_text = textract.process(input_pathname, encoding = encoding).decode(encoding)
             output_lines = parser.parse(input_text)
             all_lines += output_lines
-            row_labels += [input_filename]*len(output_lines)
+            row_labels += [name]*len(output_lines)
 
     pd.DataFrame({'sentence': all_lines}).to_csv(output_file + output_extension, encoding = encoding)
 
@@ -101,7 +105,7 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
     df = pd.concat([rows.drop('label', 1), pd.get_dummies(rows.label)], axis = 1)
     for col in df.columns:
         if 'Unnamed:' in col:
-            df.drop(col)
+            df.drop(col, inplace = True)
     df['all'] = 1
     df.to_csv(output_file + '_row_labels.csv')
 
