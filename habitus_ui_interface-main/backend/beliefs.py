@@ -30,26 +30,46 @@ class Belief:
 		}
 
 class Beliefs():
-	def __init__(self, path: str, filename: str, groundings_file_name: str):
-		data_frame = pandas.read_table(path + filename, index_col = 0, header = 0, encoding = "utf-8")
-		self.beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]		
-		self.document_to_beliefs = self.read_groundings(path, groundings_file_name)
+	def __init__(self, path: str, prev_beliefs: str, unique_filename: str):
+		self.encoding = "utf-8"
+		if prev_beliefs:
+			self.beliefs = prev_beliefs.beliefs # Only read these once, if possible.
+		else:
+			try:
+				data_frame = pandas.read_table(path + "beliefs.tsv", index_col = 0, header = 0, encoding = self.encoding)
+				self.beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
+			except:
+				self.beliefs = None
+		if unique_filename:
+			try:
+				groundings_file_name = unique_filename + "_beliefs.tsv"
+				self.document_to_beliefs = self.read_groundings(path, groundings_file_name)
+			except:
+				self.document_to_beliefs = None
+		else:
+			self.document_to_beliefs = None
 
 	def read_groundings(self, path: str, groundings_file_name: str) -> list[list[int]]:
-		with open(path + groundings_file_name, "r") as file:
+		with open(path + groundings_file_name, "r", encoding = self.encoding) as file:
 			lines = [line.rstrip() for line in file]
 			beliefs = [[int(grounding_index) for grounding_index in line.split("\t")] for line in lines]
 		return beliefs
 
 	def random_ground(self, text_index: int, text: str, k: int) -> list[Belief]:
-		seed = hash(text)
-		rndgen = random.Random(seed)
-		beliefs = rndgen.sample(self.beliefs, k)
-		return beliefs
+		if self.beliefs:
+			seed = hash(text)
+			rndgen = random.Random(seed)
+			beliefs = rndgen.sample(self.beliefs, k)
+			return beliefs
+		else:
+			return []
 
 	def ranked_ground(self, text_index: int, text: str, k: int) -> list[Belief]:
-		beliefs = [self.beliefs[index] for index in self.document_to_beliefs[text_index][0:k]]
-		return beliefs
+		if self.beliefs and self.document_to_beliefs:
+			beliefs = [self.beliefs[index] for index in self.document_to_beliefs[text_index][0:k]]
+			return beliefs
+		else:
+			return []
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
 		return self.ranked_ground(text_index, text, k)
