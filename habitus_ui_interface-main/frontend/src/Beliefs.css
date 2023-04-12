@@ -1,0 +1,15 @@
+ul.beliefs li {
+    list-style-type: none;
+    background: #F0F0F0;
+    margin-right: 0;
+    margin-left: 0;
+    font-family: "InaiMathi";
+    width: 300px;
+    overflow-y: 'scroll';
+    overflow-x:  'hidden';
+    padding-top: .3em;
+    padding-bottom: .3em;
+    padding-left: 0;
+    padding-right: 0;
+}
+ul.beliefs li:nth-child(odd) { background: #F8F8F8; }
