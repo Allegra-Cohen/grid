@@ -202,6 +202,7 @@ function App({apiUrl}) {
                                 {metadata.context.pre} <b>{metadata.context.at}</b> {metadata.context.post}
                             </div>
                         </div>
+                        <Beliefs beliefs={metadata.beliefs}/>
                     </div>
                 </div>
             </div>

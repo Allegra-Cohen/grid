@@ -35,7 +35,7 @@ class UvicornFrontend(Frontend):
         self.clicked_col = None
         self.clicked_row = None
         self.track_actions = {'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
-        self.beliefs = Beliefs(path, "beliefs.tsv", "training_beliefs.tsv") // TODO: read this somewhere else
+        self.beliefs = Beliefs(path, "beliefs.tsv", "training_beliefs.tsv") # TODO: read this somewhere else
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)

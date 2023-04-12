@@ -13,7 +13,7 @@ function Belief({belief_record}) {
     );
 }
 
-export default function Beliefs({beliefs, edit, training}) {
+export default function Beliefs({beliefs}) {
     const items = beliefs.map((belief, index) => <Belief key={index} belief_record={belief}/>);
 
     return (
@@ -22,9 +22,7 @@ export default function Beliefs({beliefs, edit, training}) {
             <div style={{display:'inline', width:'300px'}}>
                 <ul className = 'beliefs style-3' style={{
                     marginTop: "0",
-                    paddingLeft: "0",
-                    height: edit & !training ? "75em" : "35em",
-                    overflowY: "scroll"
+                    paddingLeft: "0"
                 }}>
                     {items}
                 </ul>
