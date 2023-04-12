@@ -8,7 +8,7 @@ import './info.css';
 import './Spinner.css';
 
 
-export default function ChangeCorpus({apiUrl}) {
+export default function ChangeCorpus({apiurl}) {
 
 	const [filepath, setFilepath] = useState([]);
 	const [error, setError] = useState();
@@ -25,7 +25,7 @@ export default function ChangeCorpus({apiUrl}) {
     	if (filepath.length > 0){
 			setWaiting(true);
 			console.log('eee')
-			fetch(`${apiUrl}/processSupercorpus/${toHex(filepath)}/`)
+			fetch(`${apiurl}/processSupercorpus/${toHex(filepath)}/`)
 				.then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);

@@ -15,10 +15,10 @@ root.render(
   <React.StrictMode>
   <BrowserRouter>
   <Routes>
-    <Route path="/" element={<Gallery apiUrl="." />}/>
-    <Route path="/create" element={<CreatePage apiUrl="." />}/>
-    <Route path="/changeCorpus" element={<ChangeCorpus apiUrl="." />}/>
-    <Route path="/grid" element={<App apiUrl="."/>}/>
+    <Route path="/" element={<Gallery apiurl="." />}/>
+    <Route path="/create" element={<CreatePage apiurl="." />}/>
+    <Route path="/changeCorpus" element={<ChangeCorpus apiurl="." />}/>
+    <Route path="/grid" element={<App apiurl="."/>}/>
   </Routes>
   </BrowserRouter>
   </React.StrictMode>

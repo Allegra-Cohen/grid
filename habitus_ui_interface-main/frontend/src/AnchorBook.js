@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
 
-export default function AnchorBook({anchorBook, onButtonClick, apiUrl}){
+export default function AnchorBook({anchorBook, onButtonClick, apiurl}){
 
 	const [items, setItems] = useState(anchorBook);
 
 	useEffect(() => {
-        fetch(`${apiUrl}/data/`)
+        fetch(`${apiurl}/data/`)
             .then( response => response.json())
             .then( data => {
                 setItems(data.anchor_book);;
@@ -64,11 +64,11 @@ export default function AnchorBook({anchorBook, onButtonClick, apiUrl}){
 												setNewValue(evt.target.value)}} 
 							   placeholder='Extend anchor...' />
 						<button onClick={(evt) => {setNewKey(key); 
-												  fetch(`${apiUrl}/updateAnchorBook/${newKey}/${newValue}/'add'`).then(response => response.json()).then(response => {console.log(response); 
+												  fetch(`${apiurl}/updateAnchorBook/${newKey}/${newValue}/'add'`).then(response => response.json()).then(response => {console.log(response); 
 												  onButtonClick(response)}); 
 												  handleListClick('+'); setNewKey(''); setNewValue([]); evt.target.blur()}}>+</button>
 						<button onClick={(evt) => {setNewKey(key); 
-												  fetch(`${apiUrl}/updateAnchorBook/${newKey}/${newValue}/'remove'`).then(response => response.json()).then(response => {console.log(response); 
+												  fetch(`${apiurl}/updateAnchorBook/${newKey}/${newValue}/'remove'`).then(response => response.json()).then(response => {console.log(response); 
 												  onButtonClick(response)}); 
 												  handleListClick('-'); setNewKey(''); setNewValue([]); evt.target.blur()}}>-</button>
 						</div>

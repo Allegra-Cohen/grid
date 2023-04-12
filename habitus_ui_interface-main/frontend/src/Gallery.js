@@ -8,7 +8,7 @@ import Trash from './Trash'
 import './info.css';
 
 
-function GridIcon({gridName, handleGridClick, apiUrl}) {
+function GridIcon({gridName, handleGridClick, apiurl}) {
 
     const [{ isDragging }, dragRef] = useDrag({
         type: 'gridIcon',
@@ -22,18 +22,18 @@ function GridIcon({gridName, handleGridClick, apiUrl}) {
 
 }
 
-function Gallery({apiUrl}) {
+function Gallery({apiurl}) {
 
 	const [grids, setGrids] = useState([]);
     const [numCols, setNumCols] = useState('1');
 
 	const handleGridClick = (gridName) => {
 		console.log(gridName)
-		fetch(`${apiUrl}/loadGrid/${gridName}`);
+		fetch(`${apiurl}/loadGrid/${gridName}`);
 	}
 
 	useEffect(() => {
-        fetch(`${apiUrl}/showGrids/`)
+        fetch(`${apiurl}/showGrids/`)
             .then( response => response.json())
             .then( data => {
                 setGrids(data.grids);
@@ -61,14 +61,14 @@ function Gallery({apiUrl}) {
         <Trash className='Trash'
         onDrop={
         (evt) => {
-            fetch(`${apiUrl}/showGrids/`)
+            fetch(`${apiurl}/showGrids/`)
             .then( response => response.json())
             .then( data => {
                 setGrids(data.grids);
                 setNumCols(grids.length === 1 ? '1':'2')});
                 }
        }
-       apiUrl={apiUrl}/>
+       apiurl={apiurl}/>
       </div>
       </div>
       <div className = 'info' style={{width:'max-content', marginLeft:'6%'}}><Link to="/changeCorpus" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Upload or update corpus </Link></div>

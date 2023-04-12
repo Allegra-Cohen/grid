@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 
-export default function SaveAsBox({text, apiUrl}){
+export default function SaveAsBox({text, apiurl}){
 
 	  return (
 	    <div className={"SaveBox"}>
@@ -10,7 +10,7 @@ export default function SaveAsBox({text, apiUrl}){
       	     (evt) => {
      	        if (evt.key === "Enter") {
      	        	let text = evt.target.value;
-			        fetch(`${apiUrl}/saveAsGrid/${text}`)
+			        fetch(`${apiurl}/saveAsGrid/${text}`)
 			            .then( response => response.json())
 			            .then( response => {console.log(response)})
 			            .then(evt.target.value = '')

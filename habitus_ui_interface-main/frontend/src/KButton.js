@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 
-export default function KButton({apiUrl}){
+export default function KButton({apiurl}){
     const [kInput, setKInput] = useState([]);
 
 	  return (
@@ -11,7 +11,7 @@ export default function KButton({apiUrl}){
       	     (evt) => {
  	        	let k = evt.target.value;
  	        	console.log(k);
-		        fetch(`${apiUrl}/setK/${k}`)
+		        fetch(`${apiurl}/setK/${k}`)
 		            .then( response => response.json())}
            }
            placeholder=" Max. columns "

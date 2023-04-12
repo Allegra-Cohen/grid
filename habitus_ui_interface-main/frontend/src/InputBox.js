@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {toHex} from "./toHex"
 
 
-export default function InputBox({text, onKeyPress, apiUrl}){
+export default function InputBox({text, onKeyPress, apiurl}){
     const [textInput, setTextInput] = useState([]);
 
 	  return (
@@ -13,7 +13,7 @@ export default function InputBox({text, onKeyPress, apiUrl}){
      	        if (evt.key === "Enter") {
      	        	let text = toHex(evt.target.value);
      	        	if (evt.target.value.length > 0){
-				        fetch(`${apiUrl}/textInput/${text}`)
+				        fetch(`${apiurl}/textInput/${text}`)
 				            .then( response => response.json())
 				            .then( response => {console.log(response);
 				                console.log(response);

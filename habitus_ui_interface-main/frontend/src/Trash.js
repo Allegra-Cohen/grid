@@ -1,7 +1,7 @@
 import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 
-export default function Trash({onChange, onDrop, apiUrl}){
+export default function Trash({onChange, onDrop, apiurl}){
  
     const [{ isOver }, dropRef] = useDrop({
         accept: 'gridIcon',
@@ -9,7 +9,7 @@ export default function Trash({onChange, onDrop, apiUrl}){
             let answer = window.confirm("Delete Grid? This cannot be undone")
             console.log(answer)
             if (answer) {
-                fetch(`${apiUrl}/deleteGrid/${item.gridName}`)
+                fetch(`${apiurl}/deleteGrid/${item.gridName}`)
                 .then( response => response.json())
                 .then( data => {
                     console.log(data);

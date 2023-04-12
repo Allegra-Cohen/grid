@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 
-export default function LoadBox({text, onKeyPress, apiUrl}){
+export default function LoadBox({text, onKeyPress, apiurl}){
 
 	  return (
 	    <div className={"LoadBox"}>
@@ -10,7 +10,7 @@ export default function LoadBox({text, onKeyPress, apiUrl}){
       	     (evt) => {
      	        if (evt.key === "Enter") {
      	        	let text = evt.target.value;
-			        fetch(`${apiUrl}/loadGrid/${text}`)
+			        fetch(`${apiurl}/loadGrid/${text}`)
 			            .then( response => response.json())
 			            .then( response => {console.log(response);
 			                console.log(response);

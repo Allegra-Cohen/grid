@@ -8,7 +8,7 @@ import './info.css';
 import './Spinner.css';
 
 
-function CreatePage({apiUrl}) {
+function CreatePage({apiurl}) {
 
 	const [grids, setGrids] = useState([]);
 	const [filepath, setFilepath] = useState([]);
@@ -21,7 +21,7 @@ function CreatePage({apiUrl}) {
 	const [waiting, setWaiting] = useState(false);
 
 	useEffect(() => {
-        fetch(`${apiUrl}/showGrids/`)
+        fetch(`${apiurl}/showGrids/`)
             .then( response => response.json())
             .then( data => {
                 setGrids(data.grids);
@@ -57,7 +57,7 @@ function CreatePage({apiUrl}) {
     		}
     		setWaiting(true)
     		setError(false)
-	    	fetch(`${apiUrl}/loadNewGrid/${supercorpus}/${rowFilename}/${filename}/${text}/`)
+	    	fetch(`${apiurl}/loadNewGrid/${supercorpus}/${rowFilename}/${filename}/${text}/`)
 	            .then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);
