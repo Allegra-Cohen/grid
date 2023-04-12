@@ -1,13 +1,14 @@
-from cluster_generator import ClusterGenerator
-from corpus import Corpus
-from document import Document
-from linguist import Linguist
-from mathematician import generate_clusters
-from mathematician import get_best_initial_model
-from mathematician import get_best_initial_model_k
-from mathematician import quality_scores
-from mathematician import run_expect_max
 import random
+
+from .cluster_generator import ClusterGenerator
+from .corpus import Corpus
+from .document import Document
+from .linguist import Linguist
+from .mathematician import generate_clusters
+from .mathematician import get_best_initial_model
+from .mathematician import get_best_initial_model_k
+from .mathematician import quality_scores
+from .mathematician import run_expect_max
 
 class Surdeanu2005(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):

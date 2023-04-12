@@ -1,16 +1,16 @@
-from cluster_generator import ClusterGenerator
-from corpus import Corpus
-from document import Document
-from linguist import Linguist
-from mathematician import C_score
-from mathematician import cosine_similarity
-from mathematician import betweenness
-from mathematician import withinness
-from mathematician import get_composite
-from mathematician import check_convergence
-import random
 import numpy as np
+import random
 
+from .cluster_generator import ClusterGenerator
+from .corpus import Corpus
+from .document import Document
+from .linguist import Linguist
+from .mathematician import C_score
+from .mathematician import cosine_similarity
+from .mathematician import betweenness
+from .mathematician import withinness
+from .mathematician import get_composite
+from .mathematician import check_convergence
 
 class SoftKMeans(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):

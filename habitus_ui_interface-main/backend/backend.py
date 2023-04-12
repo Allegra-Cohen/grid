@@ -1,11 +1,12 @@
-from corpus import Corpus
-from grid import Grid
-from cluster import Cluster
-from linguist import Linguist
-from row import Row
-import corpus_parser
 import os.path
 import pandas as pd
+
+from . import corpus_parser
+from .cluster import Cluster
+from .corpus import Corpus
+from .grid import Grid
+from .linguist import Linguist
+from .row import Row
 
 class Backend():
 	def __init__(self, path: str):
