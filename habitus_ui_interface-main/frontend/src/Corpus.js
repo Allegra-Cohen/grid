@@ -1,5 +1,6 @@
 import {useDrag} from "react-dnd";
 import {useId, useEffect, useState} from "react";
+import noMetadata from './Metadata.js';
 
 function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
     const [{ isDragging }, dragRef] = useDrag({
@@ -18,7 +19,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
                         .then( response => {
                         if (isActive){
                             activateSentence();
-                            onChange([]);
+                            onChange(noMetadata);
                         } else {
                             activateSentence(text);
                             onChange(response);

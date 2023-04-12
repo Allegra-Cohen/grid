@@ -13,6 +13,7 @@ import time
 import pandas as pd
 import os
 import shutil
+from beliefs import Beliefs
 
 app = FastAPI()
 
@@ -34,6 +35,7 @@ class UvicornFrontend(Frontend):
         self.clicked_col = None
         self.clicked_row = None
         self.track_actions = {'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
+        self.beliefs = Beliefs(path, "beliefs.tsv", "training_beliefs.tsv") // TODO: read this somewhere else
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -177,8 +179,19 @@ class UvicornFrontend(Frontend):
 
     def sentence_click(self, text: str):
         document = next(document for document in self.grid.clusters[self.clicked_col].documents if document.readable == text)
+        text_index = text[0:text.index(".")]
+        beliefs = self.beliefs.ground(int(text_index), text, 5)
         self.update_track_actions(['human', 'click', time.time(), 'sentence', text, None])
-        return [document.pre_context, text.split('.',1)[1], document.post_context]
+        # return [document.pre_context, text.split('.',1)[1], document.post_context]
+        metadata = {
+            "context": {
+                "pre": document.pre_context,
+                "at": text.split('.',1)[1],
+                "post": document.post_context
+            },
+            "beliefs": [belief.to_json() for belief in beliefs]
+        }
+        return metadata
 
     # This moves the sentence from the currently clicked_col and clicked_row to
     # the new row and column.

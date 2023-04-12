@@ -18,6 +18,8 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Link } from "react-router-dom";
 import './Spinner.css';
+import Beliefs from './Beliefs';
+import noMetadata from './Metadata.js';
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
@@ -25,7 +27,7 @@ function App({apiUrl}) {
     const [filename, setFilename] = useState();
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
-    const [context, setContext] = useState([]);
+    const [metadata, setMetadata] = useState(noMetadata);
     const [gridRows, setGridRows] = useState({})
     const [colNumToName, setColNumToName] = useState({})
     const [frozenColumns, setFrozenColumns] = useState([])
@@ -104,7 +106,7 @@ function App({apiUrl}) {
 
     <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents = {rowContents} onChange={
       (evt) => {setCorpus(evt);
-                setContext('')}
+                setMetadata(noMetadata)}
        }
        onDrop={
         (evt) => {
@@ -113,7 +115,7 @@ function App({apiUrl}) {
                   setCorpus(evt.clicked_sentences);
                   setGridRows(evt.grid);
                   setColNumToName(evt.col_num_to_name);
-                  setContext('')}
+                  setMetadata(noMetadata)}
        }
        onFooter={
         (evt) => {
@@ -186,7 +188,7 @@ function App({apiUrl}) {
       <Corpus sentences={corpus}
       onChange={(evt) => {console.log(evt);
                           console.log('sentence click!');
-                          setContext(evt)}}
+                          setMetadata(evt)}}
        apiUrl={apiUrl} />
        </div>
        <div style={{
