@@ -73,7 +73,7 @@ class Corpus():
 	def save_vectors(self, documents: list[Document], preexisting = None):
 		print("Couldn't find vector files. Calculating vector embeddings ... \n ")
 		if not self.model:
-			self.model = KeyedVectors.load_word2vec_format(self.model_filename, no_header = True)
+			self.model = KeyedVectors.load_word2vec_format(self.model_filename) # , no_header = True)
 		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, self.model, self.tfidf, self.linguist.tfidf_vectorizer, None, self.anchor, None, preexisting)
 		np.save(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.npy', doc_distances)
 		with open(self.path + self.clean_supercorpus_filename + '_doc_vecs_lem.json', 'w') as file:
