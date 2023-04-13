@@ -106,16 +106,15 @@ class Beliefs():
 			data_frame = pandas.read_table(self.beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
 			beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
 			vectors = [self.vectorize(belief.belief) for belief in beliefs]
-			lists = [vector.tolist() for vector in vectors]
 			with open(self.vectors_filepath, "w", encoding = self.encoding) as file:
 				header = f"{len(vectors)} {len(vectors[0])}"
 				print(header, file = file)
-				for index, list in enumerate(lists):
-					strings = [str(value) for value in list]
+				for index, vector in enumerate(vectors):
+					strings = [str(value) for value in vector.tolist()]
 					line = str(index) + " " + " ".join(strings)
 					print(line, file = file)
 			self.beliefs = beliefs
-			return {'success': True, 'beliefs_file': self.vectors_filepath}
+			return {'success': True, 'beliefs_file': self.beliefs_filepath}
 		except:
 			print(f"{beliefs_filepath} could not be processed.")
 			return {'success': False, 'beliefs_file': None}
