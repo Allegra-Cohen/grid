@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Gallery from './Gallery';
 import CreatePage from './CreatePage';
 import ChangeCorpus from './ChangeCorpus';
+import ChangeBeliefs from './ChangeBeliefs';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -18,6 +19,7 @@ root.render(
     <Route path="/" element={<Gallery apiurl="." />}/>
     <Route path="/create" element={<CreatePage apiurl="." />}/>
     <Route path="/changeCorpus" element={<ChangeCorpus apiurl="." />}/>
+    <Route path="/changeBeliefs" element={<ChangeBeliefs apiurl="." />}/>
     <Route path="/grid" element={<App apiurl="."/>}/>
   </Routes>
   </BrowserRouter>

@@ -264,6 +264,10 @@ async def showGrids():
 async def processSupercorpus(supercorpusFilepath: str):
     return frontend.backend.process_supercorpus(fromHex(supercorpusFilepath))
 
+@app.get("/processBeliefs/{beliefsFilepath}")
+async def processBeliefs(beliefsFilepath: str):
+    return frontend.backend.process_beliefs(fromHex(beliefsFilepath))
+
 @app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
     return frontend.backend.set_superfiles(corpusFilename, rowFilename)
