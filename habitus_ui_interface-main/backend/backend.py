@@ -1,23 +1,15 @@
-import json
-import numpy as np
 import os.path
 import pandas as pd
-import shutil
 
 from . import corpus_parser
-from .beliefs import Belief
 from .cluster import Cluster
 from .corpus import Corpus
 from .grid import Grid
 from .linguist import Linguist
 from .row import Row
-from gensim.models import KeyedVectors
 
 class Backend():
 	def __init__(self, path: str):
-		self.encoding = "utf-8"
-		self.model_filename = "../process_files/glove.6B.300d.txt"
-
 		self.path = path
 		self.supercorpus_filename = None
 		self.clean_supercorpus_filename = None
@@ -61,42 +53,6 @@ class Backend():
 		print(f"Corpus path {supercorpus_filepath} doesn't exist")
 		return {'success': False, 'corpus_file': None, 'rows_file': None}
 
-	def vectorize(self, text: str, model) -> list[float]:
-		words = self.linguist.tokenize(text) # TODO: clean these up
-		lower_words = [word.lower() for word in words]
-		vector_words = [word for word in lower_words if word in model]
-		if vector_words:
-			vectors = [np.array(model[word]) for word in vector_words]
-		else:
-			vectors = [np.array([np.nan] * len(model['dog']))]
-		sum = np.sum(vectors, axis = 0)
-		length = np.linalg.norm(sum, axis = 0, ord = 2)
-		norm = sum / length
-		list = [str(value) for value in norm.tolist()]
-		print(list) # need a vector of floats
-		return list
-
-	# Read in the beliefs in beliefs_filepath.  For each belief, add a column for the vectors and
-	# then save the file as beliefs.csv. 
-	def process_beliefs(self, beliefs_filepath):
-		try:
-			copied_beliefs_filepath = self.path + "beliefs.tsv"
-			vectorized_beliefs_filepath = self.path + "beliefs-vectors.txt"			
-			shutil.copyfile(beliefs_filepath, copied_beliefs_filepath)
-			data_frame = pd.read_table(copied_beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
-			beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
-			model = KeyedVectors.load_word2vec_format(self.model_filename) # , no_header = True)
-			vectors = [self.vectorize(belief.belief, model) for belief in beliefs]
-			with open(vectorized_beliefs_filepath, "w", encoding = self.encoding) as file:
-				header = f"{len(vectors)} {len(vectors[0])}"
-				print(header, file = file)
-				for index, vector in enumerate(vectors):
-					line = str(index) + " " + " ".join(vector)
-					print(line, file = file)
-			return {'success': True, 'beliefs_file': vectorized_beliefs_filepath}
-		except:
-			print(f"{beliefs_filepath} could not be processed.")
-			return {'success': False, 'beliefs_file': None}
 
 	def set_superfiles(self, supercorpus_filename, row_filename):
 		if os.path.isfile(self.path + supercorpus_filename) and os.path.isfile(self.path + row_filename):
@@ -176,23 +132,3 @@ class Backend():
 					machine_clusters.append(cluster)
 
 		return frozen_clusters + seeded_clusters + machine_clusters # Need to be in the right order
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
