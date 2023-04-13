@@ -3,6 +3,7 @@ import numpy
 import pandas
 import random
 
+from .linguist import Linguist
 from gensim.models import KeyedVectors
 
 class Belief:
@@ -33,24 +34,12 @@ class Belief:
 		}
 
 class Beliefs():
-	def __init__(self, path: str, prev_beliefs: str):
+	def __init__(self, path: str, linguist: Linguist):
 		self.encoding = "utf-8"
-		if prev_beliefs:
-			# Only read these once, if possible.
-			self.beliefs = prev_beliefs.beliefs
-			self.vectors = prev_beliefs.vectors
-			self.model = prev_beliefs.model
-		else:
-			try:
-				data_frame = pandas.read_table(path + "beliefs.tsv", index_col = 0, header = 0, encoding = self.encoding)
-				self.beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
-				self.vectors = KeyedVectors.load_word2vec_format(path + "beliefs-vectors.txt")
-				self.model = KeyedVectors.load_word2vec_format(path + "glove.6B.300d.txt")
-
-			except:
-				self.beliefs = None
-				self.vectors = None
-				self.model = None
+		self.path = path
+		self.linguist = linguist
+		self.reset()
+		self.model = None # The model will be sticky because it doesn't change.
 		# if unique_filename:
 		# 	try:
 		# 		groundings_file_name = unique_filename + "_beliefs.tsv"
@@ -65,6 +54,22 @@ class Beliefs():
 	# 		lines = [line.rstrip() for line in file]
 	# 		beliefs = [[int(grounding_index) for grounding_index in line.split("\t")] for line in lines]
 	# 	return beliefs
+
+	def load(self) -> None:
+		try:
+			if not self.beliefs:
+				data_frame = pandas.read_table(self.path + "beliefs.tsv", index_col = 0, header = 0, encoding = self.encoding)
+				self.beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
+			if not self.vectors:
+				self.vectors = KeyedVectors.load_word2vec_format(self.path + "beliefs-vectors.txt")
+			if not self.model:
+				self.model = KeyedVectors.load_word2vec_format(self.path + "glove.6B.300d.txt")
+		except:
+			self.reset()
+
+	def reset(self) -> None:
+		self.beliefs = None
+		self.vectors = None
 
 	def random_ground(self, text_index: int, text: str, k: int, model) -> list[Belief]:
 		if self.beliefs:
@@ -91,14 +96,14 @@ class Beliefs():
 		return norm
 
 	def ranked_ground(self, text_index: int, text: str, k: int) -> list[Belief]:
-		if self.beliefs and self.vectors:
+		if self.beliefs and self.vectors and self.model:
 			vector = self.vectorize(text)
-			key_similarity_list = self.model.similar_by_vector(vector, k, None)
-			beliefs = [self.beliefs[index] for index, similarity in key_similarity_list]
+			key_similarity_list = self.vectors.similar_by_vector(vector, k, None)
+			index_similarity_list = [(int(key), similarity) for key, similarity in key_similarity_list]
+			beliefs = [self.beliefs[index] for index, _ in index_similarity_list]
 			return beliefs
 		else:
 			return []
-
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
 		return self.ranked_ground(text_index, text, k)
