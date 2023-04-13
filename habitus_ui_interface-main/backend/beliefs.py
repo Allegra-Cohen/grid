@@ -43,6 +43,8 @@ class Beliefs():
 		self.linguist = linguist
 		self.reset()
 		self.model = None # The model will be sticky because it doesn't change.
+		self.width = 0
+		self.empty_vector = []
 
 	def load(self) -> None:
 		try:
@@ -50,11 +52,17 @@ class Beliefs():
 				data_frame = pandas.read_table(self.beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
 				self.beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
 			if not self.vectors:
+				# The width of these vectors should match the width of the model!
 				self.vectors = KeyedVectors.load_word2vec_format(self.vectors_filepath)
-			if not self.model:
-				self.model = KeyedVectors.load_word2vec_format(self.model_filepath)
+			self.load_model()
 		except:
 			self.reset()
+
+	def load_model(self):
+		if not self.model:
+			self.model = KeyedVectors.load_word2vec_format(self.model_filepath)
+			self.width = len(self.model['dog'])
+			self.empty_vector = numpy.array([numpy.nan] * self.width)
 
 	def reset(self) -> None:
 		self.beliefs = None
@@ -70,16 +78,16 @@ class Beliefs():
 			return []
 
 	def vectorize(self, text: str):
-		words = self.linguist.tokenize(text) # TODO: clean these up
-		lower_words = [word.lower() for word in words]
-		vector_words = [word for word in lower_words if word in self.model]
+		clean_text = self.linguist.clean_text(text, lemmatize = True)
+		words = self.linguist.tokenize(clean_text) # These are now lowercase.
+		vector_words = [word for word in words if word in self.model]
 		if vector_words:
 			vectors = [numpy.array(self.model[word]) for word in vector_words]
+			sum = numpy.sum(vectors, axis = 0)
+			length = numpy.linalg.norm(sum, axis = 0, ord = 2)
+			norm = sum / length
 		else:
-			vectors = [numpy.array([numpy.nan] * len(self.model['dog']))]
-		sum = numpy.sum(vectors, axis = 0)
-		length = numpy.linalg.norm(sum, axis = 0, ord = 2)
-		norm = sum / length
+			norm = self.empty_vector
 		return norm
 
 	def ranked_ground(self, text_index: int, text: str, k: int) -> list[Belief]:
@@ -99,8 +107,7 @@ class Beliefs():
 	# then save the file as beliefs.csv. 
 	def process(self, beliefs_filepath: str):
 		try:
-			if not self.model:
-				self.model = KeyedVectors.load_word2vec_format(self.model_filepath)
+			self.load_model()
 			self.reset()
 			shutil.copyfile(beliefs_filepath, self.beliefs_filepath)
 			data_frame = pandas.read_table(self.beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
