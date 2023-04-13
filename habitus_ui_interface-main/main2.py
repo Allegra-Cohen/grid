@@ -32,7 +32,7 @@ class UvicornFrontend(Frontend):
         self.clicked_col = None
         self.clicked_row = None
         self.track_actions = {'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
-        self.beliefs = Beliefs(path, None, None)
+        self.beliefs = Beliefs(path, None)
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -94,7 +94,7 @@ class UvicornFrontend(Frontend):
     def load_grid(self, unique_filename):
         self.round = 0
         grid = self.backend.load_grid(unique_filename, self.clustering_algorithm)
-        self.beliefs = Beliefs(self.path, self.beliefs, unique_filename)
+        self.beliefs = Beliefs(self.path, self.beliefs)
         if grid != None: # If the grid exists, load it. If it doesn't, keep the current grid.
             self.grid = grid
         self.copy_on = False
@@ -266,7 +266,9 @@ async def processSupercorpus(supercorpusFilepath: str):
 
 @app.get("/processBeliefs/{beliefsFilepath}")
 async def processBeliefs(beliefsFilepath: str):
-    return frontend.backend.process_beliefs(fromHex(beliefsFilepath))
+    result = frontend.backend.process_beliefs(fromHex(beliefsFilepath))
+    frontend.beliefs = None
+    return result
 
 @app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
@@ -276,7 +278,6 @@ async def setSuperfiles(corpusFilename: str, rowFilename: str):
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     print("loadNewGrid", newFilename, newAnchor)
     if frontend.backend.set_superfiles(corpusFilename, rowFilename):
-        frontend.beliefs = Beliefs(frontend.path, frontend.beliefs, "example") # take corpusFilename - .csv
         return frontend.load_new_grid(newFilename, newAnchor)
     else:
         return False

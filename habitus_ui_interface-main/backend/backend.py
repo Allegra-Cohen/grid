@@ -80,7 +80,7 @@ class Backend():
 	# then save the file as beliefs.csv. 
 	def process_beliefs(self, beliefs_filepath):
 		try:
-			copied_beliefs_filepath = self.path + "beliefs.csv"
+			copied_beliefs_filepath = self.path + "beliefs.tsv"
 			vectorized_beliefs_filepath = self.path + "beliefs-vectors.txt"			
 			shutil.copyfile(beliefs_filepath, copied_beliefs_filepath)
 			data_frame = pd.read_table(copied_beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
