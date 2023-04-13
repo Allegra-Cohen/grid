@@ -2,6 +2,7 @@ import math
 import numpy
 import pandas
 import random
+import shutil
 
 from .linguist import Linguist
 from gensim.models import KeyedVectors
@@ -36,34 +37,22 @@ class Belief:
 class Beliefs():
 	def __init__(self, path: str, linguist: Linguist):
 		self.encoding = "utf-8"
-		self.path = path
+		self.beliefs_filepath = path + "beliefs.tsv"
+		self.vectors_filepath = path + "beliefs-vectors.txt"
+		self.model_filepath = path + "glove.6B.300d.txt"
 		self.linguist = linguist
 		self.reset()
 		self.model = None # The model will be sticky because it doesn't change.
-		# if unique_filename:
-		# 	try:
-		# 		groundings_file_name = unique_filename + "_beliefs.tsv"
-		# 		self.document_to_beliefs = self.read_groundings(path, groundings_file_name)
-		# 	except:
-		# 		self.document_to_beliefs = None
-		# else:
-		# 	self.document_to_beliefs = None
-
-	# def read_groundings(self, path: str, groundings_file_name: str) -> list[list[int]]:
-	# 	with open(path + groundings_file_name, "r", encoding = self.encoding) as file:
-	# 		lines = [line.rstrip() for line in file]
-	# 		beliefs = [[int(grounding_index) for grounding_index in line.split("\t")] for line in lines]
-	# 	return beliefs
 
 	def load(self) -> None:
 		try:
 			if not self.beliefs:
-				data_frame = pandas.read_table(self.path + "beliefs.tsv", index_col = 0, header = 0, encoding = self.encoding)
+				data_frame = pandas.read_table(self.beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
 				self.beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
 			if not self.vectors:
-				self.vectors = KeyedVectors.load_word2vec_format(self.path + "beliefs-vectors.txt")
+				self.vectors = KeyedVectors.load_word2vec_format(self.vectors_filepath)
 			if not self.model:
-				self.model = KeyedVectors.load_word2vec_format(self.path + "glove.6B.300d.txt")
+				self.model = KeyedVectors.load_word2vec_format(self.model_filepath)
 		except:
 			self.reset()
 
@@ -91,8 +80,6 @@ class Beliefs():
 		sum = numpy.sum(vectors, axis = 0)
 		length = numpy.linalg.norm(sum, axis = 0, ord = 2)
 		norm = sum / length
-		# list = [str(value) for value in norm.tolist()]
-		# print(list) # need a vector of floats
 		return norm
 
 	def ranked_ground(self, text_index: int, text: str, k: int) -> list[Belief]:
@@ -107,3 +94,28 @@ class Beliefs():
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
 		return self.ranked_ground(text_index, text, k)
+
+	# Read in the beliefs in beliefs_filepath.  For each belief, add a column for the vectors and
+	# then save the file as beliefs.csv. 
+	def process(self, beliefs_filepath: str):
+		try:
+			if not self.model:
+				self.model = KeyedVectors.load_word2vec_format(self.model_filepath)
+			self.reset()
+			shutil.copyfile(beliefs_filepath, self.beliefs_filepath)
+			data_frame = pandas.read_table(self.beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
+			beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
+			vectors = [self.vectorize(belief.belief) for belief in beliefs]
+			lists = [vector.tolist() for vector in vectors]
+			with open(self.vectors_filepath, "w", encoding = self.encoding) as file:
+				header = f"{len(vectors)} {len(vectors[0])}"
+				print(header, file = file)
+				for index, list in enumerate(lists):
+					strings = [str(value) for value in list]
+					line = str(index) + " " + " ".join(strings)
+					print(line, file = file)
+			self.beliefs = beliefs
+			return {'success': True, 'beliefs_file': self.vectors_filepath}
+		except:
+			print(f"{beliefs_filepath} could not be processed.")
+			return {'success': False, 'beliefs_file': None}
