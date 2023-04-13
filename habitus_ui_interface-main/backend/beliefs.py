@@ -93,10 +93,13 @@ class Beliefs():
 	def ranked_ground(self, text_index: int, text: str, k: int) -> list[Belief]:
 		if self.beliefs and self.vectors and self.model:
 			vector = self.vectorize(text)
-			key_similarity_list = self.vectors.similar_by_vector(vector, k, None)
-			index_similarity_list = [(int(key), similarity) for key, similarity in key_similarity_list]
-			beliefs = [self.beliefs[index] for index, _ in index_similarity_list]
-			return beliefs
+			if vector is not self.empty_vector:
+				key_similarity_list = self.vectors.similar_by_vector(vector, k, None)
+				index_similarity_list = [(int(key), similarity) for key, similarity in key_similarity_list]
+				beliefs = [self.beliefs[index] for index, _ in index_similarity_list]
+				return beliefs
+			else:
+				return []
 		else:
 			return []
 
