@@ -71,7 +71,7 @@ class Backend():
 		sum = np.sum(vectors, axis = 0)
 		length = np.linalg.norm(sum, axis = 0, ord = 2)
 		norm = sum / length
-		list = norm.tolist() # put these in different file soon
+		list = [str(value) for value in norm.tolist()]
 		print(list) # need a vector of floats
 		return list
 
@@ -79,14 +79,18 @@ class Backend():
 	# then save the file as beliefs.csv. 
 	def process_beliefs(self, beliefs_filepath):
 		try:
+			# copy the file wholesale to beliefs.csv because will need to display
 			data_frame = pd.read_table(beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
 			beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
 			model = KeyedVectors.load_word2vec_format(self.model_filename) # , no_header = True)
-			vectors = [json.dumps(self.vectorize(belief.belief, model)) for belief in beliefs]
-			data_frame["vector"] = vectors
-
-			vectorized_beliefs_filepath = self.path + "beliefs.csv"
-			data_frame.to_csv(vectorized_beliefs_filepath)
+			vectors = [self.vectorize(belief.belief, model) for belief in beliefs]
+			vectorized_beliefs_filepath = self.path + "beliefs-vectors.csv"			
+			with open(vectorized_beliefs_filepath, "w", encoding = self.encoding) as file:
+				header = f"{len(vectors)} {len(vectors[0])}"
+				file.write(header)
+				for vector in vectors:
+					line = " ".join(vector)
+					file.write(line)
 			return {'success': True, 'beliefs_file': vectorized_beliefs_filepath}
 		except:
 			print(f"{beliefs_filepath} could not be processed.")
