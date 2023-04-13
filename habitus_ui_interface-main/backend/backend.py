@@ -2,6 +2,7 @@ import json
 import numpy as np
 import os.path
 import pandas as pd
+import shutil
 
 from . import corpus_parser
 from .beliefs import Belief
@@ -79,18 +80,19 @@ class Backend():
 	# then save the file as beliefs.csv. 
 	def process_beliefs(self, beliefs_filepath):
 		try:
-			# copy the file wholesale to beliefs.csv because will need to display
-			data_frame = pd.read_table(beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
+			copied_beliefs_filepath = self.path + "beliefs.csv"
+			vectorized_beliefs_filepath = self.path + "beliefs-vectors.txt"			
+			shutil.copyfile(beliefs_filepath, copied_beliefs_filepath)
+			data_frame = pd.read_table(copied_beliefs_filepath, index_col = 0, header = 0, encoding = self.encoding)
 			beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
 			model = KeyedVectors.load_word2vec_format(self.model_filename) # , no_header = True)
 			vectors = [self.vectorize(belief.belief, model) for belief in beliefs]
-			vectorized_beliefs_filepath = self.path + "beliefs-vectors.csv"			
 			with open(vectorized_beliefs_filepath, "w", encoding = self.encoding) as file:
 				header = f"{len(vectors)} {len(vectors[0])}"
-				file.write(header)
-				for vector in vectors:
-					line = " ".join(vector)
-					file.write(line)
+				print(header, file = file)
+				for index, vector in enumerate(vectors):
+					line = str(index) + " " + " ".join(vector)
+					print(line, file = file)
 			return {'success': True, 'beliefs_file': vectorized_beliefs_filepath}
 		except:
 			print(f"{beliefs_filepath} could not be processed.")
