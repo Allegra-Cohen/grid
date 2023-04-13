@@ -53,14 +53,14 @@ class Beliefs():
 				self.beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
 			if not self.vectors:
 				# The width of these vectors should match the width of the model!
-				self.vectors = KeyedVectors.load_word2vec_format(self.vectors_filepath)
+				self.vectors = KeyedVectors.load_word2vec_format(self.vectors_filepath, no_header = True)
 			self.load_model()
 		except:
 			self.reset()
 
 	def load_model(self):
 		if not self.model:
-			self.model = KeyedVectors.load_word2vec_format(self.model_filepath)
+			self.model = KeyedVectors.load_word2vec_format(self.model_filepath, no_header = True)
 			self.width = len(self.model['dog'])
 			self.empty_vector = numpy.array([numpy.nan] * self.width)
 
@@ -117,8 +117,8 @@ class Beliefs():
 			beliefs: list[Belief] = [Belief(index, values) for index, values in enumerate(data_frame.values.tolist())]
 			vectors = [self.vectorize(belief.belief) for belief in beliefs]
 			with open(self.vectors_filepath, "w", encoding = self.encoding) as file:
-				header = f"{len(vectors)} {len(vectors[0])}"
-				print(header, file = file)
+				# header = f"{len(vectors)} {len(vectors[0])}"
+				# print(header, file = file)
 				for index, vector in enumerate(vectors):
 					strings = [str(value) for value in vector.tolist()]
 					line = str(index) + " " + " ".join(strings)
