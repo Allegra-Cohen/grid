@@ -266,8 +266,7 @@ async def processSupercorpus(supercorpusFilepath: str):
 
 @app.get("/processBeliefs/{beliefsFilepath}")
 async def processBeliefs(beliefsFilepath: str):
-    result = frontend.backend.process_beliefs(fromHex(beliefsFilepath))
-    frontend.beliefs.reset()
+    result = frontend.beliefs.process(fromHex(beliefsFilepath))
     return result
 
 @app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
