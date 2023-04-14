@@ -6,7 +6,7 @@ import {useDrag} from "react-dnd";
 import { Link } from "react-router-dom";
 import Trash from './Trash'
 import './info.css';
-
+import {toQuery} from "./toEncoding";
 
 function GridIcon({gridName, handleGridClick, apiurl}) {
 
@@ -36,7 +36,8 @@ function Gallery({apiurl}) {
 
 	const handleGridClick = (gridName) => {
 		console.log(gridName)
-		fetch(`${apiurl}/loadGrid/${gridName}`);
+        let query = toQuery([["text", gridName]]);
+		fetch(`${apiurl}/loadGrid/${query}`);
 	}
 
 	useEffect(() => {

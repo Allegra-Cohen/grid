@@ -2,6 +2,7 @@ import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import "./Corpus.css"
 import "./Grid.css"
+import {toQuery} from "./toEncoding";
 
 function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiurl}){
   
@@ -14,7 +15,8 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
         drop: (item) => {
-            fetch(`${apiurl}/drag/${rowName}/${colName}/${item.text}`)
+            var query = toQuery([["row", rowName], ["col", colName], ["sent", item.text]]);
+            fetch(`${apiurl}/drag/${query}`)
             .then( response => response.json())
             .then( data => {
                 console.log('data', data);
@@ -37,7 +39,8 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
 
         onClick={
       (evt) => {
-        fetch(`${apiurl}/click/${rowName}/${colName}`)
+        let query = toQuery([["row", rowName], ["col", colName]]);
+        fetch(`${apiurl}/click/${query}`)
             .then( response => response.json())
             .then( response => {console.log(response);
                 console.log(colName);
@@ -76,8 +79,8 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}){
     onKeyDown={
             (evt) => {
                 if(evt.key=="Enter"){
-                    let text = evt.target.value.replace("\/", " | ").replace(/[.,#!$%\^&\*;:{}=\-_`~()]/g," ");
-                    fetch(`${apiurl}/editName/${id}/${text}`)
+                    let query = toQuery([["id", id], ["name", evt.target.value]])
+                    fetch(`${apiurl}/editName/${query}`)
                     .then( response => response.json())
                     .then( response => {onFooter(response);
                         console.log("!!!", response.frozen_columns)
@@ -87,7 +90,8 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}){
                 }
                 }}/>}
     {frozenColumns.includes(id) ? <div> <button onClick={(evt) => {
-                    fetch(`${apiurl}/deleteFrozenColumn/${id}`)
+                    let query = toQuery([["id", id]])
+                    fetch(`${apiurl}/deleteFrozenColumn/${query}`)
                     .then( response => response.json())
                     .then( response => {onDeleteFrozen(response);
                     });

@@ -3,7 +3,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import {useId, useEffect, useState} from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {toHex} from "./toHex"
+import {toQuery} from "./toEncoding"
 import './info.css';
 import './Spinner.css';
 
@@ -24,8 +24,9 @@ export default function ChangeCorpus({apiurl}) {
     const handleButton = () => {
     	if (filepath.length > 0){
 			setWaiting(true);
-			console.log('eee')
-			fetch(`${apiurl}/processSupercorpus/${toHex(filepath)}/`)
+			console.log('eee');
+			let query = toQuery([["supercorpusFilepath", filepath]]);
+			fetch(`${apiurl}/processSupercorpus/${query}`)
 				.then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);

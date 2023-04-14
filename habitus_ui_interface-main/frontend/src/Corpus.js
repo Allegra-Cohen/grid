@@ -1,6 +1,6 @@
 import {useDrag} from "react-dnd";
 import {useId, useEffect, useState} from "react";
-import noMetadata from './Metadata.js';
+import {toQuery} from "./toEncoding";
 
 function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
     const [{ isDragging }, dragRef] = useDrag({
@@ -14,7 +14,8 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
                 style={{border: isActive ? '2px solid #BE1C06' : null}}
 
                 onClick={(evt) => {
-                        fetch(`${apiurl}/sentenceClick/${text}`)
+                        let query = toQuery([["text", text]]);
+                        fetch(`${apiurl}/sentenceClick/${query}`)
                         .then( response => response.json())
                         .then( response => {
                         if (isActive){

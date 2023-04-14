@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {toQuery} from "./toEncoding";
 
 
 export default function SaveAsBox({text, apiurl}){
@@ -9,8 +10,8 @@ export default function SaveAsBox({text, apiurl}){
 	      onKeyPress={
       	     (evt) => {
      	        if (evt.key === "Enter") {
-     	        	let text = evt.target.value;
-			        fetch(`${apiurl}/saveAsGrid/${text}`)
+     	        	let query = toQuery([["text", evt.target.value]]);
+			        fetch(`${apiurl}/saveAsGrid/${query}`)
 			            .then( response => response.json())
 			            .then( response => {console.log(response)})
 			            .then(evt.target.value = '')

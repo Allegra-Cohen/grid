@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {toHex} from "./toHex"
+import {toQuery} from "./toEncoding";
 
 
 export default function InputBox({text, onKeyPress, apiurl}){
@@ -11,9 +11,9 @@ export default function InputBox({text, onKeyPress, apiurl}){
 	      onKeyPress={
       	     (evt) => {
      	        if (evt.key === "Enter") {
-     	        	let text = toHex(evt.target.value);
      	        	if (evt.target.value.length > 0){
-				        fetch(`${apiurl}/textInput/${text}`)
+						let query = toQuery([["text", evt.target.value]]);
+						fetch(`${apiurl}/textInput/${query}`)
 				            .then( response => response.json())
 				            .then( response => {console.log(response);
 				                console.log(response);

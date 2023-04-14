@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import './Spinner.css';
 import Beliefs from './Beliefs';
 import noMetadata from './Metadata.js';
+import {toQuery} from "./toEncoding";
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
@@ -56,12 +57,13 @@ function App({apiurl}) {
     }
 
     const handleSaveAs = (saveAs) => {
-        fetch(`${apiurl}/saveAsGrid/${saveAs}`)
-            .then( response => response.json())
-            .then( data => {
-                setFilename(data.filename);
-            });
-}
+        let query = toQuery([["text", saveAs]]);
+        fetch(`${apiurl}/saveAsGrid/${query}`)
+                    .then( response => response.json())
+                    .then( data => {
+                        setFilename(data.filename);
+                    });
+    }
 
     const handleSaveClick = () => {
         if (saveAs) {
