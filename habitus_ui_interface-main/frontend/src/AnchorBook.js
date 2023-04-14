@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {toQuery} from "./toEncoding";
 
 export default function AnchorBook({anchorBook, onButtonClick, apiUrl}){
 
@@ -64,11 +65,13 @@ export default function AnchorBook({anchorBook, onButtonClick, apiUrl}){
 												setNewValue(evt.target.value)}} 
 							   placeholder='Extend anchor...' />
 						<button onClick={(evt) => {setNewKey(key); 
-												  fetch(`${apiUrl}/updateAnchorBook/${newKey}/${newValue}/'add'`).then(response => response.json()).then(response => {console.log(response); 
+												  let query = toQuery([["newKey", newKey], ["newValue", newValue], ["cmd", "add"]]);
+												  fetch(`${apiUrl}/updateAnchorBook/${query}`).then(response => response.json()).then(response => {console.log(response); 
 												  onButtonClick(response)}); 
 												  handleListClick('+'); setNewKey(''); setNewValue([]); evt.target.blur()}}>+</button>
 						<button onClick={(evt) => {setNewKey(key); 
-												  fetch(`${apiUrl}/updateAnchorBook/${newKey}/${newValue}/'remove'`).then(response => response.json()).then(response => {console.log(response); 
+												  let query = toQuery([["newKey", newKey], ["newValue", newValue], ["cmd", "remove"]]);
+												  fetch(`${apiUrl}/updateAnchorBook/${query}`).then(response => response.json()).then(response => {console.log(response); 
 												  onButtonClick(response)}); 
 												  handleListClick('-'); setNewKey(''); setNewValue([]); evt.target.blur()}}>-</button>
 						</div>
