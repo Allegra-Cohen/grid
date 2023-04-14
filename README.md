@@ -77,7 +77,7 @@ A last couple rules of operation:
 ### Preprocessing your corpus
 The above tutorial uses a corpus that we created for you, but you presumably want to curate your own! Click on the “create a corpus” button.
  
-This page asks for a filepath to a folder with text files in it. You can use .docx or .rtf files. *The name of the corpus comes from the name of the folder, and the default row labels of a Grid comes from the names of the text files.* For example, if you have three text files containing interviews with three different experts, you might want to name them “Expert A”, “Expert B”, and “Expert C”; if you do that, then text in your Grid will be organized by expert. (We go further into the rows issue in the FAQs section.)
+This page asks for a filepath to a folder with text files in it. You can use .doc, .docx, .txt or .rtf files. *The name of the corpus comes from the name of the folder, and the default row labels of a Grid comes from the names of the text files.* For example, if you have three text files containing interviews with three different experts, you might want to name them “Expert A”, “Expert B”, and “Expert C”; if you do that, then text in your Grid will be organized by expert. (We go further into the rows issue in the FAQs section.)
  
 Creating a corpus is simple, but it’s worth knowing what goes on behind the scenes. Clicking on — will trigger a series of events. First, the text is split into sentences and cleaned (see FAQs for how to deal with document delimitation.) This will produce a file `process_files/cleaned_[your_corpus_name]`. Row labels are also assigned to sentences, which produces `process_files/[your_corpus_name]_row_labels`. 
  
