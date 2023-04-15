@@ -1,8 +1,10 @@
 import math
+import nltk
 import numpy
 import pandas
 import random
 import shutil
+import string
 
 from .linguist import Linguist
 from gensim.models import KeyedVectors
@@ -40,11 +42,15 @@ class Beliefs():
 		self.beliefs_filepath = path + "beliefs.tsv"
 		self.vectors_filepath = path + "beliefs-vectors.txt"
 		self.model_filepath = path + "glove.6B.300d.txt"
-		self.linguist = linguist
 		self.reset()
 		self.model = None # The model will be sticky because it doesn't change.
 		self.width = 0
 		self.empty_vector = []
+
+		self.linguist = linguist
+		self.nlp = linguist.nlp
+		self.stopwords = set(nltk.corpus.stopwords.words('english') + list(string.punctuation) + ['', ' ', '…', 'also'])
+		self.parts_of_speech = set(['NOUN', 'PROPN', 'VERB', 'ADJ'])
 
 	def load(self) -> None:
 		try:
@@ -77,12 +83,25 @@ class Beliefs():
 		else:
 			return []
 
-	def vectorize(self, text: str):
+	def tokenize(self, text: str) -> list[str]:
+		words = self.nlp(text)
+		words = [word for word in words if word.lemma_ not in self.stopwords]
+		words = [word for word in words if word.pos_ in self.parts_of_speech]
+		tokens = [word.lemma_ for word in words]
+		return tokens
+
+	def tokenize_with_linguist(self, text: str) -> list [str]:
 		clean_text = self.linguist.clean_text(text, lemmatize = True)
-		words = self.linguist.tokenize(clean_text) # These are now lowercase.
-		vector_words = [word for word in words if word in self.model]
-		if vector_words:
-			vectors = [numpy.array(self.model[word]) for word in vector_words]
+		tokens = self.linguist.tokenize(clean_text) # These are now lowercase.
+		return tokens
+
+	def vectorize(self, text: str):
+		print(text)
+		tokens = self.tokenize(text)
+		print(tokens)
+		vector_tokens = [token for token in tokens if token in self.model]
+		if vector_tokens:
+			vectors = [numpy.array(self.model[token]) for token in vector_tokens]
 			sum = numpy.sum(vectors, axis = 0)
 			length = numpy.linalg.norm(sum, axis = 0, ord = 2)
 			norm = sum / length
@@ -104,7 +123,8 @@ class Beliefs():
 			return []
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
-		return self.ranked_ground(text_index, text, k)
+		indexless_text = text[text.index(' ') + 1:]
+		return self.ranked_ground(text_index, indexless_text, k)
 
 	# Read in the beliefs in beliefs_filepath.  For each belief, add a column for the vectors and
 	# then save the file as beliefs.csv. 
