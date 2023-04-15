@@ -22,9 +22,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class Text(BaseModel):
-    value: str
-
 class UvicornFrontend(Frontend):
     def __init__(self, path: str, k: int, clustering_algorithm: str):
         super().__init__(path)

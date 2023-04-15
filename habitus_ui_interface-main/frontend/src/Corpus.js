@@ -1,6 +1,7 @@
 import {useDrag} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import {toQuery} from "./toEncoding";
+import noMetadata from './Metadata.js';
 
 function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
     const [{ isDragging }, dragRef] = useDrag({

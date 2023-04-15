@@ -3,10 +3,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import {useId, useEffect, useState} from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {toHex} from "./toHex"
 import './info.css';
 import './Spinner.css';
-
+import {toQuery} from "./toEncoding";
 
 export default function ChangeBeliefs({apiurl}) {
 	const [filepath, setFilepath] = useState([]);
@@ -24,8 +23,8 @@ export default function ChangeBeliefs({apiurl}) {
     	if (filepath.length > 0){
 			setWaiting(true);
 			setFeedback(false);
-			console.log('eee')
-			fetch(`${apiurl}/processBeliefs/${toHex(filepath)}/`)
+			let query = toQuery([["filepath", filepath]]);
+			fetch(`${apiurl}/processBeliefs/${query}/`)
 				.then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);
