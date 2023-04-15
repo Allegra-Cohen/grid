@@ -2,7 +2,7 @@ import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
 import {toQuery} from "./toEncoding";
 
-export default function Trash({onChange, onDrop, apiUrl}){
+export default function Trash({onChange, onDrop, apiurl}){
  
     const [{ isOver }, dropRef] = useDrop({
         accept: 'gridIcon',
@@ -11,7 +11,7 @@ export default function Trash({onChange, onDrop, apiUrl}){
             console.log(answer)
             if (answer) {
                 let query = toQuery([["text", item.gridName]]);
-                fetch(`${apiUrl}/deleteGrid/${query}`)
+                fetch(`${apiurl}/deleteGrid/${query}`)
                 .then( response => response.json())
                 .then( data => {
                     console.log(data);

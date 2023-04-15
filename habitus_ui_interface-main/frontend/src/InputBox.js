@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {toQuery} from "./toEncoding";
 
 
-export default function InputBox({text, onKeyPress, apiUrl}){
+export default function InputBox({text, onKeyPress, apiurl}){
     const [textInput, setTextInput] = useState([]);
 
 	  return (
@@ -13,7 +13,7 @@ export default function InputBox({text, onKeyPress, apiUrl}){
      	        if (evt.key === "Enter") {
      	        	if (evt.target.value.length > 0){
 						let query = toQuery([["text", evt.target.value]]);
-						fetch(`${apiUrl}/textInput/${query}`)
+						fetch(`${apiurl}/textInput/${query}`)
 				            .then( response => response.json())
 				            .then( response => {console.log(response);
 				                console.log(response);
