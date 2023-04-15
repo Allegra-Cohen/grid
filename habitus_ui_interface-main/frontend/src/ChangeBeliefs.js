@@ -23,8 +23,8 @@ export default function ChangeBeliefs({apiurl}) {
     	if (filepath.length > 0){
 			setWaiting(true);
 			setFeedback(false);
-			let query = toQuery([["filepath", filepath]]);
-			fetch(`${apiurl}/processBeliefs/${query}/`)
+			let query = toQuery([["beliefsFilepath", filepath]]);
+			fetch(`${apiurl}/processBeliefs/${query}`)
 				.then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);
