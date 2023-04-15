@@ -1,11 +1,10 @@
-from nltk.tokenize import sent_tokenize
-
 import io
 import os
+import pandas as pd
 import sys
 import textract
-import pandas as pd
 
+from nltk.tokenize import sent_tokenize
 
 class Parser():
     def parse(self, text: str) -> list[str]:

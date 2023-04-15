@@ -1,4 +1,4 @@
-from document import Document
+from .document import Document
 
 # These are the columns of the Grid. Documents have membership in one or more clusters.
 class Cluster():
