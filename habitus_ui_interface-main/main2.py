@@ -81,6 +81,7 @@ class UvicornFrontend(Frontend):
 
     def load_new_grid(self, newFilename: str, newAnchor: str):
         k = 5
+        self.beliefs.load()
         self.grid = self.backend.get_grid(k, newAnchor, newFilename, self.clustering_algorithm)
         self.clicked_row, self.clicked_col = None, None
         self.update_track_actions(['human', 'new_grid', time.time(), 'grid', newAnchor, None])
