@@ -13,7 +13,7 @@ cymem==2.0.7
 docx2txt==0.8
 ebcdic==1.1.1
 eldar==0.0.8
-en-core-web-sm==3.4.1
+# en-core-web-sm==3.4.1
 extract-msg==0.28.7
 fastapi==0.80.0
 fst-pso==1.8.1
