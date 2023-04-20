@@ -1,27 +1,26 @@
+import App from './App';
+import ChangeBeliefs from './ChangeBeliefs';
+import ChangeCorpus from './ChangeCorpus';
+import CreatePage from './CreatePage';
+import Gallery from './Gallery';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Route, Routes  } from "react-router-dom";
+
 import './index.css';
-import reportWebVitals from './reportWebVitals';
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import { Link } from "react-router-dom";
-import Gallery from './Gallery';
-import CreatePage from './CreatePage';
-import ChangeCorpus from './ChangeCorpus';
-import ChangeBeliefs from './ChangeBeliefs';
-import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <React.StrictMode>
-  <BrowserRouter>
-  <Routes>
-    <Route path="/" element={<Gallery apiurl="." />}/>
-    <Route path="/create" element={<CreatePage apiurl="." />}/>
-    <Route path="/changeCorpus" element={<ChangeCorpus apiurl="." />}/>
-    <Route path="/changeBeliefs" element={<ChangeBeliefs apiurl="." />}/>
-    <Route path="/grid" element={<App apiurl="."/>}/>
-  </Routes>
-  </BrowserRouter>
-  </React.StrictMode>
+    <React.StrictMode>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Gallery apiurl="." />}/>
+                <Route path="/create" element={<CreatePage apiurl="." />}/>
+                <Route path="/changeCorpus" element={<ChangeCorpus apiurl="." />}/>
+                <Route path="/changeBeliefs" element={<ChangeBeliefs apiurl="." />}/>
+                <Route path="/grid" element={<App apiurl="."/>}/>
+            </Routes>
+        </BrowserRouter>
+    </React.StrictMode>
 );

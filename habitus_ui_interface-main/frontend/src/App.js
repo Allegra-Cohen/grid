@@ -1,26 +1,27 @@
-import './App.css';
-import Corpus from './Corpus.js'
-import Grid from  "./Grid"
-import RegenerateButton from  "./RegenerateButton"
-import CopyButton from  "./CopyButton"
-import './CopyButton.css'
-import './RegenerateButton.css'
-import InputBox from './InputBox'
-import './InputBox.css'
-import LoadBox from './LoadBox'
-import './LoadBox.css'
-import KButton from './KButton'
-import './KButton.css'
-import SynonymBook from './SynonymBook'
-import Trash from './Trash'
-import {useEffect, useState} from "react";
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Link } from "react-router-dom";
-import './Spinner.css';
+
 import Beliefs from './Beliefs';
+import Context from './Context';
+import CopyButton from  "./CopyButton"
+import Corpus from './Corpus.js'
+import { DndProvider } from 'react-dnd'
+import Grid from  "./Grid"
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import InputBox from './InputBox'
+import KButton from './KButton'
+import { Link } from "react-router-dom";
+import RegenerateButton from  "./RegenerateButton"
+
 import noMetadata from './Metadata.js';
 import {toQuery} from "./toEncoding";
+import {useEffect, useState} from "react";
+
+import './App.css';
+import './CopyButton.css'
+import './InputBox.css'
+import './KButton.css'
+import './LoadBox.css'
+import './RegenerateButton.css'
+import './Spinner.css';
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
@@ -198,12 +199,7 @@ function App({apiurl}) {
                                 apiurl={apiurl}
                             />
                         </div>
-                        <div style={{display: "flex", flexDirection: "column"}}>
-                            <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center', marginBottom:'16px'}}><u>Context</u></div>
-                            <div style={{display:'inline', width:'300px', marginTop:'4.8px', height: "1200px", overflow: "auto"}}>
-                                {metadata.context.pre} <b>{metadata.context.at}</b> {metadata.context.post}
-                            </div>
-                        </div>
+                        <Context context={metadata.context}/>
                         <Beliefs beliefs={metadata.beliefs}/>
                     </div>
                 </div>
