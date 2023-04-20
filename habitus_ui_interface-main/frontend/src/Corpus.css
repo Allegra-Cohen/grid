@@ -1,3 +1,20 @@
+div.corpus {
+    display: flex;
+    flex-direction: column;
+}
+
+div.corpus div.header {
+    font-family: InaiMathi;
+    font-size: 18pt;
+    text-align: center;
+}
+
+div.corpus ul {
+    margin-left: .2em;
+    height: 1200px;
+    overflow: auto;
+}
+
 li {
     list-style-type: none;
     background: #F0F0F0;
@@ -11,11 +28,17 @@ li {
 
 li:nth-child(odd) { background: #F8F8F8; }
 
+li.selected {
+  border: 2px solid #BE1C06;
+}
+
+li.unselected {
+  border: 2px solid transparent;
+}
 
 .legend{
     font-family: "InaiMathi";
 }
-
 
 .footer::placeholder {
   color: var(--placeholder-color);

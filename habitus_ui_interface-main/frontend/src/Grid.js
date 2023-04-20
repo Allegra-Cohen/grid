@@ -1,6 +1,5 @@
 import {useDrop} from "react-dnd";
 import {useId, useEffect, useState} from "react";
-import "./Corpus.css"
 import "./Grid.css"
 import {toQuery} from "./toEncoding";
 

@@ -186,19 +186,16 @@ function App({apiurl}) {
 
                 <div style={{display: "flex", flexDirection: "column"}}>
                     <div style={{display: "flex", flexDirection: "row", fontFamily: 'InaiMathi'}}>
-                        <div style={{display: "flex", flexDirection: "column"}}>
-                            <div style={{fontFamily:'InaiMathi', fontSize:'18pt', textAlign:'center'}}><u>Sentences</u></div>
-                            <Corpus sentences={corpus}
-                                onChange={
-                                    (evt) => {
-                                        console.log(evt);
-                                        console.log('sentence click!');
-                                        setMetadata(evt)
-                                    }
+                        <Corpus sentences={corpus}
+                            onChange={
+                                (evt) => {
+                                    console.log(evt);
+                                    console.log('sentence click!');
+                                    setMetadata(evt)
                                 }
-                                apiurl={apiurl}
-                            />
-                        </div>
+                            }
+                            apiurl={apiurl}
+                        />
                         <Context context={metadata.context}/>
                         <Beliefs beliefs={metadata.beliefs}/>
                     </div>
