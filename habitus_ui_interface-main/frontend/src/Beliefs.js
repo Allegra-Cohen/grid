@@ -1,6 +1,5 @@
 import "./Beliefs.css"
 
-
 function Belief({belief_record}) {
     const {id, belief, title, author, year} = belief_record;
     const cooked_id = id >= 0 ? id.toString() : "<id unknown>";
