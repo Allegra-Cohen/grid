@@ -1,3 +1,28 @@
+div.beliefs {
+    display: flex;
+    flex-direction: column;
+}
+
+div.beliefs div.header {
+    font-family: InaiMathi;
+    font-size: 18pt;
+    text-align: center;
+    margin-bottom: 16px
+}
+
+div.beliefs div.content {
+    display: inline;
+    width: 300px;
+    margin-left: 10px;
+}
+
+ul.beliefs {
+    margin-top: 0;
+    padding-left: 0;
+    height: 1200px;
+    overflow: auto;
+}
+
 ul.beliefs li {
     list-style-type: none;
     background: #F0F0F0;
@@ -12,4 +37,5 @@ ul.beliefs li {
     padding-left: 0;
     padding-right: 0;
 }
+
 ul.beliefs li:nth-child(odd) { background: #F8F8F8; }
