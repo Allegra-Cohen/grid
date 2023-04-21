@@ -3,14 +3,14 @@ div.beliefs {
     flex-direction: column;
 }
 
-div.beliefs div.header {
+div.beliefs > div.header {
     font-family: InaiMathi;
     font-size: 18pt;
     text-align: center;
     margin-bottom: 16px
 }
 
-div.beliefs div.content {
+div.beliefs > div.content {
     display: inline;
     width: 300px;
     margin-left: 10px;
@@ -23,7 +23,7 @@ ul.beliefs {
     overflow: auto;
 }
 
-ul.beliefs li {
+ul.beliefs > li {
     list-style-type: none;
     background: #F0F0F0;
     margin-right: 0;
@@ -38,4 +38,4 @@ ul.beliefs li {
     padding-right: 0;
 }
 
-ul.beliefs li:nth-child(odd) { background: #F8F8F8; }
+ul.beliefs > li:nth-child(odd) { background: #F8F8F8; }

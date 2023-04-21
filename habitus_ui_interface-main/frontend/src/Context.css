@@ -3,14 +3,14 @@ div.context {
     flex-direction: column;
 }
 
-div.context div.header {
+div.context > div.header {
     font-family: InaiMathi;
     font-Size: 18pt;
     text-align: center;
     margin-bottom: 16px;
 }
 
-div.context div.content {
+div.context > div.content {
     display: inline;
     width: 300px;
     margin-top: 4.8px;
