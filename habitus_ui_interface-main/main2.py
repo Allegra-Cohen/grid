@@ -246,7 +246,8 @@ frontend = UvicornFrontend('../process_files/', 6,'kmeans')
 
 @app.get("/data/")
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
-    return data # returns to front end
+    beliefsAvailable = frontend.beliefs.beliefs is not None
+    return {'data': data, 'beliefsAvailable': beliefsAvailable} # returns to front end
 
 @app.get("/showGrids/")
 async def showGrids():

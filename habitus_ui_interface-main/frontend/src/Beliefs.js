@@ -12,11 +12,11 @@ function Belief({belief_record}) {
     );
 }
 
-export default function Beliefs({beliefs}) {
+export default function Beliefs({beliefsAvailable, beliefs}) {
     const items = beliefs.map((belief, index) => <Belief key={index} belief_record={belief}/>);
 
     return (
-        <div className="beliefs">
+        <div className={"beliefs " + (beliefsAvailable ? "beliefsAvailable" : "beliefsUnavailable")}>
             <div className="header"><u>Beliefs</u></div>
             <div className="content">
                 <ul className="beliefs style-3">

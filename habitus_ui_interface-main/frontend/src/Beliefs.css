@@ -1,6 +1,13 @@
 div.beliefs {
-    display: flex;
     flex-direction: column;
+}
+
+div.beliefsAvailable {
+    display: flex;
+}
+
+div.beliefsUnavailable {
+    display: None;
 }
 
 div.beliefs > div.header {

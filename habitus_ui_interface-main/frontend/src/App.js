@@ -36,12 +36,14 @@ function App({apiurl}) {
     const [rowContents, setRowContents] = useState({})
     const [waiting, setWaiting] = useState(false)
     const [saveAs, setSaveAs] = useState()
+    const [beliefsAvailable, setBeliefsAvailable] = useState(false);
 
     useEffect(() => {
         setWaiting(true)
         fetch(`${apiurl}/data/`)
             .then( response => response.json())
-            .then( data => {
+            .then( response => {
+                const {data, beliefsAvailable} = response
                 setFilename(data.filename);
                 setAnchor(data.anchor);
                 setCorpus(data.clicked_sentences);
@@ -49,6 +51,7 @@ function App({apiurl}) {
                 setColNumToName(data.col_num_to_name);
                 setFrozenColumns(data.frozen_columns);
                 setRowContents(data.row_contents);
+                setBeliefsAvailable(beliefsAvailable);
                 setWaiting(false);
             });
     }, [])
@@ -197,7 +200,7 @@ function App({apiurl}) {
                             apiurl={apiurl}
                         />
                         <Context context={metadata.context}/>
-                        <Beliefs beliefs={metadata.beliefs}/>
+                        <Beliefs beliefsAvailable={beliefsAvailable} beliefs={metadata.beliefs}/>
                     </div>
                 </div>
             </div>
