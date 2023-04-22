@@ -1,13 +1,16 @@
+import faiss
 import math
 import nltk
 import numpy
 import pandas
+import pickle
 import random
 import shutil
 import string
 
 from .linguist import Linguist
 from gensim.models import KeyedVectors
+from sentence_transformers import SentenceTransformer
 
 class Belief:
 	def __init__(self, id: int, values: list) -> None:
@@ -37,9 +40,8 @@ class Belief:
 		}
 
 class Grounder():
-	def __init__(self, path: str, linguist: Linguist):
+	def __init__(self, path: str):
 		self.encoding = "utf-8"
-		self.linguist = linguist
 		self.beliefs_filepath = path + "beliefs.tsv"
 		self.beliefs = None
 
@@ -63,8 +65,8 @@ class Grounder():
 
 
 class RandomGrounder(Grounder):
-	def __init__(self, path: str, linguist: Linguist):
-		super().__init__(path, linguist)
+	def __init__(self, path: str):
+		super().__init__(path)
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
 		if self.beliefs:
@@ -77,7 +79,8 @@ class RandomGrounder(Grounder):
 
 class RankedGloveGrounder(Grounder):
 	def __init__(self, path: str, linguist: Linguist):
-		super().__init__(path, linguist)
+		super().__init__(path)
+		self.linguist = linguist
 		self.vectors_filepath = path + "beliefs-vectors.txt"
 		self.model_filepath = path + "glove.6B.300d.txt"
 		self.model = None # The model will be sticky because it doesn't change.
@@ -158,27 +161,55 @@ class RankedGloveGrounder(Grounder):
 				print(line, file = file)
 
 class RankedTransformerGrounder(Grounder):
-	def __init__(self, path: str, linguist: Linguist):
-		super().__init__(path, linguist)
+	def __init__(self, path: str):
+		super().__init__(path)
+		self.vectors_filepath = path + "beliefs-faiss.txt"
+		self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
+		self.model = None
+		self.embeddings_name = "embeddings"
+		self.width = 0
+		self.vectors = None
 
 	def reset(self) -> None:
 		super().reset()
 
+	def load_model(self) -> None:
+		if not self.model:
+			self.model = SentenceTransformer(self.model_name)
+			self.width = self.model.encode(["dog"]).shape[1]
+
 	def load(self) -> None:
 		super().load()
-		# self.load_model()
+		self.load_model()
+		if not self.vectors:
+			with open(self.vectors_filepath, "rb") as file:
+				data = pickle.load(file)
+				embeddings = data[self.embeddings_name]
+				index = faiss.IndexFlatIP(self.width)
+				index.add(embeddings)
+				assert(index.is_trained)
+				self.vectors = index
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
-		pass
+		embeddings = self.model.encode([text])
+		_, beliefs_indexes_collection = self.vectors.search(embeddings, k)
+		beliefs_indexes = beliefs_indexes_collection[0]
+		beliefs = [self.beliefs[beliefs_index] for beliefs_index in beliefs_indexes]
+		return beliefs
 
 	def process(self, beliefs_filepath: str) -> None:
-		pass
+		super().process(beliefs_filepath)
+		self.load_model()
+		texts = [belief.belief for belief in self.beliefs]
+		embeddings = self.model.encode(texts)
+		with open(self.vectors_filepath, "wb") as file:
+			pickle.dump({self.embeddings_name: embeddings}, file, protocol=pickle.HIGHEST_PROTOCOL)
 
 class Beliefs():
 	def __init__(self, path: str, linguist: Linguist):
-		# self.grounder = RandomGrounder(path, linguist)
-		self.grounder = RankedGloveGrounder(path, linguist)
-		# self.grounder = RankedTransformerGrounder(path, linguist)
+		# self.grounder = RandomGrounder(path)
+		# self.grounder = RankedGloveGrounder(path, linguist)
+		self.grounder = RankedTransformerGrounder(path)
 
 	def beliefsAvailable(self) -> bool:
 		return self.grounder.beliefs is not None
@@ -196,8 +227,8 @@ class Beliefs():
 	def process(self, beliefs_filepath: str):
 		try:
 			self.grounder.process(beliefs_filepath)
-			return {'success': True, 'beliefs_file': self.beliefs_filepath}
-		except:
+			return {'success': True, 'beliefs_file': self.grounder.beliefs_filepath}
+		except Exception as exception:
 			self.grounder.reset()
 			print(f"{beliefs_filepath} could not be processed.")
 			return {'success': False, 'beliefs_file': None}
