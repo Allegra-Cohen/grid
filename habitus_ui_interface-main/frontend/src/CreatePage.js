@@ -86,7 +86,7 @@ export default function CreatePage({apiurl}) {
                         Which corpus will you use?
                         <input placeholder = "Corpus filename"/>
                     </div>
-                    {supercorpus.length == 0 && !error ?
+                    {supercorpus.length === 0 && !error ?
                         <div style={{margin: '0.5%', padding: '1%', color: 'blue'}}>
                             Please provide a filename
                         </div>
@@ -99,7 +99,7 @@ export default function CreatePage({apiurl}) {
                         Which row labels will you use?
                         <input placeholder = "Row labels filename"/>
                     </div>
-                    {rowFilename.length == 0 && !error ? 
+                    {rowFilename.length === 0 && !error ? 
                         <div style={{margin: '0.5%', padding: '1%', color: 'blue'}}>
                             Please provide a filename
                         </div>

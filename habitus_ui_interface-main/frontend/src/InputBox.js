@@ -1,9 +1,9 @@
 import {toQuery} from "./toEncoding";
 
-import {useEffect, useState} from "react";
+// import {useState} from "react";
 
 export default function InputBox({text, onKeyPress, apiurl}){
-    const [textInput, setTextInput] = useState([]);
+    // const [textInput, setTextInput] = useState([]);
 
     return (
         <div className={"InputBox"}>

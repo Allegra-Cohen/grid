@@ -1,9 +1,9 @@
 import {toQuery} from "./toEncoding";
 
-import {useState} from "react";
+// import {useState} from "react";
 
 export default function KButton({apiurl}){
-    const [kInput, setKInput] = useState([]);
+    // const [kInput, setKInput] = useState([]);
 
     return (
         <div className={"KButton"}>

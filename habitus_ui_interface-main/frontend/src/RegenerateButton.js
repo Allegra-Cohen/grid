@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 export default function RegenerateButton({onClick, apiurl}){
     const [disabled, setDisabled] = useState([]);
 
-    useEffect(() => { setDisabled(false)}, [false] )
+    useEffect(() => { setDisabled(false)}, [] )
 
     return (
         <div className={"RegenerateButton"}>
