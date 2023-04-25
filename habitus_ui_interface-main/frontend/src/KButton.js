@@ -9,7 +9,7 @@ export default function KButton({apiurl}){
         <div className={"KButton"}>
             <input style={{height:"2em", width:"60%", fontSize:'20px', border: '1.5px solid #90c5e1'}}
                 onInput={(evt) => {
-                    let request = toRequest(apiurl, "setK", [["k", evt.target.value]]);
+                    const request = toRequest(apiurl, "setK", [["k", evt.target.value]]);
                     fetch(request)
                         .then(response => response.json())
                 }}

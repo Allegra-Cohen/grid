@@ -8,7 +8,8 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}) {
     const [newValue, setNewValue] = useState([]);
 
     useEffect(() => {
-        fetch(`${apiurl}/data/`)
+        const request = toRequest(apiurl, data, [])
+        fetch(request)
             .then(response => response.json())
             .then(response => {
                 const {data, beliefsAvailable} = response
@@ -65,7 +66,7 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}) {
                             <button
                                 onClick={(evt) => {
                                     setNewKey(key);
-                                    let request = toRequest(apiurl, "updateAnchorBook", [["newKey", newKey], ["newValue", newValue], ["cmd", "add"]]);
+                                    const request = toRequest(apiurl, "updateAnchorBook", [["newKey", newKey], ["newValue", newValue], ["cmd", "add"]]);
                                     fetch(request)
                                         .then(response => response.json())
                                         .then(response => {
@@ -83,7 +84,7 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}) {
                             <button
                                 onClick={(evt) => {
                                     setNewKey(key); 
-                                    let request = toRequest(apiurl, "updateAnchorBook", [["newKey", newKey], ["newValue", newValue], ["cmd", "remove"]]);
+                                    const request = toRequest(apiurl, "updateAnchorBook", [["newKey", newKey], ["newValue", newValue], ["cmd", "remove"]]);
                                     fetch(request)
                                         .then(response => response.json())
                                         .then(response => {

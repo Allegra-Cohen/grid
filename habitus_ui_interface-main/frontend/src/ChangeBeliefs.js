@@ -24,7 +24,7 @@ export default function ChangeBeliefs({apiurl}) {
         if (filepath.length > 0){
             setWaiting(true);
             setFeedback(false);
-            let request = toRequest(apiurl, "processBeliefs", [["beliefsFilepath", filepath]]);
+            const request = toRequest(apiurl, "processBeliefs", [["beliefsFilepath", filepath]]);
             fetch(request)
                 .then(response => response.json())
                 .then(data => {

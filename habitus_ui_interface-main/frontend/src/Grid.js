@@ -27,7 +27,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
         drop: (item) => {
-            var request = toRequest(apiurl, "drag", [["row", rowName], ["col", colName], ["sent", item.text]]);
+            const request = toRequest(apiurl, "drag", [["row", rowName], ["col", colName], ["sent", item.text]]);
             fetch(request)
                 .then(response => response.json())
                 .then(data => {
@@ -50,7 +50,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
                 border: isActive ? '2px solid #BE1C06' : null}
             }
             onClick={(evt) => {
-                let request = toRequest(apiurl, "click", [["row", rowName], ["col", colName]]);
+                const request = toRequest(apiurl, "click", [["row", rowName], ["col", colName]]);
                 fetch(request)
                     .then(response => response.json())
                     .then(response => {
@@ -111,7 +111,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                     <input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}}
                         onKeyDown={(evt) => {
                             if (evt.key === "Enter"){
-                                let request = toRequest(apiurl, "editName", [["id", id], ["name", evt.target.value]])
+                                const request = toRequest(apiurl, "editName", [["id", id], ["name", evt.target.value]])
                                 fetch(request)
                                     .then(response => response.json())
                                     .then(response => {
@@ -128,7 +128,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                     <div>
                         <button
                             onClick={(evt) => {
-                                let request = toRequest(apiurl, "deleteFrozenColumn", [["id", id]])
+                                const request = toRequest(apiurl, "deleteFrozenColumn", [["id", id]])
                                 fetch(request)
                                     .then(response => response.json())
                                     .then(response => onDeleteFrozen(response));

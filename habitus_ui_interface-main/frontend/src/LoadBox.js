@@ -7,7 +7,7 @@ export default function LoadBox({text, onKeyPress, apiurl}){
             <input style={{height:"2.2em", width:"200px", fontSize:'18px', border: '1.5px solid #90c5e1'}}
                 onKeyPress={(evt) => {
                     if (evt.key === "Enter") {
-                        let request = toRequest(apiurl, "loadGrid", [["text", evt.target.value]]);
+                        const request = toRequest(apiurl, "loadGrid", [["text", evt.target.value]]);
                         fetch(request)
                             .then(response => response.json())
                             .then(response => {

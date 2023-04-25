@@ -35,17 +35,18 @@ export default function Gallery({apiurl}) {
 
 	const handleGridClick = (gridName) => {
 		console.log("gridName:", gridName)
-        let request = toRequest(apiurl, "loadGrid", [["text", gridName]]);
+        const request = toRequest(apiurl, "loadGrid", [["text", gridName]]);
 		fetch(request);
 	}
 
 	useEffect(() => {
-        fetch(`${apiurl}/showGrids/`)
+        const request = toRequest(apiurl, "showGrids", [])
+        fetch(request)
             .then(response => response.json())
             .then(data => {
                 setGrids(data.grids);
             });
-        setNumCols(grids.length === 1 ? '1':'2')
+        setNumCols(grids.length === 1 ? '1' : '2')
     }, [numCols, apiurl, grids.length])
 
     let items = grids.map((gridName, i) => (<GridIcon key={gridName} gridName={gridName} handleGridClick={handleGridClick} />))
@@ -66,15 +67,14 @@ export default function Gallery({apiurl}) {
                 </div>
                 <div style={{marginLeft:'42%', marginTop:'1%'}}>
                     <Trash className='Trash'
-                        onDrop={
-                            (evt) => {
-                                fetch(`${apiurl}/showGrids/`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    setGrids(data.grids);
-                                    setNumCols(grids.length === 1 ? '1':'2')});
-                                    }
-                            }
+                        onDrop={(evt) => {
+                            const request = toRequest(apiurl, "showGrids", [])
+                            fetch(request)
+                            .then(response => response.json())
+                            .then(data => {
+                                setGrids(data.grids);
+                                setNumCols(grids.length === 1 ? '1':'2')});
+                        }}
                         apiurl={apiurl}
                     />
                 </div>

@@ -11,7 +11,7 @@ export default function InputBox({text, onKeyPress, apiurl}){
                 onKeyPress={(evt) => {
                     if (evt.key === "Enter") {
                         if (evt.target.value.length > 0) {
-                            let request = toRequest(apiurl, "textInput", [["text", evt.target.value]]);
+                            const request = toRequest(apiurl, "textInput", [["text", evt.target.value]]);
                             fetch(request)
                                 .then(response => response.json())
                                 .then(response => {

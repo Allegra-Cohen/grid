@@ -39,7 +39,8 @@ export default function App({apiurl}) {
 
     useEffect(() => {
         setWaiting(true)
-        fetch(`${apiurl}/data/`)
+        const request = toRequest(apiurl, "data", [])
+        fetch(request)
             .then(response => response.json())
             .then(response => {
                 const {data, beliefsAvailable} = response
@@ -60,7 +61,7 @@ export default function App({apiurl}) {
     }
 
     const handleSaveAs = (saveAs) => {
-        let request = toRequest(apiurl, "saveAsGrid", [["text", saveAs]]);
+        const request = toRequest(apiurl, "saveAsGrid", [["text", saveAs]]);
         fetch(request)
             .then(response => response.json())
             .then(data => setFilename(data.filename));
@@ -68,23 +69,26 @@ export default function App({apiurl}) {
 
     const handleSaveClick = () => {
         if (saveAs) {
-            fetch(`${apiurl}/showGrids/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.grids.includes(saveAs)) {
-                    let safe = window.confirm("A Grid with this name already exists. Would you like to overwrite?");
-                    if (safe) {
-                        handleSaveAs(saveAs);
+            const request = toRequest(apiurl, "showGrids", [])
+            fetch(request)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.grids.includes(saveAs)) {
+                        let safe = window.confirm("A Grid with this name already exists. Would you like to overwrite?");
+                        if (safe) {
+                            handleSaveAs(saveAs);
+                        }
                     }
-                } else {
-                    handleSaveAs(saveAs)
-                }
-            })
-        } else {
-            fetch(`${apiurl}/saveGrid/`)
+                    else {
+                        handleSaveAs(saveAs)
+                    }
+                })
+        }
+        else {
+            const request = toRequest(apiurl, "saveGrid", [])
+            fetch(request)
         }
     }
-
 
     return (
         <DndProvider backend={HTML5Backend}>

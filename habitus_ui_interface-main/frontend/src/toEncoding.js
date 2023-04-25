@@ -14,7 +14,7 @@ export function toQuery(nameAndValuePairs) {
 
 export function toRequest(apiurl, command, nameAndValuePairs) {
     let query = toQuery(nameAndValuePairs)
-    let request = `${apiurl}/${command}/?${query}`;
+    const request = `${apiurl}/${command}/?${query}`;
     console.log("request:", request);
     return request;
 }

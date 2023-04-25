@@ -18,7 +18,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
         <li ref={dragRef} className={isActive ? 'selected' : 'unselected'}
             onDrag={(evt) => {activateSentence()}}
             onClick={(evt) => {
-                let request = toRequest(apiurl, "sentenceClick", [["text", text]]);
+                const request = toRequest(apiurl, "sentenceClick", [["text", text]]);
                 fetch(request)
                     .then(response => response.json())
                     .then(response => {

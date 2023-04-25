@@ -1,3 +1,5 @@
+import {toRequest} from "./toEncoding"
+
 import {useState} from "react";
 
 export default function CopyButton({onClick, apiurl}){
@@ -12,7 +14,8 @@ export default function CopyButton({onClick, apiurl}){
         <div className={"CopyButton"}>
             <button style={{height:'2.5em', width:'8em', background: clicked ? '#FFFFFF' : '#48e3d0', fontSize:'20px', fontFamily: "InaiMathi"}}
                 onClick={ (evt) => {
-                    fetch(`${apiurl}/copyToggle/`)
+                    const request = toRequest(apiurl, "copyToggle", [])
+                    fetch(request)
                         .then(response => response.json())
                         .then(response => {
                             console.log("response:", response);

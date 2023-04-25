@@ -21,7 +21,8 @@ export default function CreatePage({apiurl}) {
     const [waiting, setWaiting] = useState(false);
 
     useEffect(() => {
-        fetch(`${apiurl}/showGrids/`)
+        const request = toRequest(apiurl, "showGrids", [])
+        fetch(request)
             .then(response => response.json())
             .then(data => {
                 setGrids(data.grids);
@@ -61,7 +62,7 @@ export default function CreatePage({apiurl}) {
             }
             setWaiting(true)
             setError(false)
-            let request = toRequest(
+            const request = toRequest(
                 apiurl, "loadNewGrid",
                 [["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]
             );

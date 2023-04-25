@@ -23,7 +23,7 @@ export default function ChangeCorpus({apiurl}) {
     const handleButton = () => {
         if (filepath.length > 0) {
             setWaiting(true);
-            let request = toRequest(apiurl, "processSupercorpus", [["supercorpusFilepath", filepath]]);
+            const request = toRequest(apiurl, "processSupercorpus", [["supercorpusFilepath", filepath]]);
             fetch(request)
                 .then(response => response.json())
                 .then(data => {

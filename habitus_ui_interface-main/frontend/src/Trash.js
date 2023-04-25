@@ -10,7 +10,7 @@ export default function Trash({onChange, onDrop, apiurl}){
             let answer = window.confirm("Delete Grid? This cannot be undone")
             console.log("answer:", answer)
             if (answer) {
-                let request = toRequest(apiurl, "deleteGrid", [["text", item.gridName]]);
+                const request = toRequest(apiurl, "deleteGrid", [["text", item.gridName]]);
                 fetch(request)
                     .then(response => response.json())
                     .then(data => {

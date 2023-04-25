@@ -1,3 +1,5 @@
+import {toRequest} from "./toEncoding"
+
 import {useEffect, useState} from "react";
 
 export default function RegenerateButton({onClick, apiurl}){
@@ -10,7 +12,8 @@ export default function RegenerateButton({onClick, apiurl}){
             <button style={{height:'2.5em', width:'8em', background:'#90c5e1', fontSize:'20px', fontFamily: "InaiMathi"}}
                 onClick={(evt) => {
                     setDisabled(true);
-                    fetch(`${apiurl}/regenerate/`)
+                    const request = toRequest(apiurl, "regenerate", [])
+                    fetch(request)
                         .then(response => response.json())
                         .then(response => {
                             onClick(response);
