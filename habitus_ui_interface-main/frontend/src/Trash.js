@@ -8,18 +8,18 @@ export default function Trash({onChange, onDrop, apiurl}){
         accept: 'gridIcon',
         drop: (item) => {
             let answer = window.confirm("Delete Grid? This cannot be undone")
-            console.log(answer)
+            console.log("answer:", answer)
             if (answer) {
                 let query = toQuery([["text", item.gridName]]);
                 fetch(`${apiurl}/deleteGrid/${query}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
+                        console.log("data:", data);
                         onDrop(data)
                     }
                 );
             }
-            console.log([item]);
+            console.log("item:", [item]);
         },
         collect: (monitor) => ({
             isOver: monitor.isOver()

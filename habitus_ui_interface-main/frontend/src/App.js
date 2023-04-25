@@ -53,7 +53,7 @@ function App({apiurl}) {
                 setBeliefsAvailable(beliefsAvailable);
                 setWaiting(false);
             });
-    }, [])
+    }, [apiurl])
 
     const handleSaveTyping = (evt) => {
         setSaveAs(evt.target.value);
@@ -120,7 +120,7 @@ function App({apiurl}) {
                         }
                         onDrop={
                             (evt) => {
-                                console.log(evt);
+                                console.log("evt:", evt);
                                 console.log('drop!');
                                 setCorpus(evt.clicked_sentences);
                                 setGridRows(evt.grid);
@@ -130,7 +130,7 @@ function App({apiurl}) {
                         }
                         onFooter={
                             (evt) => {
-                                console.log('onfooter:', evt);
+                                console.log('onfooter evt:', evt);
                                 setGridRows({...evt.grid});
                                 setColNumToName({...evt.col_num_to_name});
                                 setFrozenColumns([...evt.frozen_columns]);
@@ -138,7 +138,7 @@ function App({apiurl}) {
                         }
                         onDeleteFrozen={
                             (evt) => {
-                                console.log('delete frozen:', evt);
+                                console.log('delete frozen evt:', evt);
                                 setCorpus(evt.clicked_sentences);
                                 setGridRows({...evt.grid});
                                 setColNumToName({...evt.col_num_to_name});
@@ -152,7 +152,7 @@ function App({apiurl}) {
                             <InputBox data={gridRows} col_num_to_name={colNumToName} 
                                 onKeyPress={
                                     (evt) => {
-                                        console.log(evt);
+                                        console.log("evt:", evt);
                                         setCorpus(evt.clicked_sentences);
                                         setGridRows(evt.grid);
                                         setColNumToName(evt.col_num_to_name);
@@ -164,7 +164,7 @@ function App({apiurl}) {
                             <CopyButton className="CopyButton"
                                 onClick={
                                     (evt) => {
-                                        console.log("copy button: ", evt)
+                                        console.log("copy button evt:", evt)
                                     }
                                 }
                                 apiurl={apiurl}
@@ -173,7 +173,7 @@ function App({apiurl}) {
                         <div style={{display:"flex", flexDirection:"row"}}>
                             <RegenerateButton className="RegenerateButton"
                                 onClick={(evt) => {
-                                    console.log(evt);
+                                    console.log("evt:", evt);
                                     setCorpus(evt.clicked_sentences);
                                     setGridRows(evt.grid);
                                     setColNumToName(evt.col_num_to_name);
@@ -191,7 +191,7 @@ function App({apiurl}) {
                         <Corpus sentences={corpus}
                             onChange={
                                 (evt) => {
-                                    console.log(evt);
+                                    console.log("evt:", evt);
                                     console.log('sentence click!');
                                     setMetadata(evt)
                                 }

@@ -34,7 +34,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
                     console.log('data', data);
                     onDrop(data)
                 });
-            console.log([rowName, colName, item]);
+            console.log("rowName, colName, item:", [rowName, colName, item]);
         },
         collect: (monitor) => ({
             isOver: monitor.isOver() && rowContents[rowName].includes(monitor.getItem().text)
@@ -53,12 +53,13 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
                 let query = toQuery([["row", rowName], ["col", colName]]);
                 fetch(`${apiurl}/click/${query}`)
                     .then(response => response.json())
-                    .then(response => {console.log(response);
-                        console.log(colName);
+                    .then(response => {
+                        console.log("response:", response);
+                        console.log("colName:", colName);
                         onChange(response);
                     });
                     activateCell(id);
-                    console.log("evt", id);
+                    console.log("id:", id);
             }}
         >
             {isOver && "Drop"}
@@ -147,7 +148,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
 export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, onDeleteFrozen, apiurl}) {
     const [activeCell, setActiveCell] = useState();
     const activateCell = (item) => setActiveCell(item);
-    console.log(activeCell)
+    console.log("activeCell:", activeCell)
 
     let gridRows = Object.entries(data).map(([name, cells], ix) => 
         <GridRow key={ix}

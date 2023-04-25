@@ -11,6 +11,6 @@ export function toQuery(namesAndValues) {
     let urlSearchParams = new URLSearchParams();
     namesAndValues.forEach(nameAndValue  => urlSearchParams.append(nameAndValue[0], nameAndValue[1]));
     let query = "?" + urlSearchParams.toString();
-    console.info("Query is " + query);
+    console.log("query:", query);
     return query;
 }

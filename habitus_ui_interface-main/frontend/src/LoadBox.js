@@ -11,8 +11,7 @@ export default function LoadBox({text, onKeyPress, apiurl}){
                         fetch(`${apiurl}/loadGrid/${query}`)
                             .then(response => response.json())
                             .then(response => {
-                                console.log(response);
-                                console.log(response);
+                                console.log("response:", response);
                                 onKeyPress(response);
                             })
                             .then(evt.target.value = '')

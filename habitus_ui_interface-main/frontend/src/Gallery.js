@@ -34,7 +34,7 @@ export default function Gallery({apiurl}) {
     const [numCols, setNumCols] = useState('1');
 
 	const handleGridClick = (gridName) => {
-		console.log(gridName)
+		console.log("gridName:", gridName)
         let query = toQuery([["text", gridName]]);
 		fetch(`${apiurl}/loadGrid/${query}`);
 	}
@@ -46,7 +46,7 @@ export default function Gallery({apiurl}) {
                 setGrids(data.grids);
             });
         setNumCols(grids.length === 1 ? '1':'2')
-    }, [numCols])
+    }, [numCols, apiurl, grids.length])
 
     let items = grids.map((gridName, i) => (<GridIcon key={gridName} gridName={gridName} handleGridClick={handleGridClick} />))
 

@@ -21,9 +21,9 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}){
 
 		const newDict = {}
 		newDict[newKey] = newValue;	
-		console.log("NV: ", newValue)	
+		console.log("newValue:", newValue)	
 		setItems(items => ({...items, ...newDict}));
-		console.log('!!', items);
+		console.log("items:", items);
 		
 	};
 
@@ -43,7 +43,7 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}){
 			}
 		}
 		setItems(items => ({...items, ...newDict}));
-		console.log(items);
+		console.log("items:", items);
 		
 	};
 

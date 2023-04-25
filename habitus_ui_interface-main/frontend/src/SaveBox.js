@@ -10,7 +10,7 @@ export default function SaveAsBox({text, apiurl}){
                         let query = toQuery([["text", evt.target.value]]);
                         fetch(`${apiurl}/saveAsGrid/${query}`)
                             .then(response => response.json())
-                            .then(response => {console.log(response)})
+                            .then(response => console.log("response:", response))
                             .then(evt.target.value = '')
                             .then(evt.target.blur()
                         )

@@ -15,8 +15,7 @@ export default function InputBox({text, onKeyPress, apiurl}){
                             fetch(`${apiurl}/textInput/${query}`)
                                 .then(response => response.json())
                                 .then(response => {
-                                    console.log(response);
-                                    console.log(response);
+                                    console.log("response:", response);
                                     onKeyPress(response);
                                 })
                                 .then(evt.target.value = '')

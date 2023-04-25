@@ -15,7 +15,7 @@ export default function CopyButton({onClick, apiurl}){
                     fetch(`${apiurl}/copyToggle/`)
                         .then(response => response.json())
                         .then(response => {
-                            console.log(response);
+                            console.log("response:", response);
                             console.log('copy click!');
                             onClick(response);
                         });
