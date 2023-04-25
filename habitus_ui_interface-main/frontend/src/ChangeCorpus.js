@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding"
+import {toRequest} from "./toEncoding"
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
@@ -23,8 +23,8 @@ export default function ChangeCorpus({apiurl}) {
     const handleButton = () => {
         if (filepath.length > 0) {
             setWaiting(true);
-            let query = toQuery([["supercorpusFilepath", filepath]]);
-            fetch(`${apiurl}/processSupercorpus/${query}`)
+            let request = toRequest(apiurl, "processSupercorpus", [["supercorpusFilepath", filepath]]);
+            fetch(request)
                 .then(response => response.json())
                 .then(data => {
                     setWaiting(false);

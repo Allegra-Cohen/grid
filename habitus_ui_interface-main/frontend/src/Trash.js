@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 import {useDrop} from "react-dnd";
 
@@ -10,8 +10,8 @@ export default function Trash({onChange, onDrop, apiurl}){
             let answer = window.confirm("Delete Grid? This cannot be undone")
             console.log("answer:", answer)
             if (answer) {
-                let query = toQuery([["text", item.gridName]]);
-                fetch(`${apiurl}/deleteGrid/${query}`)
+                let request = toRequest(apiurl, "deleteGrid", [["text", item.gridName]]);
+                fetch(request)
                     .then(response => response.json())
                     .then(data => {
                         console.log("data:", data);

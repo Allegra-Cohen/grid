@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
@@ -27,7 +27,7 @@ export default function CreatePage({apiurl}) {
                 setGrids(data.grids);
                 setFilepath(data.filepath);
             });
-    }, [])
+    }, [apiurl])
 
     const navigate = useNavigate();
 
@@ -61,8 +61,11 @@ export default function CreatePage({apiurl}) {
             }
             setWaiting(true)
             setError(false)
-            let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]);
-            fetch(`${apiurl}/loadNewGrid/${query}`)
+            let request = toRequest(
+                apiurl, "loadNewGrid",
+                [["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]
+            );
+            fetch(request)
                 .then(response => response.json())
                 .then(data => {
                     setWaiting(false);

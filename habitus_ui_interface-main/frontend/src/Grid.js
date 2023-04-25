@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 import {useDrop} from "react-dnd";
 import {useState} from "react";
@@ -27,8 +27,8 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
         drop: (item) => {
-            var query = toQuery([["row", rowName], ["col", colName], ["sent", item.text]]);
-            fetch(`${apiurl}/drag/${query}`)
+            var request = toRequest(apiurl, "drag", [["row", rowName], ["col", colName], ["sent", item.text]]);
+            fetch(request)
                 .then(response => response.json())
                 .then(data => {
                     console.log('data', data);
@@ -50,8 +50,8 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
                 border: isActive ? '2px solid #BE1C06' : null}
             }
             onClick={(evt) => {
-                let query = toQuery([["row", rowName], ["col", colName]]);
-                fetch(`${apiurl}/click/${query}`)
+                let request = toRequest(apiurl, "click", [["row", rowName], ["col", colName]]);
+                fetch(request)
                     .then(response => response.json())
                     .then(response => {
                         console.log("response:", response);
@@ -111,8 +111,8 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                     <input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}}
                         onKeyDown={(evt) => {
                             if (evt.key === "Enter"){
-                                let query = toQuery([["id", id], ["name", evt.target.value]])
-                                fetch(`${apiurl}/editName/${query}`)
+                                let request = toRequest(apiurl, "editName", [["id", id], ["name", evt.target.value]])
+                                fetch(request)
                                     .then(response => response.json())
                                     .then(response => {
                                         onFooter(response);
@@ -128,8 +128,8 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                     <div>
                         <button
                             onClick={(evt) => {
-                                let query = toQuery([["id", id]])
-                                fetch(`${apiurl}/deleteFrozenColumn/${query}`)
+                                let request = toRequest(apiurl, "deleteFrozenColumn", [["id", id]])
+                                fetch(request)
                                     .then(response => response.json())
                                     .then(response => onDeleteFrozen(response));
                             }}

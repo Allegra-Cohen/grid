@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 // import {useState} from "react";
 
@@ -11,8 +11,8 @@ export default function InputBox({text, onKeyPress, apiurl}){
                 onKeyPress={(evt) => {
                     if (evt.key === "Enter") {
                         if (evt.target.value.length > 0) {
-                            let query = toQuery([["text", evt.target.value]]);
-                            fetch(`${apiurl}/textInput/${query}`)
+                            let request = toRequest(apiurl, "textInput", [["text", evt.target.value]]);
+                            fetch(request)
                                 .then(response => response.json())
                                 .then(response => {
                                     console.log("response:", response);

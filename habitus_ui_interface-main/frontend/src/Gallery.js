@@ -1,5 +1,5 @@
 import Trash from './Trash'
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
@@ -35,8 +35,8 @@ export default function Gallery({apiurl}) {
 
 	const handleGridClick = (gridName) => {
 		console.log("gridName:", gridName)
-        let query = toQuery([["text", gridName]]);
-		fetch(`${apiurl}/loadGrid/${query}`);
+        let request = toRequest(apiurl, "loadGrid", [["text", gridName]]);
+		fetch(request);
 	}
 
 	useEffect(() => {

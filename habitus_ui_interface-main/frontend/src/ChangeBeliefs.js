@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
@@ -24,8 +24,8 @@ export default function ChangeBeliefs({apiurl}) {
         if (filepath.length > 0){
             setWaiting(true);
             setFeedback(false);
-            let query = toQuery([["beliefsFilepath", filepath]]);
-            fetch(`${apiurl}/processBeliefs/${query}`)
+            let request = toRequest(apiurl, "processBeliefs", [["beliefsFilepath", filepath]]);
+            fetch(request)
                 .then(response => response.json())
                 .then(data => {
                     setWaiting(false);

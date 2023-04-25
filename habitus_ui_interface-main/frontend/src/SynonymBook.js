@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 import {useState} from "react";
 
@@ -10,15 +10,15 @@ function SynonymEntry({entryIndex, entry, onUpdate, apiurl}) {
     }
 
     const handleDeleteWord = (entryIndex, word) => {
-        let query = toQuery([["entryIndex", entryIndex], ["word", word]]);
-        fetch(`${apiurl}/removeFromSynBook/${query}`)
+        let request = toRequest(apiurl, "removeFromSynBook", [["entryIndex", entryIndex], ["word", word]]);
+        fetch(request)
             .then(response => response.json())
             .then(response => onUpdate(response))
     }
 
     const handleAddWord = (entryIndex) => {
-        let query = toQuery([["entryIndex", entryIndex], ["newWord", newWord]]);
-        fetch(`${apiurl}/addToSynBook/${query}`)
+        let request = toRequest(apiurl, "addToSynBook", [["entryIndex", entryIndex], ["newWord", newWord]]);
+        fetch(request)
             .then(response => response.json())
             .then(response => onUpdate(response))
     }
@@ -49,8 +49,8 @@ export default function SynonymBook({synonymBook, onUpdate, apiurl}){
     }
 
     const handleAddEntry = () => {
-        let query = toQuery([["id", synonymBook.length + 1], ["newEntry", newEntry]]);
-        fetch(`${apiurl}/addToSynBook/${query}`)
+        let request = toRequest(apiurl, "addToSynBook", [["id", synonymBook.length + 1], ["newEntry", newEntry]]);
+        fetch(request)
             .then(response => response.json())
             .then(response => {
                 onUpdate(response);

@@ -1,4 +1,4 @@
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 export default function SaveAsBox({text, apiurl}){
 
@@ -7,8 +7,8 @@ export default function SaveAsBox({text, apiurl}){
             <input style={{height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}}
                 onKeyPress={(evt) => {
                     if (evt.key === "Enter") {
-                        let query = toQuery([["text", evt.target.value]]);
-                        fetch(`${apiurl}/saveAsGrid/${query}`)
+                        let request = toRequest(apiurl, "saveAsGrid", [["text", evt.target.value]]);
+                        fetch(request)
                             .then(response => response.json())
                             .then(response => console.log("response:", response))
                             .then(evt.target.value = '')

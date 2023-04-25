@@ -1,5 +1,5 @@
 import noMetadata from './Metadata.js';
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 import {useDrag} from "react-dnd";
 import {useEffect, useState} from "react";
 
@@ -18,21 +18,19 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
         <li ref={dragRef} className={isActive ? 'selected' : 'unselected'}
             onDrag={(evt) => {activateSentence()}}
             onClick={(evt) => {
-                let query = toQuery([["text", text]]);
-                fetch(`${apiurl}/sentenceClick/${query}`)
+                let request = toRequest(apiurl, "sentenceClick", [["text", text]]);
+                fetch(request)
                     .then(response => response.json())
-                    .then(
-                        response => {
-                            if (isActive) {
-                                activateSentence();
-                                onChange(noMetadata);
-                            }
-                            else {
-                                activateSentence(text);
-                                onChange(response);
-                            }
+                    .then(response => {
+                        if (isActive) {
+                            activateSentence();
+                            onChange(noMetadata);
                         }
-                    );
+                        else {
+                            activateSentence(text);
+                            onChange(response);
+                        }
+                    });
             }}
         >
             {text} {isDragging}

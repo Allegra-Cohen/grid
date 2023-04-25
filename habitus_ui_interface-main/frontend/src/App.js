@@ -7,7 +7,7 @@ import InputBox from './InputBox'
 import KButton from './KButton'
 import RegenerateButton from  "./RegenerateButton"
 import noMetadata from './Metadata.js';
-import {toQuery} from "./toEncoding";
+import {toRequest} from "./toEncoding";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
@@ -60,12 +60,10 @@ function App({apiurl}) {
     }
 
     const handleSaveAs = (saveAs) => {
-        let query = toQuery([["text", saveAs]]);
-        fetch(`${apiurl}/saveAsGrid/${query}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        setFilename(data.filename);
-                    });
+        let request = toRequest(apiurl, "saveAsGrid", [["text", saveAs]]);
+        fetch(request)
+            .then(response => response.json())
+            .then(data => setFilename(data.filename));
     }
 
     const handleSaveClick = () => {
