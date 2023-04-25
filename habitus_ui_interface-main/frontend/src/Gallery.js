@@ -1,15 +1,15 @@
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import {useId, useEffect, useState} from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import {useDrag} from "react-dnd";
-import { Link } from "react-router-dom";
 import Trash from './Trash'
-import './info.css';
 import {toQuery} from "./toEncoding";
 
-function GridIcon({gridName, handleGridClick, apiurl}) {
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
+import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useDrag} from "react-dnd";
 
+import './info.css';
+
+function GridIcon({gridName, handleGridClick, apiurl}) {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'gridIcon',
         item: { gridName },
@@ -20,17 +20,16 @@ function GridIcon({gridName, handleGridClick, apiurl}) {
 
     return (
         <Link to="/grid" className='gallery' ref={dragRef} style={{'color' : '#060e4e', 'fontSize':'14pt'}}
-            onClick={
-                ()=>
-                    handleGridClick(gridName)
-            }>
+            onClick={()=>
+                handleGridClick(gridName)
+            }
+        >
             {gridName}{isDragging}
         </Link>
     );
 }
 
-function Gallery({apiurl}) {
-
+export default function Gallery({apiurl}) {
 	const [grids, setGrids] = useState([]);
     const [numCols, setNumCols] = useState('1');
 
@@ -42,15 +41,14 @@ function Gallery({apiurl}) {
 
 	useEffect(() => {
         fetch(`${apiurl}/showGrids/`)
-            .then( response => response.json())
-            .then( data => {
+            .then(response => response.json())
+            .then(data => {
                 setGrids(data.grids);
             });
         setNumCols(grids.length === 1 ? '1':'2')
     }, [numCols])
 
     let items = grids.map((gridName, i) => (<GridIcon key={gridName} gridName={gridName} handleGridClick={handleGridClick} />))
-
 
 	return (
         <DndProvider backend={HTML5Backend}>
@@ -71,8 +69,8 @@ function Gallery({apiurl}) {
                         onDrop={
                             (evt) => {
                                 fetch(`${apiurl}/showGrids/`)
-                                .then( response => response.json())
-                                .then( data => {
+                                .then(response => response.json())
+                                .then(data => {
                                     setGrids(data.grids);
                                     setNumCols(grids.length === 1 ? '1':'2')});
                                     }
@@ -90,5 +88,3 @@ function Gallery({apiurl}) {
         </DndProvider>
     );
 }
-
-export default Gallery;

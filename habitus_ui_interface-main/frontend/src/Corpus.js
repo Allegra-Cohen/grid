@@ -1,14 +1,14 @@
 import noMetadata from './Metadata.js';
 import {toQuery} from "./toEncoding";
 import {useDrag} from "react-dnd";
-import {useId, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 
 import "./Corpus.css"
 
 function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'sentence',
-        item: { text },
+        item: {text},
         collect: (monitor) => ({
             isDragging: monitor.isDragging()
         })
@@ -20,7 +20,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
             onClick={(evt) => {
                 let query = toQuery([["text", text]]);
                 fetch(`${apiurl}/sentenceClick/${query}`)
-                    .then( response => response.json())
+                    .then(response => response.json())
                     .then(
                         response => {
                             if (isActive) {

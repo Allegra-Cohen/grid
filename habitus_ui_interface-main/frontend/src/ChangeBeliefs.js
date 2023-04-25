@@ -1,7 +1,8 @@
+import {toQuery} from "./toEncoding";
+
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {Link} from "react-router-dom";
-import {toQuery} from "./toEncoding";
 import {useState} from "react";
 
 import './info.css';

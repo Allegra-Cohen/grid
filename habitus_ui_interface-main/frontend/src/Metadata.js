@@ -1,5 +1,5 @@
 
-const noMetadata = {
+export default noMetadata = {
     context: {
         pre: "",
         at: "",
@@ -7,5 +7,3 @@ const noMetadata = {
     },
     beliefs: [ ]
 };
-
-export default noMetadata;

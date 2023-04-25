@@ -3,9 +3,10 @@ import ChangeBeliefs from './ChangeBeliefs';
 import ChangeCorpus from './ChangeCorpus';
 import CreatePage from './CreatePage';
 import Gallery from './Gallery';
+
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Route, Routes  } from "react-router-dom";
 
 import './index.css';
 

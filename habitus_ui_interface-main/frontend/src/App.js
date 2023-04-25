@@ -1,18 +1,17 @@
-
 import Beliefs from './Beliefs';
 import Context from './Context';
 import CopyButton from  "./CopyButton"
 import Corpus from './Corpus.js'
-import { DndProvider } from 'react-dnd'
 import Grid from  "./Grid"
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import InputBox from './InputBox'
 import KButton from './KButton'
-import { Link } from "react-router-dom";
 import RegenerateButton from  "./RegenerateButton"
-
 import noMetadata from './Metadata.js';
 import {toQuery} from "./toEncoding";
+
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
+import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 
 import './App.css';
@@ -41,8 +40,8 @@ function App({apiurl}) {
     useEffect(() => {
         setWaiting(true)
         fetch(`${apiurl}/data/`)
-            .then( response => response.json())
-            .then( response => {
+            .then(response => response.json())
+            .then(response => {
                 const {data, beliefsAvailable} = response
                 setFilename(data.filename);
                 setAnchor(data.anchor);
@@ -63,8 +62,8 @@ function App({apiurl}) {
     const handleSaveAs = (saveAs) => {
         let query = toQuery([["text", saveAs]]);
         fetch(`${apiurl}/saveAsGrid/${query}`)
-                    .then( response => response.json())
-                    .then( data => {
+                    .then(response => response.json())
+                    .then(data => {
                         setFilename(data.filename);
                     });
     }

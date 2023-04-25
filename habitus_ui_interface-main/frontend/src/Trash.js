@@ -1,6 +1,6 @@
-import {useDrop} from "react-dnd";
-import {useId, useEffect, useState} from "react";
 import {toQuery} from "./toEncoding";
+
+import {useDrop} from "react-dnd";
 
 export default function Trash({onChange, onDrop, apiurl}){
  
@@ -12,25 +12,28 @@ export default function Trash({onChange, onDrop, apiurl}){
             if (answer) {
                 let query = toQuery([["text", item.gridName]]);
                 fetch(`${apiurl}/deleteGrid/${query}`)
-                .then( response => response.json())
-                .then( data => {
-                    console.log(data);
-                    onDrop(data)
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        onDrop(data)
+                    }
+                );
             }
             console.log([item]);
-            },
+        },
         collect: (monitor) => ({
             isOver: monitor.isOver()
         })
     })
 
-    return (<div ref={dropRef} 
-
-        style={{
-            background: isOver ? 'skyblue' : "white",
-            fontSize: '40pt'}}
-            >
-           🗑
-    </div>);
-    }
+    return (
+        <div ref={dropRef} 
+            style={{
+                background: isOver ? 'skyblue' : "white",
+                fontSize: '40pt'
+            }}
+        >
+            🗑
+        </div>
+    );
+}

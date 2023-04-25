@@ -7,8 +7,8 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}){
 
 	useEffect(() => {
         fetch(`${apiurl}/data/`)
-            .then( response => response.json())
-            .then( response => {
+            .then(response => response.json())
+            .then(response => {
 							  const {data, beliefsAvailable} = response
                 setItems(data.anchor_book);;
             });
