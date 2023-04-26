@@ -1,5 +1,5 @@
 
-print("This is main2.py")
+print("Welcome to the grid!")
 
 import pandas as pd
 import os
