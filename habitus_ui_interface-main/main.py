@@ -318,9 +318,9 @@ async def sentenceClick(text: str):
     return frontend.sentence_click(text)
 
 @app.get("/editName/")
-async def editName(id: int, newName: str):
-    print("editName", id, newName)
-    return frontend.set_name(id, newName)
+async def editName(id: int, name: str):
+    print("editName", id, name)
+    return frontend.set_name(id, name)
 
 @app.get("/deleteFrozenColumn/")
 async def deleteFrozenColumn(id: int):
