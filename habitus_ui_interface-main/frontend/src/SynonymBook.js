@@ -1,26 +1,28 @@
-import {toRequest} from "./toEncoding";
+import Backend from "./Backend";
 
 import {useState} from "react";
 
 function SynonymEntry({entryIndex, entry, onUpdate, apiurl}) {
     const [newWord, setNewWord] = useState();
 
+    const backend = new Backend(apiurl);
+
     const handleInput = (text) => {
         setNewWord(text);
     }
 
     const handleDeleteWord = (entryIndex, word) => {
-        const request = toRequest(apiurl, "removeFromSynBook", [["entryIndex", entryIndex], ["word", word]]);
-        fetch(request)
-            .then(response => response.json())
-            .then(response => onUpdate(response))
+        const request = backend.toRequest("removeFromSynBook", ["entryIndex", entryIndex], ["word", word]);
+        backend.fetchThen(request, response => {
+            onUpdate(response);
+        });
     }
 
     const handleAddWord = (entryIndex) => {
-        const request = toRequest(apiurl, "addToSynBook", [["entryIndex", entryIndex], ["newWord", newWord]]);
-        fetch(request)
-            .then(response => response.json())
-            .then(response => onUpdate(response))
+        const request = backend.toRequest("addToSynBook", ["entryIndex", entryIndex], ["newWord", newWord]);
+        backend.fetchThen(request, response => {
+            onUpdate(response);
+        });
     }
 
     return(
@@ -44,17 +46,17 @@ function SynonymEntry({entryIndex, entry, onUpdate, apiurl}) {
 export default function SynonymBook({synonymBook, onUpdate, apiurl}){
     const [newEntry, setNewEntry] = useState();
 
+    const backend = new Backend(apiurl);
+
     const handleInput = (text) => {
         setNewEntry(text);
     }
 
     const handleAddEntry = () => {
-        const request = toRequest(apiurl, "addToSynBook", [["id", synonymBook.length + 1], ["newEntry", newEntry]]);
-        fetch(request)
-            .then(response => response.json())
-            .then(response => {
-                onUpdate(response);
-            });
+        const request = backend.toRequest("addToSynBook", ["id", synonymBook.length + 1], ["newEntry", newEntry]);
+        backend.fetchThen(request, response => {
+            onUpdate(response);
+        });
     }
 
     let entries = synonymBook.map((entry, i) => <SynonymEntry key={entry} entryIndex={i} entry={entry} onUpdate={onUpdate} apiurl={apiurl}/>)

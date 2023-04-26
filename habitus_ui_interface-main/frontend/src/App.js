@@ -1,3 +1,4 @@
+import Backend from "./Backend"
 import Beliefs from './Beliefs';
 import Context from './Context';
 import CopyButton from  "./CopyButton"
@@ -7,12 +8,11 @@ import InputBox from './InputBox'
 import KButton from './KButton'
 import RegenerateButton from  "./RegenerateButton"
 import noMetadata from './Metadata.js';
-import {toRequest} from "./toEncoding";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 
 import './App.css';
 import './CopyButton.css'
@@ -37,56 +37,50 @@ export default function App({apiurl}) {
     const [saveAs, setSaveAs] = useState()
     const [beliefsAvailable, setBeliefsAvailable] = useState(false);
 
+    const backend = useMemo(() => new Backend(apiurl, setWaiting), [apiurl]);
+
     useEffect(() => {
-        setWaiting(true)
-        const request = toRequest(apiurl, "data", [])
-        fetch(request)
-            .then(response => response.json())
-            .then(response => {
-                const {data, beliefsAvailable} = response
-                setFilename(data.filename);
-                setAnchor(data.anchor);
-                setCorpus(data.clicked_sentences);
-                setGridRows(data.grid);
-                setColNumToName(data.col_num_to_name);
-                setFrozenColumns(data.frozen_columns);
-                setRowContents(data.row_contents);
-                setBeliefsAvailable(beliefsAvailable);
-                setWaiting(false);
-            });
-    }, [apiurl])
+        const request = backend.toRequest("data")
+        backend.fetchThen(request, response => {
+            const {data, beliefsAvailable} = response;
+            setFilename(data.filename);
+            setAnchor(data.anchor);
+            setCorpus(data.clicked_sentences);
+            setGridRows(data.grid);
+            setColNumToName(data.col_num_to_name);
+            setFrozenColumns(data.frozen_columns);
+            setRowContents(data.row_contents);
+            setBeliefsAvailable(beliefsAvailable);
+        });
+    }, [backend])
 
     const handleSaveTyping = (evt) => {
         setSaveAs(evt.target.value);
     }
 
     const handleSaveAs = (saveAs) => {
-        const request = toRequest(apiurl, "saveAsGrid", [["text", saveAs]]);
-        fetch(request)
-            .then(response => response.json())
-            .then(data => setFilename(data.filename));
+        const request = backend.toRequest("saveAsGrid", ["text", saveAs]);
+        backend.fetchThen(request, response => {
+            setFilename(response.filename);
+        });
     }
 
     const handleSaveClick = () => {
         if (saveAs) {
-            const request = toRequest(apiurl, "showGrids", [])
-            fetch(request)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.grids.includes(saveAs)) {
-                        let safe = window.confirm("A Grid with this name already exists. Would you like to overwrite?");
-                        if (safe) {
-                            handleSaveAs(saveAs);
-                        }
-                    }
-                    else {
-                        handleSaveAs(saveAs)
-                    }
-                })
+            const request = backend.toRequest("showGrids");
+            backend.fetchThen(request, response => {
+                if (response.grids.includes(saveAs)) {
+                    const safe = window.confirm("A Grid with this name already exists. Would you like to overwrite?");
+                    if (safe)
+                        handleSaveAs(saveAs);
+                }
+                else
+                    handleSaveAs(saveAs);
+            });
         }
         else {
-            const request = toRequest(apiurl, "saveGrid", [])
-            fetch(request)
+            const request = backend.toRequest("saveGrid");
+            backend.fetch(request);
         }
     }
 
@@ -127,13 +121,11 @@ export default function App({apiurl}) {
                             setMetadata(noMetadata)
                         }}
                         onFooter={(evt) => {
-                            console.log('onfooter evt:', evt);
                             setGridRows({...evt.grid});
                             setColNumToName({...evt.col_num_to_name});
                             setFrozenColumns([...evt.frozen_columns]);
                         }}
                         onDeleteFrozen={(evt) => {
-                            console.log('delete frozen evt:', evt);
                             setCorpus(evt.clicked_sentences);
                             setGridRows({...evt.grid});
                             setColNumToName({...evt.col_num_to_name});
@@ -187,8 +179,6 @@ export default function App({apiurl}) {
                         <Corpus
                             sentences={corpus}
                             onChange={(evt) => {
-                                console.log("evt:", evt);
-                                console.log('sentence click!');
                                 setMetadata(evt)
                             }}
                             apiurl={apiurl}

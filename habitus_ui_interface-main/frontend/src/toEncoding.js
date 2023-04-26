@@ -18,3 +18,16 @@ export function toRequest(apiurl, command, nameAndValuePairs) {
     console.log("request:", request);
     return request;
 }
+
+export function fetchThen(request, operation) {
+    fetch(request)
+        .then(response => response.json())
+        .then(response => {
+            console.log("response from keith:", response)
+            operation(response)
+        })
+}
+
+export function process(apiurl, command, nameAndValuePairs, operation) {
+
+}

@@ -1,10 +1,10 @@
+import Backend from './Backend';
 import Trash from './Trash'
-import {toRequest} from "./toEncoding";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useDrag} from "react-dnd";
 
 import './info.css';
@@ -33,21 +33,21 @@ export default function Gallery({apiurl}) {
 	const [grids, setGrids] = useState([]);
     const [numCols, setNumCols] = useState('1');
 
+    const backend = useMemo(() => new Backend(apiurl), [apiurl]);
+
 	const handleGridClick = (gridName) => {
 		console.log("gridName:", gridName)
-        const request = toRequest(apiurl, "loadGrid", [["text", gridName]]);
-		fetch(request);
+        const request = backend.toRequest("loadGrid", ["text", gridName]);
+        backend.fetch(request);
 	}
 
 	useEffect(() => {
-        const request = toRequest(apiurl, "showGrids", [])
-        fetch(request)
-            .then(response => response.json())
-            .then(data => {
-                setGrids(data.grids);
-            });
-        setNumCols(grids.length === 1 ? '1' : '2')
-    }, [numCols, apiurl, grids.length])
+        const request = backend.toRequest("showGrids")
+        backend.fetchThen(request, response => {
+            setGrids(response.grids);
+            setNumCols(grids.length === 1 ? '1' : '2')
+        });
+    }, [backend, numCols, grids.length])
 
     let items = grids.map((gridName, i) => (<GridIcon key={gridName} gridName={gridName} handleGridClick={handleGridClick} />))
 
@@ -68,12 +68,11 @@ export default function Gallery({apiurl}) {
                 <div style={{marginLeft:'42%', marginTop:'1%'}}>
                     <Trash className='Trash'
                         onDrop={(evt) => {
-                            const request = toRequest(apiurl, "showGrids", [])
-                            fetch(request)
-                            .then(response => response.json())
-                            .then(data => {
-                                setGrids(data.grids);
-                                setNumCols(grids.length === 1 ? '1':'2')});
+                            const request = backend.toRequest("showGrids");
+                            backend.fetchThen(request, response => {
+                                setGrids(response.grids);
+                                setNumCols(grids.length === 1 ? '1' : '2')
+                            });
                         }}
                         apiurl={apiurl}
                     />

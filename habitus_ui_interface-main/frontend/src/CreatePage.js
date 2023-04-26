@@ -1,9 +1,9 @@
-import {toRequest} from "./toEncoding";
+import Backend from "./Backend";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 
 import './info.css';
@@ -20,15 +20,15 @@ export default function CreatePage({apiurl}) {
     const [error, setError] = useState(false);
     const [waiting, setWaiting] = useState(false);
 
+    const backend = useMemo(() => new Backend(apiurl, setWaiting), [apiurl]);
+
     useEffect(() => {
-        const request = toRequest(apiurl, "showGrids", [])
-        fetch(request)
-            .then(response => response.json())
-            .then(data => {
-                setGrids(data.grids);
-                setFilepath(data.filepath);
-            });
-    }, [apiurl])
+        const request = backend.toRequest("showGrids")
+        backend.fetchThen(request, response => {
+            setGrids(response.grids);
+            setFilepath(response.filepath);
+        });
+    }, [backend])
 
     const navigate = useNavigate();
 
@@ -60,23 +60,16 @@ export default function CreatePage({apiurl}) {
             if (anchor.length > 0) {
                 text = anchor
             }
-            setWaiting(true)
             setError(false)
-            const request = toRequest(
-                apiurl, "loadNewGrid",
-                [["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]
+            const request = backend.toRequest("loadNewGrid",
+                ["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]
             );
-            fetch(request)
-                .then(response => response.json())
-                .then(data => {
-                    setWaiting(false);
-                    if (!data) {
-                        setError(true)
-                    }
-                    else {
-                        navigate('/grid')
-                    }
-                })
+            backend.fetchThen(request, response => {
+                if (!response)
+                    setError(true);
+                else
+                    navigate('/grid');
+            })
         }
     }
 

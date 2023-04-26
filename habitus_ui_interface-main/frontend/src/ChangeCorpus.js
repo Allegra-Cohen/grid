@@ -1,4 +1,4 @@
-import {toRequest} from "./toEncoding"
+import Backend from "./Backend";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
@@ -16,28 +16,24 @@ export default function ChangeCorpus({apiurl}) {
     const [corpusFile, setCorpusFile] = useState([]);
     const [rowsFile, setRowsFile] = useState([]);
 
+    const backend = new Backend(apiurl, setWaiting);
+
     const handleInput = (text) => {
         setFilepath(text)
     }
 
     const handleButton = () => {
         if (filepath.length > 0) {
-            setWaiting(true);
-            const request = toRequest(apiurl, "processSupercorpus", [["supercorpusFilepath", filepath]]);
-            fetch(request)
-                .then(response => response.json())
-                .then(data => {
-                    setWaiting(false);
-                    setError(!data.success);
-                    if (data.success){
-                        setCorpusFile(data.corpus_file);
-                        setRowsFile(data.rows_file)
-                    }
-                    else {
-                        setErrorPath(filepath);
-                    }
+            const request = backend.toRequest("processSupercorpus", ["supercorpusFilepath", filepath]);
+            backend.fetchThen(request, response => {
+                setError(!response.success);
+                if (response.success) {
+                    setCorpusFile(response.corpus_file);
+                    setRowsFile(response.rows_file)
                 }
-            );
+                else
+                    setErrorPath(filepath);
+            });
         }
     }
 

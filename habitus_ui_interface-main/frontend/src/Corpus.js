@@ -1,11 +1,13 @@
+import Backend from "./Backend.js";
 import noMetadata from './Metadata.js';
-import {toRequest} from "./toEncoding";
 import {useDrag} from "react-dnd";
 import {useEffect, useState} from "react";
 
 import "./Corpus.css"
 
 function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
+    const backend = new Backend(apiurl);
+
     const [{ isDragging }, dragRef] = useDrag({
         type: 'sentence',
         item: {text},
@@ -18,19 +20,17 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
         <li ref={dragRef} className={isActive ? 'selected' : 'unselected'}
             onDrag={(evt) => {activateSentence()}}
             onClick={(evt) => {
-                const request = toRequest(apiurl, "sentenceClick", [["text", text]]);
-                fetch(request)
-                    .then(response => response.json())
-                    .then(response => {
-                        if (isActive) {
-                            activateSentence();
-                            onChange(noMetadata);
-                        }
-                        else {
-                            activateSentence(text);
-                            onChange(response);
-                        }
-                    });
+                const request = backend.toRequest("sentenceClick", ["text", text]);
+                backend.fetchThen(request, response => {
+                    if (isActive) {
+                        activateSentence();
+                        onChange(noMetadata);
+                    }
+                    else {
+                        activateSentence(text);
+                        onChange(response);
+                    }
+                });
             }}
         >
             {text} {isDragging}

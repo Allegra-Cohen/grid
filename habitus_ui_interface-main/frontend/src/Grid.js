@@ -1,4 +1,4 @@
-import {toRequest} from "./toEncoding";
+import Backend from "./Backend";
 
 import {useDrop} from "react-dnd";
 import {useState} from "react";
@@ -20,20 +20,17 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
         '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236'
     ]
 
-    // const [validRow, setValidRow] = useState();
+    const backend = new Backend(apiurl);
 
     let ix = Math.ceil(colorValue * 100)
 
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
         drop: (item) => {
-            const request = toRequest(apiurl, "drag", [["row", rowName], ["col", colName], ["sent", item.text]]);
-            fetch(request)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('data', data);
-                    onDrop(data)
-                });
+            const request = backend.toRequest("drag", ["row", rowName], ["col", colName], ["sent", item.text]);
+            backend.fetchThen(request, response => {
+                onDrop(response)
+            });
             console.log("rowName, colName, item:", [rowName, colName, item]);
         },
         collect: (monitor) => ({
@@ -50,16 +47,11 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
                 border: isActive ? '2px solid #BE1C06' : null}
             }
             onClick={(evt) => {
-                const request = toRequest(apiurl, "click", [["row", rowName], ["col", colName]]);
-                fetch(request)
-                    .then(response => response.json())
-                    .then(response => {
-                        console.log("response:", response);
-                        console.log("colName:", colName);
-                        onChange(response);
-                    });
+                const request = backend.toRequest("click", ["row", rowName], ["col", colName]);
+                backend.fetchThen(request, response => {
+                    onChange(response);
                     activateCell(id);
-                    console.log("id:", id);
+                });
             }}
         >
             {isOver && "Drop"}
@@ -93,7 +85,8 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
 }
 
 function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) {
-    
+    const backend = new Backend(apiurl);
+
     return (
         <td key={id}>
             <div style={{
@@ -111,15 +104,12 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                     <input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}}
                         onKeyDown={(evt) => {
                             if (evt.key === "Enter"){
-                                const request = toRequest(apiurl, "editName", [["id", id], ["name", evt.target.value]])
-                                fetch(request)
-                                    .then(response => response.json())
-                                    .then(response => {
-                                        onFooter(response);
-                                        console.log("!!!", response.frozen_columns)
-                                    });
-                                evt.target.value = '';
-                                evt.target.blur();
+                                const request = backend.toRequest("editName", ["id", id], ["name", evt.target.value])
+                                backend.fetchThen(request, response => {
+                                    onFooter(response);
+                                    evt.target.value = '';
+                                    evt.target.blur();
+                                });
                             }
                         }}
                     />
@@ -128,10 +118,10 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                     <div>
                         <button
                             onClick={(evt) => {
-                                const request = toRequest(apiurl, "deleteFrozenColumn", [["id", id]])
-                                fetch(request)
-                                    .then(response => response.json())
-                                    .then(response => onDeleteFrozen(response));
+                                const request = backend.toRequest("deleteFrozenColumn", ["id", id])
+                                backend.fetchThen(request, response => {
+                                    onDeleteFrozen(response)
+                                });
                             }}
                         >
                             🗑
@@ -147,8 +137,8 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
 
 export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, onDeleteFrozen, apiurl}) {
     const [activeCell, setActiveCell] = useState();
+
     const activateCell = (item) => setActiveCell(item);
-    console.log("activeCell:", activeCell)
 
     let gridRows = Object.entries(data).map(([name, cells], ix) => 
         <GridRow key={ix}

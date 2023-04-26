@@ -1,25 +1,21 @@
-import {toRequest} from "./toEncoding";
+import Backend from "./Backend";
 
 import {useDrop} from "react-dnd";
 
 export default function Trash({onChange, onDrop, apiurl}){
- 
+    const backend = new Backend(apiurl);
+
     const [{ isOver }, dropRef] = useDrop({
         accept: 'gridIcon',
         drop: (item) => {
             let answer = window.confirm("Delete Grid? This cannot be undone")
             console.log("answer:", answer)
             if (answer) {
-                const request = toRequest(apiurl, "deleteGrid", [["text", item.gridName]]);
-                fetch(request)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("data:", data);
-                        onDrop(data)
-                    }
-                );
+                const request = backend.toRequest("deleteGrid", ["text", item.gridName]);
+                backend.fetchThen(request, response => {
+                    onDrop(response);
+                });
             }
-            console.log("item:", [item]);
         },
         collect: (monitor) => ({
             isOver: monitor.isOver()

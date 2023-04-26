@@ -1,21 +1,21 @@
-import {toRequest} from "./toEncoding";
+import Backend from "./Backend";
 
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 
 export default function AnchorBook({anchorBook, onButtonClick, apiurl}) {
     const [items, setItems] = useState(anchorBook);
     const [newKey, setNewKey] = useState('');
     const [newValue, setNewValue] = useState([]);
 
+    const backend = useMemo(() => new Backend(apiurl), [apiurl]);
+
     useEffect(() => {
-        const request = toRequest(apiurl, data, [])
-        fetch(request)
-            .then(response => response.json())
-            .then(response => {
-                const {data, beliefsAvailable} = response
-                setItems(data.anchor_book);;
-            });
-    }, [apiurl])
+        const request = backend.toRequest("data");
+        backend.fetchThen(request, response => {
+            const {data, beliefsAvailable} = response
+            setItems(data.anchor_book);;
+        });
+    }, [backend])
 
     const handleAddAnchorClick = () => {
         const newDict = { newKey: newValue }
@@ -66,13 +66,10 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}) {
                             <button
                                 onClick={(evt) => {
                                     setNewKey(key);
-                                    const request = toRequest(apiurl, "updateAnchorBook", [["newKey", newKey], ["newValue", newValue], ["cmd", "add"]]);
-                                    fetch(request)
-                                        .then(response => response.json())
-                                        .then(response => {
-                                            console.log(response); 
-                                            onButtonClick(response)
-                                        });
+                                    const request = backend.toRequest("updateAnchorBook", ["newKey", newKey], ["newValue", newValue], ["cmd", "add"]);
+                                    backend.fetchThen(request, response => {
+                                        onButtonClick(response)
+                                    });
                                     handleListClick('+');
                                     setNewKey('');
                                     setNewValue([]);
@@ -84,13 +81,10 @@ export default function AnchorBook({anchorBook, onButtonClick, apiurl}) {
                             <button
                                 onClick={(evt) => {
                                     setNewKey(key); 
-                                    const request = toRequest(apiurl, "updateAnchorBook", [["newKey", newKey], ["newValue", newValue], ["cmd", "remove"]]);
-                                    fetch(request)
-                                        .then(response => response.json())
-                                        .then(response => {
-                                            console.log(response); 
-                                            onButtonClick(response)
-                                        }); 
+                                    const request = backend.toRequest("updateAnchorBook", ["newKey", newKey], ["newValue", newValue], ["cmd", "remove"]);
+                                    backend.fetchThen(request, response => {
+                                        onButtonClick(response)
+                                    }); 
                                     handleListClick('-');
                                     setNewKey('');
                                     setNewValue([]);

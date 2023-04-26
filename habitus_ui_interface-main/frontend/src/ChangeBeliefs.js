@@ -1,4 +1,4 @@
-import {toRequest} from "./toEncoding";
+import Backend from "./Backend";
 
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
@@ -15,6 +15,8 @@ export default function ChangeBeliefs({apiurl}) {
     const [error, setError] = useState(false);
     const [beliefsFile, setBeliefsFile] = useState([]);
 
+    const backend = new Backend(apiurl, setWaiting);
+
     const handleInput = (text) => {
         setFeedback(false);
         setFilepath(text);
@@ -22,23 +24,16 @@ export default function ChangeBeliefs({apiurl}) {
 
     const handleButton = () => {
         if (filepath.length > 0){
-            setWaiting(true);
             setFeedback(false);
-            const request = toRequest(apiurl, "processBeliefs", [["beliefsFilepath", filepath]]);
-            fetch(request)
-                .then(response => response.json())
-                .then(data => {
-                    setWaiting(false);
-                    setError(!data.success);
-                    if (data.success){
-                        setBeliefsFile(data.beliefs_file)
-                        // Report back that beliefs are available
-                    }
-                    else {
-                        setBeliefsFile([])
-                    };
-                    setFeedback(true);
-                });
+            const request = backend.toRequest("processBeliefs", ["beliefsFilepath", filepath]);
+            backend.fetchThen(request, response => {
+                setError(!response.success);
+                if (response.success)
+                    setBeliefsFile(response.beliefs_file);
+                else
+                    setBeliefsFile([]);
+                setFeedback(true);
+            });
         }
     }
 

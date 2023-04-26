@@ -1,9 +1,7 @@
-import {toRequest} from "./toEncoding";
+import Backend from "./Backend";
 
-// import {useState} from "react";
-
-export default function InputBox({text, onKeyPress, apiurl}){
-    // const [textInput, setTextInput] = useState([]);
+export default function InputBox({text, onKeyPress, apiurl}) {
+    const backend = new Backend(apiurl);
 
     return (
         <div className={"InputBox"}>
@@ -11,15 +9,12 @@ export default function InputBox({text, onKeyPress, apiurl}){
                 onKeyPress={(evt) => {
                     if (evt.key === "Enter") {
                         if (evt.target.value.length > 0) {
-                            const request = toRequest(apiurl, "textInput", [["text", evt.target.value]]);
-                            fetch(request)
-                                .then(response => response.json())
-                                .then(response => {
-                                    console.log("response:", response);
-                                    onKeyPress(response);
-                                })
-                                .then(evt.target.value = '')
-                                .then(evt.target.blur())
+                            const request = backend.toRequest("textInput", ["text", evt.target.value]);
+                            backend.fetchThen(request, response => {
+                                onKeyPress(response);
+                                evt.target.value = ''
+                                evt.target.blur()
+                            })
                         }
                     }
                 }} 
