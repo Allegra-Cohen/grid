@@ -1,6 +1,13 @@
-.SaveBox {
+div.SaveBox {
   color: 'black';
   text-align: center;
   text-decoration: none;
   display: flex;
+}
+
+div.SaveBox > input {
+  height: 2em;
+  color: black;
+  font-size: 13pt;
+  border: 1.5px solid #90c5e1;
 }

@@ -3,7 +3,7 @@ import Callback from "./Callback";
 
 import {useDrop} from "react-dnd";
 
-import "./Trash.css"
+import "./Trash.css";
 
 export default function Trash({onDrop, apiurl}) {
     const backend = new Backend(apiurl);
