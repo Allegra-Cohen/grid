@@ -1,4 +1,5 @@
 import Backend from "./Backend";
+import Callback from "./Callback";
 
 import {useDrop} from "react-dnd";
 import {useState} from "react";
@@ -22,38 +23,38 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
 
     const backend = new Backend(apiurl);
 
-    let ix = Math.ceil(colorValue * 100)
+    const handleLocalDrop = new Callback("GridCell.handleDrop").log1(item => {
+        const request = backend.toRequest("drag", ["row", rowName], ["col", colName], ["sent", item.text]);
+        backend.fetchThen(request, response => {
+            onDrop(response)
+        });
+        console.log("rowName, colName, item:", [rowName, colName, item]);
+    })
 
     const [{ isOver }, dropRef] = useDrop({
         accept: 'sentence',
-        drop: (item) => {
-            const request = backend.toRequest("drag", ["row", rowName], ["col", colName], ["sent", item.text]);
-            backend.fetchThen(request, response => {
-                onDrop(response)
-            });
-            console.log("rowName, colName, item:", [rowName, colName, item]);
-        },
+        drop: handleLocalDrop,
         collect: (monitor) => ({
+            // A Callback doesn't work here because it needs to return something.
             isOver: monitor.isOver() && rowContents[rowName].includes(monitor.getItem().text)
         })
     })
 
+    const handleLocalClick = new Callback("GridCell.handleClick").log1((evt) => {
+        const request = backend.toRequest("click", ["row", rowName], ["col", colName]);
+        backend.fetchThen(request, response => {
+            onChange(response);
+            activateCell(id);
+        });
+    })
+
+    const index = Math.ceil(colorValue * 100)
+    const colorIndex = Math.min(index, gradientArray.length - 1)
+    const background = gradientArray[colorIndex]
+    const border = isActive ? '2px solid #BE1C06' : '2px transparent'
+
     return (
-        <td ref={dropRef}
-            style={{ 
-                width: "5em",
-                height: "4em",
-                background: gradientArray[ix],
-                border: isActive ? '2px solid #BE1C06' : null}
-            }
-            onClick={(evt) => {
-                const request = backend.toRequest("click", ["row", rowName], ["col", colName]);
-                backend.fetchThen(request, response => {
-                    onChange(response);
-                    activateCell(id);
-                });
-            }}
-        >
+        <td ref={dropRef} onClick={handleLocalClick} style={{width: "5em", height: "4em", background: background, border: border}}>
             {isOver && "Drop"}
         </td>
     );
