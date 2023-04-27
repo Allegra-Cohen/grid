@@ -12,7 +12,8 @@ export default class Callback {
         return () => {
             const args = []
             console.log("callback:", `${this.name}[${args}]`);
-            operation();
+            const result = operation();
+            return result;
         }
     }
 
@@ -20,7 +21,16 @@ export default class Callback {
         return (arg1) => {
             const args = [arg1]
             console.log("callback:", `${this.name}[${args}]`);
-            operation(arg1);
+            const result = operation(arg1);
+            return result;
+        }
+    }
+
+    get(operation) {
+        return (...args) => {
+            console.log(`callback: ${this.name}(`, ...args, ")");
+            const result = operation(...args);
+            return result;
         }
     }
 }
