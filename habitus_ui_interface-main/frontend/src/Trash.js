@@ -1,35 +1,34 @@
 import Backend from "./Backend";
+import Callback from "./Callback";
 
 import {useDrop} from "react-dnd";
 
-export default function Trash({onChange, onDrop, apiurl}){
+import "./Trash.css"
+
+export default function Trash({onDrop, apiurl}) {
     const backend = new Backend(apiurl);
 
-    const [{ isOver }, dropRef] = useDrop({
+    const handleDrop = new Callback("Trash.handleDrop").log1(item => {
+        const answer = window.confirm("Delete Grid? This cannot be undone.");
+        if (answer) {
+            const request = backend.toRequest("deleteGrid", ["text", item.gridName]);
+            backend.fetchThen(request, response => {
+                onDrop(response);
+            });
+        }
+    });
+
+    const [{isOver}, dropRef] = useDrop({
         accept: 'gridIcon',
-        drop: (item) => {
-            let answer = window.confirm("Delete Grid? This cannot be undone")
-            console.log("answer:", answer)
-            if (answer) {
-                const request = backend.toRequest("deleteGrid", ["text", item.gridName]);
-                backend.fetchThen(request, response => {
-                    onDrop(response);
-                });
-            }
-        },
+        drop: handleDrop,
         collect: (monitor) => ({
             isOver: monitor.isOver()
         })
-    })
+    });
+
+    const className = "trash " + (isOver ? "trashAvailable" : "trashUnavailable");
 
     return (
-        <div ref={dropRef} 
-            style={{
-                background: isOver ? 'skyblue' : "white",
-                fontSize: '40pt'
-            }}
-        >
-            🗑
-        </div>
+        <div ref={dropRef} className={className}>🗑</div>
     );
 }

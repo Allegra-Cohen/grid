@@ -1,0 +1,11 @@
+div.trash {
+    font-size: 40pt;
+}
+
+div.trashAvailable {
+    background: skyblue;
+}
+
+div.trashUnavailable {
+    background: white;
+}
