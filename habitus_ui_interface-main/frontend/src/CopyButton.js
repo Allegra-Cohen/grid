@@ -3,7 +3,7 @@ import Callback from "./Callback";
 
 import {useState} from "react";
 
-export default function CopyButton({onClick, apiurl}) {
+export default function CopyButton({apiurl}) {
     const [clicked, setClicked] = useState(false);
 
     const backend = new Backend(apiurl);
@@ -12,7 +12,6 @@ export default function CopyButton({onClick, apiurl}) {
         evt.preventDefault();
         const request = backend.toRequest("copyToggle");
         backend.fetchThen(request, response => {
-            onClick(response);
             setClicked(!clicked);
         });
     });

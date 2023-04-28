@@ -1,4 +1,5 @@
 import Backend from "./Backend";
+import Callback from "./Callback";
 import Beliefs from './Beliefs';
 import Context from './Context';
 import CopyButton from  "./CopyButton";
@@ -20,8 +21,6 @@ import './InputBox.css';
 import './KButton.css';
 import './RegenerateButton.css';
 import './Spinner.css';
-
-// This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
 
 export default function App({apiurl}) {
     const [filename, setFilename] = useState();
@@ -53,18 +52,18 @@ export default function App({apiurl}) {
         });
     }, [backend]);
 
-    const handleSaveTyping = evt => {
+    const handleSaveTyping = new Callback("App.handleSaveTyping").get(evt => {
         setSaveAs(evt.target.value);
-    };
+    });
 
-    const handleSaveAs = saveAs => {
+    const handleSaveAs = new Callback("App.handleSaveAs").get(saveAs => {
         const request = backend.toRequest("saveAsGrid", ["text", saveAs]);
         backend.fetchThen(request, response => {
             setFilename(response.filename);
         });
-    };
+    });
 
-    const handleSaveClick = () => {
+    const handleSaveClick = new Callback("App.handleSaveClick").get(() => {
         if (saveAs) {
             const request = backend.toRequest("showGrids");
             backend.fetchThen(request, response => {
@@ -81,109 +80,109 @@ export default function App({apiurl}) {
             const request = backend.toRequest("saveGrid");
             backend.fetch(request);
         }
-    };
+    });
+
+    const handleGridChange = new Callback("App.handleGridDrop").get(evt => {
+        setCorpus(evt);
+        setMetadata(noMetadata)
+    });
+
+    const handleGridDrop = new Callback("App.handleGridDrop").get(evt => {
+        console.log("evt:", evt);
+        console.log('drop!');
+        setCorpus(evt.clicked_sentences);
+        setGridRows(evt.grid);
+        setColNumToName(evt.col_num_to_name);
+        setMetadata(noMetadata)
+    });
+
+    const handleGridFooter = new Callback("App.handleGridFooter").get(evt => {
+        setGridRows({...evt.grid});
+        setColNumToName({...evt.col_num_to_name});
+        setFrozenColumns([...evt.frozen_columns]);
+    });
+
+    const handleGridDelete = new Callback("App.handleGridDelete").get(evt => {
+        setCorpus(evt.clicked_sentences);
+        setGridRows({...evt.grid});
+        setColNumToName({...evt.col_num_to_name});
+        setFrozenColumns([...evt.frozen_columns]); // TODO convert this to other format?
+    });
+
+    const handleRegenerate = new Callback("App.handleRegenerate").get(evt => {
+        console.log("evt:", evt);
+        setCorpus(evt.clicked_sentences);
+        setGridRows(evt.grid);
+        setColNumToName(evt.col_num_to_name);
+        setFrozenColumns(evt.frozen_columns);
+    });
+
+    const handleNewColumn = new Callback("App.handleNewColumn").get(evt => {
+        console.log("evt:", evt);
+        setCorpus(evt.clicked_sentences);
+        setGridRows(evt.grid);
+        setColNumToName(evt.col_num_to_name);
+        setFrozenColumns(evt.frozen_columns);
+    });
+
+    const handleCorpusChange = new Callback("App.handleCorpusChange").get(evt => {
+        setMetadata(evt)
+    });
+
+    const anchorDiv = (waiting ? 
+        <div/>
+        :
+        <div style={{display:'inline', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'3%', fontFamily:'InaiMathi', fontSize:'20pt'}}>
+            {filename} ({anchor})
+        </div>
+    );
+
+    const spinnerDiv = (waiting ?
+        <div className='spinner' style={{marginLeft:'25%',marginTop:'3%'}}/>
+        : 
+        <div/>
+    );
 
     return (
         <DndProvider backend={HTML5Backend}>
             <div style={{background: "#a9d3ff", padding:"1%", display: 'flex', flexDirection: 'row', marginBottom:'1%'}}>
                 <Link style={{color:'black', marginTop:'0.5%'}} to="/">Back to Gallery</Link>
-                <div style={{marginLeft:'80%'}}><input style={{width:'90%', height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}} placeholder='Save as' onKeyUp={(evt) => handleSaveTyping(evt)} apiurl={apiurl}/></div>
-                <button style={{marginLeft:'2%', fontSize:'20pt', background:'none', borderWidth:'1pt'}} onClick={(evt)=>handleSaveClick()}>💾</button>
+                <div style={{marginLeft:'80%'}}>
+                    <input style={{width:'90%', height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}} placeholder='Save as' onKeyUp={handleSaveTyping} apiurl={apiurl}/>
+                </div>
+                <button style={{marginLeft:'2%', fontSize:'20pt', background:'none', borderWidth:'1pt'}} onClick={handleSaveClick}>&#x1F4BE;</button>
             </div>
-            {waiting ? 
-                <div/>
-                :
-                <div style={{display:'inline', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'3%', fontFamily:'InaiMathi', fontSize:'20pt'}}> {filename} ({anchor}) </div>
-            }
+            {anchorDiv}
             <div className="App" style={{display: "flex", flexDirection: "row"}}>
                 <div style={{display: "flex", flexDirection: "column"}}>
-                    {waiting ? 
-                        <div className='spinner' style={{marginLeft:'25%',marginTop:'3%'}}/>
-                        : 
-                        <div/>
-                    }
+                    {spinnerDiv}
                     <Grid
                         data={gridRows}
                         col_num_to_name={colNumToName}
                         frozen_columns={frozenColumns}
                         row_contents = {rowContents}
-                        onChange={(evt) => {
-                            setCorpus(evt);
-                            setMetadata(noMetadata)
-                        }}
-                        onDrop={(evt) => {
-                            console.log("evt:", evt);
-                            console.log('drop!');
-                            setCorpus(evt.clicked_sentences);
-                            setGridRows(evt.grid);
-                            setColNumToName(evt.col_num_to_name);
-                            setMetadata(noMetadata)
-                        }}
-                        onFooter={(evt) => {
-                            setGridRows({...evt.grid});
-                            setColNumToName({...evt.col_num_to_name});
-                            setFrozenColumns([...evt.frozen_columns]);
-                        }}
-                        onDeleteFrozen={(evt) => {
-                            setCorpus(evt.clicked_sentences);
-                            setGridRows({...evt.grid});
-                            setColNumToName({...evt.col_num_to_name});
-                            setFrozenColumns([...evt.frozen_columns]);
-                        }}
+                        onChange={handleGridChange}
+                        onDrop={handleGridDrop}
+                        onFooter={handleGridFooter}
+                        onDeleteFrozen={handleGridDelete}
                         apiurl={apiurl}
                     />
                     <div style={{display:"flex", flexDirection:"column"}}>
                         <div style={{display:"flex", flexDirection:"row"}}>
-                            <InputBox
-                                data={gridRows}
-                                col_num_to_name={colNumToName} 
-                                onKeyPress={(evt) => {
-                                    console.log("evt:", evt);
-                                    setCorpus(evt.clicked_sentences);
-                                    setGridRows(evt.grid);
-                                    setColNumToName(evt.col_num_to_name);
-                                    setFrozenColumns(evt.frozen_columns)
-                                }}
-                                apiurl={apiurl}
-                            />
-                            <CopyButton
-                                className="CopyButton"
-                                onClick={(evt) => {
-                                    console.log("copy button evt:", evt)
-                                }}
-                                apiurl={apiurl}
-                            />
+                            <InputBox data={gridRows} col_num_to_name={colNumToName} onKeyPress={handleNewColumn} apiurl={apiurl} />
+                            <CopyButton className="CopyButton" apiurl={apiurl} />
                         </div>
                         <div style={{display:"flex", flexDirection:"row"}}>
-                            <RegenerateButton
-                                className="RegenerateButton"
-                                onClick={(evt) => {
-                                    console.log("evt:", evt);
-                                    setCorpus(evt.clicked_sentences);
-                                    setGridRows(evt.grid);
-                                    setColNumToName(evt.col_num_to_name);
-                                    setFrozenColumns(evt.frozen_columns)}
-                                }
-                                apiurl={apiurl}
-                            />
-                            <KButton 
-                                className="KButton"
-                                apiurl={apiurl}
-                            />
+                            <RegenerateButton className="RegenerateButton" onClick={handleRegenerate} apiurl={apiurl} />
+                            <KButton className="KButton" apiurl={apiurl} />
                         </div>
                     </div>
                 </div>
                 <div style={{display: "flex", flexDirection: "column"}}>
                     <div style={{display: "flex", flexDirection: "row", fontFamily: 'InaiMathi'}}>
-                        <Corpus
-                            sentences={corpus}
-                            onChange={(evt) => {
-                                setMetadata(evt)
-                            }}
-                            apiurl={apiurl}
-                        />
-                        <Context context={metadata.context}/>
-                        <Beliefs beliefsAvailable={beliefsAvailable} beliefs={metadata.beliefs}/>
+                        <Corpus sentences={corpus} onChange={handleCorpusChange} apiurl={apiurl} />
+                        <Context context={metadata.context} />
+                        <Beliefs beliefs={metadata.beliefs} beliefsAvailable={beliefsAvailable} />
                     </div>
                 </div>
             </div>
