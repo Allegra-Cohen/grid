@@ -9,7 +9,7 @@ export default function Trash({onDrop, apiurl}) {
     const backend = new Backend(apiurl);
 
     const handleDrop = new Callback("Trash.handleDrop").get(item => {
-        const answer = window.confirm("Delete Grid? This cannot be undone.");
+        const answer = window.confirm(`Delete grid "${item.gridName}"? This cannot be undone.`);
         if (answer) {
             const request = backend.toRequest("deleteGrid", ["text", item.gridName]);
             backend.fetchThen(request, response => {
