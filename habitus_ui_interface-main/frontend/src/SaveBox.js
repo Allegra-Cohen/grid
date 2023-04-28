@@ -10,7 +10,7 @@ export default function SaveAsBox({text, apiurl}){
         if (evt.key === "Enter") {
             const request = backend.toRequest("saveAsGrid", ["text", evt.target.value]);
             backend.fetchThen(request, response => {
-                evt.target.value = ''
+                evt.target.value = ""
                 evt.target.blur()
             });
         }

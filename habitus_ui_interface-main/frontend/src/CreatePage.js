@@ -1,15 +1,15 @@
 import Backend from "./Backend";
 import Callback from "./Callback";
 
-import {DndProvider} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 import {Link} from "react-router-dom";
 import {useEffect, useMemo, useState} from "react";
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from "react-router-dom";
 
-import './info.css';
+import "./info.css";
 import "./Page.css";
-import './Spinner.css';
+import "./Spinner.css";
 
 export default function CreatePage({apiurl}) {
     const [grids, setGrids] = useState([]);
@@ -36,7 +36,7 @@ export default function CreatePage({apiurl}) {
 
     const handleInput = new Callback("CreatePage.handleInput").get((variable, evt) => {
         const text =  evt.target.value;
-        if (variable === 'filename') {
+        if (variable === "filename") {
             if (grids.includes(text))
                 setValidFile(false);
             else {
@@ -44,9 +44,9 @@ export default function CreatePage({apiurl}) {
                 setValidFile(true);
             }
         }
-        else if (variable === 'anchor')
+        else if (variable === "anchor")
             setAnchor(text);
-        else if (variable === 'rowname')
+        else if (variable === "rowname")
             setRowFilename(text);
         else
             setSupercorpus(text);
@@ -55,7 +55,7 @@ export default function CreatePage({apiurl}) {
     const handleButton = new Callback("CreatePage.handleButton").get(env => {
         if (validFile && rowFilename.length > 0) {
             setError(false);
-            const text = anchor.length > 0 ? anchor : 'load_all';
+            const text = anchor.length > 0 ? anchor : "load_all";
             const request = backend.toRequest("loadNewGrid",
                 ["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]
             );
@@ -63,25 +63,25 @@ export default function CreatePage({apiurl}) {
                 if (!response)
                     setError(true);
                 else
-                    navigate('/grid');
+                    navigate("/grid");
             });
         }
     });
 
     const handleCorpus = new Callback("CreatePage.handleCorpus").get(evt => {
-        handleInput('corpus', evt);
+        handleInput("corpus", evt);
     });
 
     const handleRowname = new Callback("CreatePage.handleRowname").get(evt => {
-        handleInput('rowname', evt);
+        handleInput("rowname", evt);
     });
 
     const handleAnchor = new Callback("CreatePage.handleAnchor").get(evt => {
-        handleInput('anchor', evt);
+        handleInput("anchor", evt);
     });
 
     const handleFilename = new Callback("CreatePage.handleFilename").get(evt => {
-        handleInput('filename', evt);
+        handleInput("filename", evt);
     });
 
     return (
@@ -89,15 +89,15 @@ export default function CreatePage({apiurl}) {
             <div className="banner">
                 <Link to="/">Back to Gallery</Link>
             </div>
-            <div style={{marginTop:'5%'}}>
-                <h1 style={{marginLeft:'40%'}}>Create a new Grid</h1>
+            <div style={{marginTop:"5%"}}>
+                <h1 style={{marginLeft:"40%"}}>Create a new Grid</h1>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className='info' style={{width:'max-content', marginLeft:'37%'}} onKeyUp={handleCorpus}>
+                    <div className="info" style={{width:"max-content", marginLeft:"37%"}} onKeyUp={handleCorpus}>
                         Which corpus will you use?
                         <input placeholder = "Corpus filename"/>
                     </div>
                     {supercorpus.length === 0 && !error ?
-                        <div style={{margin: '0.5%', padding: '1%', color: 'blue'}}>
+                        <div style={{margin: "0.5%", padding: "1%", color: "blue"}}>
                             Please provide a filename
                         </div>
                         :
@@ -105,43 +105,43 @@ export default function CreatePage({apiurl}) {
                     }
                 </div>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className='info' style={{width:'max-content', marginLeft:'36.6%'}} onKeyUp={handleRowname}>
+                    <div className="info" style={{width:"max-content", marginLeft:"36.6%"}} onKeyUp={handleRowname}>
                         Which row labels will you use?
                         <input placeholder = "Row labels filename"/>
                     </div>
                     {rowFilename.length === 0 && !error ? 
-                        <div style={{margin: '0.5%', padding: '1%', color: 'blue'}}>
+                        <div style={{margin: "0.5%", padding: "1%", color: "blue"}}>
                             Please provide a filename
                         </div>
                         :
                         <div/>
                     }
                 </div>
-                <div className='info' style={{width:'max-content', marginLeft:'36%'}} onKeyUp={handleAnchor}>
+                <div className="info" style={{width:"max-content", marginLeft:"36%"}} onKeyUp={handleAnchor}>
                     Do you want to anchor your Grid?
                     <input placeholder = "Anchor term"/>
                 </div>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className='info' style={{width:'max-content', marginLeft:'33%'}} onKeyUp={handleFilename}>
+                    <div className="info" style={{width:"max-content", marginLeft:"33%"}} onKeyUp={handleFilename}>
                         What filename do you want to save your Grid with?
                         <input placeholder = "Filename"/>
                     </div>
                     {validFile ?
                         <div/>
                         :
-                        <div style={{margin: '0.5%', padding: '1%', color: 'red'}}>That filename already exists</div>
+                        <div style={{margin: "0.5%", padding: "1%", color: "red"}}>That filename already exists</div>
                     }
                     {filename.length > 0 ? 
                         <div/>
                         :
-                        <div style={{margin: '0.5%', padding: '1%', color: 'blue'}}>Please provide a filename</div>
+                        <div style={{margin: "0.5%", padding: "1%", color: "blue"}}>Please provide a filename</div>
                     }
                 </div>
             </div>
-            <button style={{width:'max-content', marginLeft:'44%', fontSize:'14pt', padding:'0.5%', backgroundColor:'#54f07d'}} onClick={handleButton}>Ready!</button>
+            <button style={{width:"max-content", marginLeft:"44%", fontSize:"14pt", padding:"0.5%", backgroundColor:"#54f07d"}} onClick={handleButton}>Ready!</button>
             <div>
                 {error ? 
-                    <div style={{marginLeft: '26%', margin: '0.5%', padding: '1%', color: 'red'}}>
+                    <div style={{marginLeft: "26%", margin: "0.5%", padding: "1%", color: "red"}}>
                         Please double check your corpus and row label files. One or more of them does not exist in the folder {filepath}
                     </div>
                     :
@@ -149,10 +149,10 @@ export default function CreatePage({apiurl}) {
                 }
                 {waiting ? 
                     <div>
-                        <div style={{marginLeft:'34%', marginTop:'2%', marginBottom:'1%'}}>
+                        <div style={{marginLeft:"34%", marginTop:"2%", marginBottom:"1%"}}>
                             Loading corpus...If this is a new corpus, this step may take several minutes.
                         </div>
-                        <div className='spinner' style={{marginLeft:'44%'}}>
+                        <div className="spinner" style={{marginLeft:"44%"}}>
                         </div>
                     </div>
                     :

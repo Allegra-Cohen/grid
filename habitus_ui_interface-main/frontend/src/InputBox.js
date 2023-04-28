@@ -10,7 +10,7 @@ export default function InputBox({text, onKeyPress, apiurl}) {
                 const request = backend.toRequest("textInput", ["text", evt.target.value]);
                 backend.fetchThen(request, response => {
                     onKeyPress(response);
-                    evt.target.value = '';
+                    evt.target.value = "";
                     evt.target.blur();
                 })
             }

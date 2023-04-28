@@ -1,27 +1,27 @@
 import Backend from "./Backend";
 import Callback from "./Callback";
-import Beliefs from './Beliefs';
-import Context from './Context';
+import Beliefs from "./Beliefs";
+import Context from "./Context";
 import CopyButton from  "./CopyButton";
-import Corpus from './Corpus.js';
+import Corpus from "./Corpus";
 import Grid from  "./Grid";
-import InputBox from './InputBox';
-import KButton from './KButton';
+import InputBox from "./InputBox";
+import KButton from "./KButton";
 import RegenerateButton from  "./RegenerateButton";
-import noMetadata from './Metadata.js';
+import noMetadata from "./Metadata";
 
-import {DndProvider} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 import {Link} from "react-router-dom";
 import {useEffect, useMemo, useState} from "react";
 
-import './App.css';
-import './CopyButton.css';
-import './InputBox.css';
-import './KButton.css';
-import './Page.css';
-import './RegenerateButton.css';
-import './Spinner.css';
+import "./App.css";
+import "./CopyButton.css";
+import "./InputBox.css";
+import "./KButton.css";
+import "./Page.css";
+import "./RegenerateButton.css";
+import "./Spinner.css";
 
 export default function App({apiurl}) {
     const [filename, setFilename] = useState();
@@ -90,7 +90,7 @@ export default function App({apiurl}) {
 
     const handleGridDrop = new Callback("App.handleGridDrop").get(evt => {
         console.log("evt:", evt);
-        console.log('drop!');
+        console.log("drop!");
         setCorpus(evt.clicked_sentences);
         setGridRows(evt.grid);
         setColNumToName(evt.col_num_to_name);
@@ -133,13 +133,13 @@ export default function App({apiurl}) {
     const anchorDiv = (waiting ? 
         <div/>
         :
-        <div style={{display:'inline', width: '80px', marginBottom:'0.03em', marginLeft:'4em', marginTop:'3%', fontFamily:'InaiMathi', fontSize:'20pt'}}>
+        <div style={{display:"inline", width: "80px", marginBottom:"0.03em", marginLeft:"4em", marginTop:"3%", fontFamily:"InaiMathi", fontSize:"20pt"}}>
             {filename} ({anchor})
         </div>
     );
 
     const spinnerDiv = (waiting ?
-        <div className='spinner' style={{marginLeft:'25%',marginTop:'3%'}}/>
+        <div className="spinner" style={{marginLeft:"25%",marginTop:"3%"}}/>
         : 
         <div/>
     );
@@ -148,10 +148,10 @@ export default function App({apiurl}) {
         <DndProvider backend={HTML5Backend}>
             <div className="banner">
                 <Link to="/">Back&nbsp;to&nbsp;Gallery</Link>
-                <div style={{marginLeft:'80%'}}>
-                    <input style={{width:'80%', height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}} placeholder='Save as' onKeyUp={handleSaveTyping} apiurl={apiurl}/>
+                <div style={{marginLeft:"80%"}}>
+                    <input style={{width:"80%", height:"2em", color:"black", fontSize: "13pt", border: "1.5px solid #90c5e1"}} placeholder="Save as" onKeyUp={handleSaveTyping} apiurl={apiurl}/>
                 </div>
-                <button style={{marginLeft:'2%', fontSize:'20pt', background:'none', borderWidth:'1pt'}} onClick={handleSaveClick}>&#x1F4BE;</button>
+                <button style={{marginLeft:"2%", fontSize:"20pt", background:"none", borderWidth:"1pt"}} onClick={handleSaveClick}>&#x1F4BE;</button>
             </div>
             {anchorDiv}
             <div className="App">
@@ -180,7 +180,7 @@ export default function App({apiurl}) {
                     </div>
                 </div>
                 <div className="flexColumn">
-                    <div className="flexRow" style={{fontFamily: 'InaiMathi'}}>
+                    <div className="flexRow" style={{fontFamily: "InaiMathi"}}>
                         <Corpus sentences={corpus} onChange={handleCorpusChange} apiurl={apiurl} />
                         <Context context={metadata.context} />
                         <Beliefs beliefs={metadata.beliefs} beliefsAvailable={beliefsAvailable} />

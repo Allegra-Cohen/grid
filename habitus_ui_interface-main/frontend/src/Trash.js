@@ -24,7 +24,7 @@ export default function Trash({onDrop, apiurl}) {
     });
 
     const [{isOver}, dropRef] = useDrop({
-        accept: 'gridIcon',
+        accept: "gridIcon",
         drop: handleDrop,
         collect: handleCollect
     });

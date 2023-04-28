@@ -1,15 +1,15 @@
-import Backend from './Backend';
-import Callback from './Callback';
-import Trash from './Trash';
+import Backend from "./Backend";
+import Callback from "./Callback";
+import Trash from "./Trash";
 
-import {DndProvider} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 import {Link} from "react-router-dom";
 import {useEffect, useMemo, useState} from "react";
 import {useDrag} from "react-dnd";
 
 import "./Gallery.css";
-import './info.css';
+import "./info.css";
 import "./Page.css";
 
 function GridIcon({gridName, onGridClick}) {
@@ -20,7 +20,7 @@ function GridIcon({gridName, onGridClick}) {
     });
 
     const [{isDragging}, dragRef] = useDrag({
-        type: 'gridIcon',
+        type: "gridIcon",
         item: {gridName},
         collect: handleCollect
     });
@@ -30,7 +30,7 @@ function GridIcon({gridName, onGridClick}) {
     });
 
     return (
-        <Link ref={dragRef} className='gallery' to="/grid" onClick={handleClick}>
+        <Link ref={dragRef} className="gallery" to="/grid" onClick={handleClick}>
             {gridName}{isDragging}
         </Link>
     );
@@ -38,7 +38,7 @@ function GridIcon({gridName, onGridClick}) {
 
 export default function Gallery({apiurl}) {
     const [grids, setGrids] = useState([]);
-    const [numCols, setNumCols] = useState('1');
+    const [numCols, setNumCols] = useState("1");
 
     const backend = useMemo(() => new Backend(apiurl), [apiurl]);
 
@@ -46,7 +46,7 @@ export default function Gallery({apiurl}) {
         const request = backend.toRequest("showGrids")
         backend.fetchThen(request, response => {
             setGrids(response.grids);
-            setNumCols(grids.length === 1 ? '1' : '2')
+            setNumCols(grids.length === 1 ? "1" : "2")
         });
     }, [backend, numCols, grids.length]);
 
@@ -59,7 +59,7 @@ export default function Gallery({apiurl}) {
         const request = backend.toRequest("showGrids");
         backend.fetchThen(request, response => {
             setGrids(response.grids);
-            setNumCols(grids.length === 1 ? '1' : '2');
+            setNumCols(grids.length === 1 ? "1" : "2");
         });
     });
 
@@ -70,25 +70,25 @@ export default function Gallery({apiurl}) {
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="banner" />
-            <h1 style={{marginLeft:"5%", color:'#060e4e'}}>Grids:</h1>
+            <h1 style={{marginLeft:"5%", color:"#060e4e"}}>Grids:</h1>
             <div>
                 <ul style={{columns:numCols, marginLeft:"3.5%"}}>
                     {items}
                 </ul>
             </div>
 
-            <div style={{display:'flex', flexDirection:'row', marginLeft:'6%'}}>
-                <div style={{marginLeft:'42%', marginTop:'1%'}}>
-                    <Trash className='Trash' onDrop={handleTrashDrop} apiurl={apiurl} />
+            <div style={{display:"flex", flexDirection:"row", marginLeft:"6%"}}>
+                <div style={{marginLeft:"42%", marginTop:"1%"}}>
+                    <Trash className="Trash" onDrop={handleTrashDrop} apiurl={apiurl} />
                 </div>
             </div>
-            <div className='info'>
+            <div className="info">
                 <Link to="/create"> Create new Grid! </Link>
             </div>
-            <div className='info'>
+            <div className="info">
                 <Link to="/changeCorpus"> Upload or update corpus </Link>
             </div>
-            <div className='info'>
+            <div className="info">
                 <Link to="/changeBeliefs"> Update beliefs </Link>
             </div>
         </DndProvider>

@@ -8,17 +8,17 @@ import "./Grid.css";
 
 function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiurl}) {
     const gradientArray = [
-        '#f0f7fd', '#cce6fe', '#a9d3ff', '#87c1ff', '#65adff', '#4099ff', '#0084ff', '#0084ff', '#117bf3', '#1972e6',
-        '#1e69da', '#2160ce', '#2258c2', '#234fb6', '#2247aa', '#213f9f', '#203793', '#1e2f88', '#1b277d', '#182071',
-        '#151867', '#11115c', '#0f1159', '#0c1057', '#0a0f54', '#080f51', '#060e4e', '#040e4c', '#030d49', '#020c46',
-        '#010b43', '#010941', '#01083e', '#01063b', '#020439', '#020236', '#020236', '#020236', '#020236', '#020236',
-        '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
-        '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
-        '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
-        '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
-        '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
-        '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
-        '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236'
+        "#f0f7fd", "#cce6fe", "#a9d3ff", "#87c1ff", "#65adff", "#4099ff", "#0084ff", "#0084ff", "#117bf3", "#1972e6",
+        "#1e69da", "#2160ce", "#2258c2", "#234fb6", "#2247aa", "#213f9f", "#203793", "#1e2f88", "#1b277d", "#182071",
+        "#151867", "#11115c", "#0f1159", "#0c1057", "#0a0f54", "#080f51", "#060e4e", "#040e4c", "#030d49", "#020c46",
+        "#010b43", "#010941", "#01083e", "#01063b", "#020439", "#020236", "#020236", "#020236", "#020236", "#020236",
+        "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236",
+        "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236",
+        "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236",
+        "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236",
+        "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236",
+        "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236",
+        "#020236", "#020236", "#020236", "#020236", "#020236", "#020236", "#020236"
     ];
 
     const backend = new Backend(apiurl);
@@ -37,7 +37,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     });
 
     const [{isOver}, dropRef] = useDrop({
-        accept: 'sentence',
+        accept: "sentence",
         drop: handleDrop,
         collect: handleCollect
     });
@@ -53,7 +53,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     const index = Math.ceil(colorValue * 100);
     const colorIndex = Math.min(index, gradientArray.length - 1);
     const background = gradientArray[colorIndex];
-    const border = isActive ? '2px solid #BE1C06' : '2px transparent';
+    const border = isActive ? "2px solid #BE1C06" : "2px transparent";
 
     return (
         <td ref={dropRef} onClick={handleClick} style={{width: "5em", height: "4em", background: background, border: border}}>
@@ -81,7 +81,7 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
 
     return (
         <tr>
-            <td style={{textAlign:'left', padding:'1em'}}>{rowName}</td>
+            <td style={{textAlign:"left", padding:"1em"}}>{rowName}</td>
             {cells}
         </tr>
     );
@@ -95,7 +95,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
             const request = backend.toRequest("editName", ["id", id], ["name", evt.target.value]);
             backend.fetchThen(request, response => {
                 onFooter(response);
-                evt.target.value = '';
+                evt.target.value = "";
                 evt.target.blur();
             });
         }
@@ -108,7 +108,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
         });
     });
 
-    const color = colName.includes('Unassigned') ? '#616160' : (frozenColumns.includes(id) ? 'black' : 'blue');
+    const color = colName.includes("Unassigned") ? "#616160" : (frozenColumns.includes(id) ? "black" : "blue");
 
     return (
         <td key={id}>
@@ -121,10 +121,10 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
             }}>
                 {id}.<br/>
                 {colName}
-                {colName.includes('Unassigned') ?
+                {colName.includes("Unassigned") ?
                     <div/>
                     :
-                    <input className="footer" placeholder={"Rename"} style={{'--placeholder-color': 'gray'}} onKeyDown={handleEditName} />
+                    <input className="footer" placeholder={"Rename"} style={{"--placeholder-color": "gray"}} onKeyDown={handleEditName} />
                 }
                 {frozenColumns.includes(id) ?
                     <div>
@@ -160,7 +160,7 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
         const row = rows[0];
         const colIDs = Object.keys(row);
         const colNames = colIDs.map((colID) => col_num_to_name[colID]);
-        // console.log('grid here');
+        // console.log("grid here");
         // console.log(col_num_to_name)
         const footer = colNames.map((name, ix) =>
             <Footer

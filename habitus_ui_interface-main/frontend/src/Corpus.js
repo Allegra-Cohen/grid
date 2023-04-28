@@ -1,6 +1,6 @@
 import Backend from "./Backend";
 import Callback from "./Callback";
-import noMetadata from './Metadata';
+import noMetadata from "./Metadata";
 
 import {useDrag} from "react-dnd";
 import {useEffect, useState} from "react";
@@ -16,7 +16,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
     });
 
     const [{isDragging}, dragRef] = useDrag({
-        type: 'sentence',
+        type: "sentence",
         item: {text},
         collect: handleCollect
     });

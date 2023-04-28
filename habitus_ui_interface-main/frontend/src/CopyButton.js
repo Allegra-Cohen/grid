@@ -17,7 +17,7 @@ export default function CopyButton({apiurl}) {
     });
 
     const className = "CopyButton " + (clicked ? "CopyOn" : "CopyOff");
-    const isClicked = clicked && 'clicked';
+    const isClicked = clicked && "clicked";
 
     return (
         <div className={className}>
