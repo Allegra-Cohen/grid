@@ -191,11 +191,14 @@ class RankedTransformerGrounder(Grounder):
 				self.vectors = index
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
-		embeddings = self.model.encode([text])
-		_, beliefs_indexes_collection = self.vectors.search(embeddings, k)
-		beliefs_indexes = beliefs_indexes_collection[0]
-		beliefs = [self.beliefs[beliefs_index] for beliefs_index in beliefs_indexes]
-		return beliefs
+		if self.beliefs and self.vectors and self.model:
+			embeddings = self.model.encode([text])
+			_, beliefs_indexes_collection = self.vectors.search(embeddings, k)
+			beliefs_indexes = beliefs_indexes_collection[0]
+			beliefs = [self.beliefs[beliefs_index] for beliefs_index in beliefs_indexes]
+			return beliefs
+		else:
+			return []
 
 	def process(self, beliefs_filepath: str) -> None:
 		super().process(beliefs_filepath)
