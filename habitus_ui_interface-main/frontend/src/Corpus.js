@@ -1,38 +1,44 @@
-import Backend from "./Backend.js";
-import noMetadata from './Metadata.js';
+import Backend from "./Backend";
+import Callback from "./Callback";
+import noMetadata from './Metadata';
+
 import {useDrag} from "react-dnd";
 import {useEffect, useState} from "react";
 
-import "./Corpus.css"
+import "./Corpus.css";
 
 function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
     const backend = new Backend(apiurl);
 
-    const [{ isDragging }, dragRef] = useDrag({
+    const handleCollect = new Callback("Sentence.handleCollect").get(monitor => {
+        const result = {isDragging: monitor.isDragging()};
+        return result;
+    });
+
+    const [{isDragging}, dragRef] = useDrag({
         type: 'sentence',
         item: {text},
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging()
-        })
+        collect: handleCollect
+    });
+
+    const className = isActive ? "selected" : "unselected";
+
+    const handleClick = new Callback("Sentence.handleClick").get(evt => {
+        const request = backend.toRequest("sentenceClick", ["text", text]);
+        backend.fetchThen(request, response => {
+            if (isActive) {
+                activateSentence("");
+                onChange(noMetadata);
+            }
+            else {
+                activateSentence(text);
+                onChange(response);
+            }
+        });
     });
 
     return (
-        <li ref={dragRef} className={isActive ? 'selected' : 'unselected'}
-            onDrag={(evt) => {activateSentence()}}
-            onClick={(evt) => {
-                const request = backend.toRequest("sentenceClick", ["text", text]);
-                backend.fetchThen(request, response => {
-                    if (isActive) {
-                        activateSentence();
-                        onChange(noMetadata);
-                    }
-                    else {
-                        activateSentence(text);
-                        onChange(response);
-                    }
-                });
-            }}
-        >
+        <li ref={dragRef} className={className} onDrag={activateSentence} onClick={handleClick}>
             {text} {isDragging}
         </li>
     );
@@ -40,7 +46,9 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
 
 export default function Corpus({sentences, onChange, apiurl}) {
     const [activeSentence, setActiveSentence] = useState();
-    const activateSentence = (item) => setActiveSentence(item);
+
+    const activateSentence = item => setActiveSentence(item);
+    
     const items = sentences.map((s, ix) =>
         <Sentence key={ix} text={s}
             onChange={onChange}
@@ -48,11 +56,11 @@ export default function Corpus({sentences, onChange, apiurl}) {
             isActive={activeSentence === s}
             apiurl={apiurl}
         />
-    )
+    );
 
-    useEffect(()=>{
+    useEffect(()=> {
         setActiveSentence();
-    },[sentences])
+    }, [sentences]);
 
     return (
         <div className="corpus">
