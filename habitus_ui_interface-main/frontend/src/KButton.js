@@ -10,7 +10,7 @@ export default function KButton({apiurl}){
     });
 
     return (
-        <div className={"KButton"}>
+        <div className="KButton">
             <input onInput={handleInput} placeholder=" Max. columns " />
         </div>
     );

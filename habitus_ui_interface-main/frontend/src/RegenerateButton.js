@@ -24,7 +24,7 @@ export default function RegenerateButton({onClick, apiurl}) {
     });
 
     return (
-        <div className={"RegenerateButton"}>
+        <div className="RegenerateButton">
             <button onClick={handleButtonClick} disabled={disabled}>Update Grid</button>
         </div>
     );

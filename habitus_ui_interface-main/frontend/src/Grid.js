@@ -124,7 +124,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                 {colName.includes("Unassigned") ?
                     <div/>
                     :
-                    <input className="footer" placeholder={"Rename"} style={{"--placeholder-color": "gray"}} onKeyDown={handleEditName} />
+                    <input className="footer" placeholder="Rename" style={{"--placeholder-color": "gray"}} onKeyDown={handleEditName} />
                 }
                 {frozenColumns.includes(id) ?
                     <div>

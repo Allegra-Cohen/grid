@@ -18,7 +18,7 @@ export default function InputBox({text, onKeyPress, apiurl}) {
     });
 
     return (
-        <div className={"InputBox"}>
+        <div className="InputBox">
             <input onKeyPress={handleInput} placeholder=" Create new column " />
         </div>
     );
