@@ -147,15 +147,15 @@ export default function App({apiurl}) {
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="banner">
-                <Link to="/">Back to Gallery</Link>
-                <div style={{marginLeft:'60%'}}>
-                    <input style={{width:'60%', height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}} placeholder='Save as' onKeyUp={handleSaveTyping} apiurl={apiurl}/>
+                <Link to="/">Back&nbsp;to&nbsp;Gallery</Link>
+                <div style={{marginLeft:'80%'}}>
+                    <input style={{width:'80%', height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}} placeholder='Save as' onKeyUp={handleSaveTyping} apiurl={apiurl}/>
                 </div>
                 <button style={{marginLeft:'2%', fontSize:'20pt', background:'none', borderWidth:'1pt'}} onClick={handleSaveClick}>&#x1F4BE;</button>
             </div>
             {anchorDiv}
             <div className="App">
-                <div style={{display: "flex", flexDirection: "column"}}>
+                <div className="flexColumn">
                     {spinnerDiv}
                     <Grid
                         data={gridRows}
@@ -168,19 +168,19 @@ export default function App({apiurl}) {
                         onDeleteFrozen={handleGridDelete}
                         apiurl={apiurl}
                     />
-                    <div style={{display:"flex", flexDirection:"column"}}>
-                        <div style={{display:"flex", flexDirection:"row"}}>
+                    <div className="flexColumn">
+                        <div className="flexRow">
                             <InputBox data={gridRows} col_num_to_name={colNumToName} onKeyPress={handleNewColumn} apiurl={apiurl} />
                             <CopyButton className="CopyButton" apiurl={apiurl} />
                         </div>
-                        <div style={{display:"flex", flexDirection:"row"}}>
+                        <div className="flexRow">
                             <RegenerateButton className="RegenerateButton" onClick={handleRegenerate} apiurl={apiurl} />
                             <KButton className="KButton" apiurl={apiurl} />
                         </div>
                     </div>
                 </div>
-                <div style={{display: "flex", flexDirection: "column"}}>
-                    <div style={{display: "flex", flexDirection: "row", fontFamily: 'InaiMathi'}}>
+                <div className="flexColumn">
+                    <div className="flexRow" style={{fontFamily: 'InaiMathi'}}>
                         <Corpus sentences={corpus} onChange={handleCorpusChange} apiurl={apiurl} />
                         <Context context={metadata.context} />
                         <Beliefs beliefs={metadata.beliefs} beliefsAvailable={beliefsAvailable} />
