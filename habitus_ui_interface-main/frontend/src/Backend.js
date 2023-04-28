@@ -24,12 +24,13 @@ export default class Backend {
         // console.log("nameAndValuePairs:", nameAndValuePairs);
         const query = this.toQuery(nameAndValuePairs)
         const request = `${this.apiurl}/${command}/${query}`;
-        console.log("request:", request);
         return request;
     }
 
     fetchThen(request, operation) {
         this.setWaiting(true);
+        console.log("request:", request);
+        // alert(request);
         fetch(request)
             .then(response => response.json())
             .then(response => {
