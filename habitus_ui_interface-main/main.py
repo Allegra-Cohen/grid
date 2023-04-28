@@ -283,7 +283,7 @@ async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, n
 
 @app.get("/loadGrid/")
 async def loadGrid(text: str):
-    print("loading grid ", text)
+    print("loading grid", text)
     grid = frontend.load_grid(text)
     return grid
 
@@ -294,12 +294,12 @@ async def saveGrid():
 
 @app.get("/saveAsGrid/")
 async def saveAsGrid(text: str):
-    print("saving grid as ", text)
+    print("saving grid as", text)
     return frontend.save_as_grid(text)
 
 @app.get("/deleteGrid/")
 async def deleteGrid(text: str):
-    print("deleting ", text)
+    print("deleting", text)
     return frontend.delete_grid(text)
 
 @app.get("/drag/")
@@ -349,5 +349,5 @@ async def copyToggle():
 
 @app.get("/trash/")
 async def trash(text: str):
-    print("trash ", text)
+    print("trash", text)
     return frontend.trash(text)
