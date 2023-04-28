@@ -1,5 +1,5 @@
 
-.LoadBox {
+div.LoadBox {
   color: #e7f5f9;
   text-align: center;
   text-decoration: none;
@@ -8,4 +8,11 @@
   margin-right: 0.5em;
   margin-top: 0.95em;
   font-size: 24px;
+}
+
+div.LoadBox > input {
+  height: 2.2em;
+  width: 200px;
+  font-size: 18px;
+  border: 1.5px solid #90c5e1;
 }

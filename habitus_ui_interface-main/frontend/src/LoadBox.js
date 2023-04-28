@@ -1,23 +1,25 @@
 import Backend from "./Backend";
+import Callback from "./Callback";
+
+import "./LoadBox.css";
 
 export default function LoadBox({text, onKeyPress, apiurl}) {
     const backend = new Backend(apiurl);
 
+    const handleInput = new Callback("LoadBox.handleInput").get(evt => {
+        if (evt.key === "Enter") {
+            const request = backend.toRequest("loadGrid", ["text", evt.target.value]);
+            backend.fetchThen(request, response => {
+                onKeyPress(response);
+                evt.target.value = '';
+                evt.target.blur();
+            });
+        }
+    });
+
     return (
         <div className={"LoadBox"}>
-            <input style={{height:"2.2em", width:"200px", fontSize:'18px', border: '1.5px solid #90c5e1'}}
-                onKeyPress={(evt) => {
-                    if (evt.key === "Enter") {
-                        const request = backend.toRequest("loadGrid", ["text", evt.target.value]);
-                        backend.fetchThen(request, response => {
-                            onKeyPress(response);
-                            evt.target.value = ''
-                            evt.target.blur()
-                        })
-                    }
-                }}
-                placeholder=" Load grid "
-            />
+            <input onKeyPress={handleInput} placeholder=" Load grid " />
         </div>
     );
 }
