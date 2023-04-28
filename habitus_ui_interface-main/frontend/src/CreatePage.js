@@ -1,7 +1,8 @@
 import Backend from "./Backend";
+import Callback from "./Callback";
 
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 import {Link} from "react-router-dom";
 import {useEffect, useMemo, useState} from "react";
 import {useNavigate} from 'react-router-dom';
@@ -23,44 +24,37 @@ export default function CreatePage({apiurl}) {
     const backend = useMemo(() => new Backend(apiurl, setWaiting), [apiurl]);
 
     useEffect(() => {
-        const request = backend.toRequest("showGrids")
+        const request = backend.toRequest("showGrids");
         backend.fetchThen(request, response => {
             setGrids(response.grids);
             setFilepath(response.filepath);
         });
-    }, [backend])
+    }, [backend]);
 
     const navigate = useNavigate();
 
-    const handleInput = (variable, text) => {
-        if (variable === 'filename'){
-            if (grids.includes(text)) {
-                setValidFile(false)
-            }
+    const handleInput = new Callback("CreatePage.handleInput").get((variable, evt) => {
+        const text =  evt.target.value;
+        if (variable === 'filename') {
+            if (grids.includes(text))
+                setValidFile(false);
             else {
-                setFilename(text)
-                setValidFile(true)
+                setFilename(text);
+                setValidFile(true);
             }
         }
-        else if (variable === 'anchor'){
-            setAnchor(text)
-        }
-        else if (variable === 'rowname') {
-            setRowFilename(text)
-        }
-        else {
-            setSupercorpus(text)
-        }
-    }
+        else if (variable === 'anchor')
+            setAnchor(text);
+        else if (variable === 'rowname')
+            setRowFilename(text);
+        else
+            setSupercorpus(text);
+    });
 
-    const handleButton = () => {
-        let text = 'load_all'
-
-        if (validFile && rowFilename.length > 0){
-            if (anchor.length > 0) {
-                text = anchor
-            }
-            setError(false)
+    const handleButton = new Callback("CreatePage.handleButton").get(env => {
+        if (validFile && rowFilename.length > 0) {
+            setError(false);
+            const text = anchor.length > 0 ? anchor : 'load_all';
             const request = backend.toRequest("loadNewGrid",
                 ["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]
             );
@@ -69,9 +63,25 @@ export default function CreatePage({apiurl}) {
                     setError(true);
                 else
                     navigate('/grid');
-            })
+            });
         }
-    }
+    });
+
+    const handleCorpus = new Callback("CreatePage.handleCorpus").get(evt => {
+        handleInput('corpus', evt);
+    });
+
+    const handleRowname = new Callback("CreatePage.handleRowname").get(evt => {
+        handleInput('rowname', evt);
+    });
+
+    const handleAnchor = new Callback("CreatePage.handleAnchor").get(evt => {
+        handleInput('anchor', evt);
+    });
+
+    const handleFilename = new Callback("CreatePage.handleFilename").get(evt => {
+        handleInput('filename', evt);
+    });
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -79,7 +89,7 @@ export default function CreatePage({apiurl}) {
             <div style={{marginTop:'5%'}}>
                 <h1 style={{marginLeft:'40%'}}>Create a new Grid</h1>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className='info' style={{width:'max-content', marginLeft:'37%'}} onKeyUp={(evt) => handleInput('corpus', evt.target.value)}>
+                    <div className='info' style={{width:'max-content', marginLeft:'37%'}} onKeyUp={handleCorpus}>
                         Which corpus will you use?
                         <input placeholder = "Corpus filename"/>
                     </div>
@@ -92,7 +102,7 @@ export default function CreatePage({apiurl}) {
                     }
                 </div>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className='info' style={{width:'max-content', marginLeft:'36.6%'}} onKeyUp={(evt) => handleInput('rowname', evt.target.value)}>
+                    <div className='info' style={{width:'max-content', marginLeft:'36.6%'}} onKeyUp={handleRowname}>
                         Which row labels will you use?
                         <input placeholder = "Row labels filename"/>
                     </div>
@@ -104,12 +114,12 @@ export default function CreatePage({apiurl}) {
                         <div/>
                     }
                 </div>
-                <div className='info' style={{width:'max-content', marginLeft:'36%'}} onKeyUp={(evt) => handleInput('anchor', evt.target.value)}>
+                <div className='info' style={{width:'max-content', marginLeft:'36%'}} onKeyUp={handleAnchor}>
                     Do you want to anchor your Grid?
                     <input placeholder = "Anchor term"/>
                 </div>
                 <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className='info' style={{width:'max-content', marginLeft:'33%'}} onKeyUp={(evt) => handleInput('filename', evt.target.value)}>
+                    <div className='info' style={{width:'max-content', marginLeft:'33%'}} onKeyUp={handleFilename}>
                         What filename do you want to save your Grid with?
                         <input placeholder = "Filename"/>
                     </div>
@@ -125,7 +135,7 @@ export default function CreatePage({apiurl}) {
                     }
                 </div>
             </div>
-            <button style={{width:'max-content', marginLeft:'44%', fontSize:'14pt', padding:'0.5%', backgroundColor:'#54f07d'}} onClick={(evt)=>handleButton()}>Ready!</button>
+            <button style={{width:'max-content', marginLeft:'44%', fontSize:'14pt', padding:'0.5%', backgroundColor:'#54f07d'}} onClick={handleButton}>Ready!</button>
             <div>
                 {error ? 
                     <div style={{marginLeft: '26%', margin: '0.5%', padding: '1%', color: 'red'}}>
