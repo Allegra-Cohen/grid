@@ -10,21 +10,25 @@ import {useDrag} from "react-dnd";
 
 import './info.css';
 
-function GridIcon({gridName, handleGridClick}) {
-    const [{ isDragging }, dragRef] = useDrag({
+function GridIcon({gridName, onGridClick}) {
+
+    const handleCollect = new Callback("GridIcon.handleCollect").get(monitor => {
+        const result = {isDragging: monitor.isDragging()};
+        return result;
+    });
+
+    const [{isDragging}, dragRef] = useDrag({
         type: 'gridIcon',
-        item: { gridName },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging()
-        })
+        item: {gridName},
+        collect: handleCollect
     })
 
-    const handleClick = new Callback("GridIcon.handleClick").log0(() => {
-        handleGridClick(gridName);
+    const handleClick = new Callback("GridIcon.handleClick").get(() => {
+        onGridClick(gridName);
     })
 
     return (
-        <Link to="/grid" className='gallery' ref={dragRef} style={{'color' : '#060e4e', 'fontSize':'14pt'}} onClick={handleClick}>
+        <Link ref={dragRef} to="/grid" className='gallery' style={{'color' : '#060e4e', 'fontSize':'14pt'}} onClick={handleClick}>
             {gridName}{isDragging}
         </Link>
     );
@@ -44,12 +48,12 @@ export default function Gallery({apiurl}) {
         });
     }, [backend, numCols, grids.length])
 
-    const handleGridClick = new Callback("Gallery.handleGridClick").log1((gridName) => {
+    const handleGridClick = new Callback("Gallery.handleGridClick").get((gridName) => {
         const request = backend.toRequest("loadGrid", ["text", gridName]);
         backend.fetch(request);
     })
 
-    const handleTrashDrop = new Callback("Gallery.handleTrashDrop").log1((evt) => {
+    const handleTrashDrop = new Callback("Gallery.handleTrashDrop").get((evt) => {
         const request = backend.toRequest("showGrids");
         backend.fetchThen(request, response => {
             setGrids(response.grids);
@@ -70,17 +74,17 @@ export default function Gallery({apiurl}) {
             </div>
 
             <div style={{display:'flex', flexDirection:'row', marginLeft:'6%'}}>
-                <div className = 'info' style={{width:'max-content'}}>
+                <div className='info' style={{width:'max-content'}}>
                     <Link to="/create" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Create new Grid! </Link>
                 </div>
                 <div style={{marginLeft:'42%', marginTop:'1%'}}>
                     <Trash className='Trash' onDrop={handleTrashDrop} apiurl={apiurl} />
                 </div>
             </div>
-            <div className = 'info' style={{width:'max-content', marginLeft:'6%'}}>
+            <div className='info' style={{width:'max-content', marginLeft:'6%'}}>
                 <Link to="/changeCorpus" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Upload or update corpus </Link>
             </div>
-            <div className = 'info' style={{width:'max-content', marginLeft:'6%'}}>
+            <div className='info' style={{width:'max-content', marginLeft:'6%'}}>
                 <Link to="/changeBeliefs" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Update beliefs </Link>
             </div>
         </DndProvider>
