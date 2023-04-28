@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import {useState} from "react";
 
 import './info.css';
+import "./Page.css";
 import './Spinner.css';
 
 export default function ChangeBeliefs({apiurl}) {
@@ -39,7 +40,9 @@ export default function ChangeBeliefs({apiurl}) {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div style={{background: "#a9d3ff", padding:"1%"}}><Link style={{color:'black'}} to="/">Back to Gallery</Link></div>
+            <div className="banner">
+                <Link to="/">Back to Gallery</Link>
+            </div>
             <div style={{marginTop:'5%'}}>
                 <div style={{display: "flex", flexDirection: "row", justifyContent:'center'}}>
                     <div className='info' style={{width:'max-content', fontSize:'14pt', }} onKeyUp={(evt) => handleInput(evt.target.value)}>

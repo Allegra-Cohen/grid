@@ -10,6 +10,7 @@ import {useDrag} from "react-dnd";
 
 import "./Gallery.css";
 import './info.css';
+import "./Page.css";
 
 function GridIcon({gridName, onGridClick}) {
 
@@ -68,7 +69,7 @@ export default function Gallery({apiurl}) {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div style={{background: "#a9d3ff", padding:"1.5%"}}></div>
+            <div className="banner" />
             <h1 style={{marginLeft:"5%", color:'#060e4e'}}>Grids:</h1>
             <div>
                 <ul style={{columns:numCols, marginLeft:"3.5%"}}>

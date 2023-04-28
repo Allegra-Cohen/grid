@@ -19,6 +19,7 @@ import './App.css';
 import './CopyButton.css';
 import './InputBox.css';
 import './KButton.css';
+import './Page.css';
 import './RegenerateButton.css';
 import './Spinner.css';
 
@@ -145,15 +146,15 @@ export default function App({apiurl}) {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div style={{background: "#a9d3ff", padding:"1%", display: 'flex', flexDirection: 'row', marginBottom:'1%'}}>
-                <Link style={{color:'black', marginTop:'0.5%'}} to="/">Back to Gallery</Link>
-                <div style={{marginLeft:'80%'}}>
-                    <input style={{width:'90%', height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}} placeholder='Save as' onKeyUp={handleSaveTyping} apiurl={apiurl}/>
+            <div className="banner">
+                <Link to="/">Back to Gallery</Link>
+                <div style={{marginLeft:'60%'}}>
+                    <input style={{width:'60%', height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}} placeholder='Save as' onKeyUp={handleSaveTyping} apiurl={apiurl}/>
                 </div>
                 <button style={{marginLeft:'2%', fontSize:'20pt', background:'none', borderWidth:'1pt'}} onClick={handleSaveClick}>&#x1F4BE;</button>
             </div>
             {anchorDiv}
-            <div className="App" style={{display: "flex", flexDirection: "row"}}>
+            <div className="App">
                 <div style={{display: "flex", flexDirection: "column"}}>
                     {spinnerDiv}
                     <Grid

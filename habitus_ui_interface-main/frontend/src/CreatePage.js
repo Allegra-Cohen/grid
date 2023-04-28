@@ -8,6 +8,7 @@ import {useEffect, useMemo, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 
 import './info.css';
+import "./Page.css";
 import './Spinner.css';
 
 export default function CreatePage({apiurl}) {
@@ -85,7 +86,9 @@ export default function CreatePage({apiurl}) {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div style={{background: "#a9d3ff", padding:"1%"}}><Link style={{color:'black'}} to="/">Back to Gallery</Link></div>
+            <div className="banner">
+                <Link to="/">Back to Gallery</Link>
+            </div>
             <div style={{marginTop:'5%'}}>
                 <h1 style={{marginLeft:'40%'}}>Create a new Grid</h1>
                 <div style={{display: "flex", flexDirection: "row"}}>
