@@ -113,7 +113,7 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
     return (
         <td key={id}>
             <div style={{
-                color: {color},
+                color: color,
                 textAlign: "center",
                 verticalAlign: "top",
                 width: "5em",
