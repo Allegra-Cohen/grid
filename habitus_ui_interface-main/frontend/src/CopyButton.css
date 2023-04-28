@@ -1,5 +1,20 @@
-.CopyButton {
-  margin-left:8em;
-  margin-top:2em;
-  margin-bottom:0.1em;
+div.CopyButton {
+  margin-left: 8em;
+  margin-top: 2em;
+  margin-bottom: 0.1em;
 }
+
+div.CopyButton > button {
+  height: 2.5em;
+  width: 8em;
+  font-size: 20px;
+  font-family: InaiMathi;
+}
+
+div.CopyOn > button {
+  background: #FFFFFF;
+ }
+ 
+ div.CopyOff > button {
+    background: #48e3d0;
+ }

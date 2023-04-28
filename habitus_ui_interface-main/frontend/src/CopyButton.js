@@ -1,31 +1,27 @@
-import Backend from "./Backend"
+import Backend from "./Backend";
+import Callback from "./Callback";
 
 import {useState} from "react";
 
-export default function CopyButton({onClick, apiurl}){
-    const [clicked, setClicked] = useState([false]);
+export default function CopyButton({onClick, apiurl}) {
+    const [clicked, setClicked] = useState(false);
 
     const backend = new Backend(apiurl);
 
-    function onLaunchClicked(evt){
+    const handleClick = new Callback("CopyButton.handleClick").get(evt => {
         evt.preventDefault();
-        setClicked(!clicked);
-    }
+        const request = backend.toRequest("copyToggle");
+        backend.fetchThen(request, response => {
+            onClick(response);
+            setClicked(!clicked);
+        });
+    });
+
+    const className = "CopyButton " + (clicked ? "CopyOn" : "CopyOff");
 
     return (
-        <div className={"CopyButton"}>
-            <button style={{height:'2.5em', width:'8em', background: clicked ? '#FFFFFF' : '#48e3d0', fontSize:'20px', fontFamily: "InaiMathi"}}
-                onClick={ (evt) => {
-                    const request = backend.toRequest("copyToggle");
-                    backend.fetchThen(request, response => {
-                        onClick(response);
-                    });
-                    onLaunchClicked(evt);
-                }}
-                clicked={clicked}
-            >
-                Copy
-            </button>
+        <div className={className}>
+            <button onClick={handleClick} clicked={clicked && 'clicked'}> Copy </button>
         </div>
     );
 }
