@@ -18,10 +18,11 @@ export default function CopyButton({onClick, apiurl}) {
     });
 
     const className = "CopyButton " + (clicked ? "CopyOn" : "CopyOff");
+    const isClicked = clicked && 'clicked';
 
     return (
         <div className={className}>
-            <button onClick={handleClick} clicked={clicked && 'clicked'}> Copy </button>
+            <button onClick={handleClick} clicked={isClicked}> Copy </button>
         </div>
     );
 }
