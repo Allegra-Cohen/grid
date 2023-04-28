@@ -77,7 +77,7 @@ export default function Gallery({apiurl}) {
                 </ul>
             </div>
 
-            <div style={{display:"flex", flexDirection:"row", marginLeft:"6%"}}>
+            <div className="flexRow" style={{marginLeft:"6%"}}>
                 <div style={{marginLeft:"42%", marginTop:"1%"}}>
                     <Trash className="Trash" onDrop={handleTrashDrop} apiurl={apiurl} />
                 </div>

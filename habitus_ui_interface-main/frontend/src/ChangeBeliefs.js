@@ -44,7 +44,7 @@ export default function ChangeBeliefs({apiurl}) {
                 <Link to="/">Back to Gallery</Link>
             </div>
             <div style={{marginTop:"5%"}}>
-                <div style={{display: "flex", flexDirection: "row", justifyContent:"center"}}>
+                <div className="flexRow" style={{justifyContent:"center"}}>
                     <div className="info" style={{width:"max-content", fontSize:"14pt", }} onKeyUp={(evt) => handleInput(evt.target.value)}>
                         Please specify the beliefs file: <br/><br/> <input placeholder = "Beliefs file" style={{width:"100%",  fontSize:"14pt"}}/>
                     </div>

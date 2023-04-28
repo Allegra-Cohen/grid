@@ -91,7 +91,7 @@ export default function CreatePage({apiurl}) {
             </div>
             <div style={{marginTop:"5%"}}>
                 <h1 style={{marginLeft:"40%"}}>Create a new Grid</h1>
-                <div style={{display: "flex", flexDirection: "row"}}>
+                <div className="flexRow">
                     <div className="info" style={{width:"max-content", marginLeft:"37%"}} onKeyUp={handleCorpus}>
                         Which corpus will you use?
                         <input placeholder = "Corpus filename"/>
@@ -104,7 +104,7 @@ export default function CreatePage({apiurl}) {
                         <div/>
                     }
                 </div>
-                <div style={{display: "flex", flexDirection: "row"}}>
+                <div className="flexRow">
                     <div className="info" style={{width:"max-content", marginLeft:"36.6%"}} onKeyUp={handleRowname}>
                         Which row labels will you use?
                         <input placeholder = "Row labels filename"/>
@@ -121,7 +121,7 @@ export default function CreatePage({apiurl}) {
                     Do you want to anchor your Grid?
                     <input placeholder = "Anchor term"/>
                 </div>
-                <div style={{display: "flex", flexDirection: "row"}}>
+                <div className="flexRow">
                     <div className="info" style={{width:"max-content", marginLeft:"33%"}} onKeyUp={handleFilename}>
                         What filename do you want to save your Grid with?
                         <input placeholder = "Filename"/>

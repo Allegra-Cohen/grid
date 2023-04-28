@@ -154,7 +154,7 @@ export default function App({apiurl}) {
                 <button style={{marginLeft:"2%", fontSize:"20pt", background:"none", borderWidth:"1pt"}} onClick={handleSaveClick}>&#x1F4BE;</button>
             </div>
             {anchorDiv}
-            <div className="App">
+            <div className="App flexRow">
                 <div className="flexColumn">
                     {spinnerDiv}
                     <Grid

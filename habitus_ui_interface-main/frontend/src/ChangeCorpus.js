@@ -44,7 +44,7 @@ export default function ChangeCorpus({apiurl}) {
                 <Link to="/">Back to Gallery</Link>
             </div>
             <div style={{marginTop:"5%"}}>
-                <div style={{display: "flex", flexDirection: "row", justifyContent:"center"}}>
+                <div className="flexRow" style={{justifyContent:"center"}}>
                     <div className="info" style={{width:"max-content", fontSize:"14pt", }} onKeyUp={(evt) => handleInput(evt.target.value)}>
                         Please enter the filepath to the folder that contains corpus documents: <br/>
                         <br/>
