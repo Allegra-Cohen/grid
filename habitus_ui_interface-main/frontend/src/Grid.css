@@ -1,13 +1,11 @@
 .footer::placeholder {
   color: var(--placeholder-color);
-  font-family: "InaiMathi";
   font-size: 12pt;
   width: 4em;
 }
 
 .footer{
     color: var(--placeholder-color);
-    font-family: "InaiMathi";
     font-size: 12pt;
     text-align: center;
     width: 4em;

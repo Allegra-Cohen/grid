@@ -181,12 +181,7 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
 
     return (
         <div>
-            <table style={
-                {
-                    tableLayout: "fixed",
-                    fontFamily: "InaiMathi"
-                }
-            }>
+            <table style={{tableLayout: "fixed"}}>
                 <tbody>
                     {gridRows}
                     {footer && <tr><td/>{footer}</tr>}

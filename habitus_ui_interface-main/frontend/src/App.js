@@ -133,7 +133,7 @@ export default function App({apiurl}) {
     const anchorDiv = (waiting ? 
         <div/>
         :
-        <div style={{display:"inline", width: "80px", marginBottom:"0.03em", marginLeft:"4em", marginTop:"3%", fontFamily:"InaiMathi", fontSize:"20pt"}}>
+        <div style={{display:"inline", width: "80px", marginBottom:"0.03em", marginLeft:"4em", marginTop:"3%", fontSize:"20pt"}}>
             {filename} ({anchor})
         </div>
     );
@@ -180,7 +180,7 @@ export default function App({apiurl}) {
                     </div>
                 </div>
                 <div className="flexColumn">
-                    <div className="flexRow" style={{fontFamily: "InaiMathi"}}>
+                    <div className="flexRow">
                         <Corpus sentences={corpus} onChange={handleCorpusChange} apiurl={apiurl} />
                         <Context context={metadata.context} />
                         <Beliefs beliefs={metadata.beliefs} beliefsAvailable={beliefsAvailable} />

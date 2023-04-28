@@ -4,7 +4,6 @@ div.corpus {
 }
 
 div.corpus > div.header {
-    font-family: InaiMathi;
     font-size: 18pt;
     text-align: center;
 }
@@ -21,7 +20,6 @@ li {
     padding: .3em;
     margin-right: 1em;
     margin-left: -2em;
-    font-family: "InaiMathi";
     width: 400px;
     overflow: 'scroll';
 }
@@ -37,12 +35,10 @@ li.unselected {
 }
 
 .legend{
-    font-family: "InaiMathi";
 }
 
 .footer::placeholder {
   color: var(--placeholder-color);
-  font-family: "InaiMathi";
   font-size: 12pt;
   width: max-content;
 }
