@@ -53,7 +53,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
     const index = Math.ceil(colorValue * 100);
     const colorIndex = Math.min(index, gradientArray.length - 1);
     const background = gradientArray[colorIndex];
-    const border = isActive ? "2px solid #BE1C06" : "2px transparent";
+    const border = isActive ? "2px solid #BE1C06" : "2px solid transparent";
 
     return (
         <td ref={dropRef} onClick={handleClick} style={{width: "5em", height: "4em", background: background, border: border}}>
