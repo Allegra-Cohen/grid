@@ -29,7 +29,7 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
             onDrop(response);
         });
         console.log("rowName, colName, item:", [rowName, colName, item]);
-    })
+    });
 
     const handleCollect = new Callback("GridCell.handleCollect").get(monitor => {
         const result = {isOver: monitor.isOver() && rowContents[rowName].includes(monitor.getItem().text)};
@@ -84,16 +84,36 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
             <td style={{textAlign:'left', padding:'1em'}}>{rowName}</td>
             {cells}
         </tr>
-    )
+    );
 }
 
 function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) {
     const backend = new Backend(apiurl);
 
+    const handleEditName = new Callback("Footer.handleEditName").get(evt => {
+        if (evt.key === "Enter") {
+            const request = backend.toRequest("editName", ["id", id], ["name", evt.target.value]);
+            backend.fetchThen(request, response => {
+                onFooter(response);
+                evt.target.value = '';
+                evt.target.blur();
+            });
+        }
+    });
+
+    const handleDelete = new Callback("Footer.handleDelete").get(evt => {
+        const request = backend.toRequest("deleteFrozenColumn", ["id", id]);
+        backend.fetchThen(request, response => {
+            onDeleteFrozen(response);
+        });
+    });
+
+    const color = colName.includes('Unassigned') ? '#616160' : (frozenColumns.includes(id) ? 'black' : 'blue');
+
     return (
         <td key={id}>
             <div style={{
-                color: colName.includes('Unassigned') ? '#616160' : (frozenColumns.includes(id) ? 'black' : 'blue'),
+                color: {color},
                 textAlign: "center",
                 verticalAlign: "top",
                 width: "5em",
@@ -104,38 +124,18 @@ function Footer({id, colName, frozenColumns, onFooter, onDeleteFrozen, apiurl}) 
                 {colName.includes('Unassigned') ?
                     <div/>
                     :
-                    <input placeholder={"Rename"} className="footer" style={{'--placeholder-color': 'gray'}}
-                        onKeyDown={(evt) => {
-                            if (evt.key === "Enter"){
-                                const request = backend.toRequest("editName", ["id", id], ["name", evt.target.value])
-                                backend.fetchThen(request, response => {
-                                    onFooter(response);
-                                    evt.target.value = '';
-                                    evt.target.blur();
-                                });
-                            }
-                        }}
-                    />
+                    <input className="footer" placeholder={"Rename"} style={{'--placeholder-color': 'gray'}} onKeyDown={handleEditName} />
                 }
                 {frozenColumns.includes(id) ?
                     <div>
-                        <button
-                            onClick={(evt) => {
-                                const request = backend.toRequest("deleteFrozenColumn", ["id", id])
-                                backend.fetchThen(request, response => {
-                                    onDeleteFrozen(response)
-                                });
-                            }}
-                        >
-                            🗑
-                        </button>
+                        <button onClick={handleDelete}>&#x1F5D1;</button>
                     </div>
                     :
                     <div/>
                 }
             </div>
         </td>
-    )
+    );
 }
 
 export default function Grid({data, col_num_to_name, frozen_columns, row_contents, onChange, onDrop, onFooter, onDeleteFrozen, apiurl}) {
@@ -143,7 +143,7 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
 
     const activateCell = (item) => setActiveCell(item);
 
-    let gridRows = Object.entries(data).map(([name, cells], ix) => 
+    const gridRows = Object.entries(data).map(([name, cells], ix) => 
         <GridRow key={ix}
             rowName={name}
             rowContents={row_contents}
@@ -154,7 +154,7 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
             activeCell={activeCell}
             apiurl={apiurl}
         />
-    )
+    );
     // Get the col names from the first row
     // let rowNames = Object.keys(data)
     let rows = Object.values(data);
@@ -174,7 +174,7 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
                 onDeleteFrozen={onDeleteFrozen}
                 apiurl={apiurl}
             />
-        )
+        );
     }
 
     return (
@@ -191,5 +191,5 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
                 </tbody>
             </table>
         </div>
-    )
+    );
 }
