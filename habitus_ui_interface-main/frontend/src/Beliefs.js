@@ -1,4 +1,4 @@
-import "./Beliefs.css"
+import "./Beliefs.css";
 
 function Belief({belief_record}) {
     const {id, belief, title, author, year} = belief_record;
@@ -7,6 +7,7 @@ function Belief({belief_record}) {
     const cooked_title = title !== "" ? title : "<title unknown>";
     const cooked_author = author !== "" ? author : "<author unknown>";
     const cooked_year = year >= 0 ? year.toString() : "<year unknown>";
+
     return(
         <li>{cooked_id}. &quot;{cooked_belief}&quot; in <i>{cooked_title}</i> by {cooked_author}, {cooked_year}.</li>
     );
@@ -15,8 +16,10 @@ function Belief({belief_record}) {
 export default function Beliefs({beliefsAvailable, beliefs}) {
     const items = beliefs.map((belief, index) => <Belief key={index} belief_record={belief}/>);
 
+    const className = "beliefs " + (beliefsAvailable ? "beliefsAvailable" : "beliefsUnavailable");
+
     return (
-        <div className={"beliefs " + (beliefsAvailable ? "beliefsAvailable" : "beliefsUnavailable")}>
+        <div className={className}>
             <div className="header"><u>Beliefs</u></div>
             <div className="content">
                 <ul className="beliefs style-3">

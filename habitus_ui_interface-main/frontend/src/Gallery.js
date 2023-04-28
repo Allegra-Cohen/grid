@@ -1,13 +1,14 @@
 import Backend from './Backend';
-import Callback from './Callback'
-import Trash from './Trash'
+import Callback from './Callback';
+import Trash from './Trash';
 
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 import {Link} from "react-router-dom";
 import {useEffect, useMemo, useState} from "react";
 import {useDrag} from "react-dnd";
 
+import "./Gallery.css";
 import './info.css';
 
 function GridIcon({gridName, onGridClick}) {
@@ -21,14 +22,14 @@ function GridIcon({gridName, onGridClick}) {
         type: 'gridIcon',
         item: {gridName},
         collect: handleCollect
-    })
+    });
 
     const handleClick = new Callback("GridIcon.handleClick").get(() => {
         onGridClick(gridName);
-    })
+    });
 
     return (
-        <Link ref={dragRef} to="/grid" className='gallery' style={{'color' : '#060e4e', 'fontSize':'14pt'}} onClick={handleClick}>
+        <Link ref={dragRef} className='gallery' to="/grid" onClick={handleClick}>
             {gridName}{isDragging}
         </Link>
     );
@@ -46,22 +47,24 @@ export default function Gallery({apiurl}) {
             setGrids(response.grids);
             setNumCols(grids.length === 1 ? '1' : '2')
         });
-    }, [backend, numCols, grids.length])
+    }, [backend, numCols, grids.length]);
 
-    const handleGridClick = new Callback("Gallery.handleGridClick").get((gridName) => {
+    const handleGridClick = new Callback("Gallery.handleGridClick").get(gridName => {
         const request = backend.toRequest("loadGrid", ["text", gridName]);
         backend.fetch(request);
-    })
+    });
 
-    const handleTrashDrop = new Callback("Gallery.handleTrashDrop").get((evt) => {
+    const handleTrashDrop = new Callback("Gallery.handleTrashDrop").get(evt => {
         const request = backend.toRequest("showGrids");
         backend.fetchThen(request, response => {
             setGrids(response.grids);
-            setNumCols(grids.length === 1 ? '1' : '2')
+            setNumCols(grids.length === 1 ? '1' : '2');
         });
-    })
+    });
 
-    let items = grids.map((gridName, i) => (<GridIcon key={gridName} gridName={gridName} onGridClick={handleGridClick} />))
+    const items = grids.map((gridName, i) => (
+        <GridIcon key={gridName} gridName={gridName} onGridClick={handleGridClick} />
+    ));
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -74,18 +77,18 @@ export default function Gallery({apiurl}) {
             </div>
 
             <div style={{display:'flex', flexDirection:'row', marginLeft:'6%'}}>
-                <div className='info' style={{width:'max-content'}}>
-                    <Link to="/create" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Create new Grid! </Link>
-                </div>
                 <div style={{marginLeft:'42%', marginTop:'1%'}}>
                     <Trash className='Trash' onDrop={handleTrashDrop} apiurl={apiurl} />
                 </div>
             </div>
-            <div className='info' style={{width:'max-content', marginLeft:'6%'}}>
-                <Link to="/changeCorpus" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Upload or update corpus </Link>
+            <div className='info'>
+                <Link to="/create"> Create new Grid! </Link>
             </div>
-            <div className='info' style={{width:'max-content', marginLeft:'6%'}}>
-                <Link to="/changeBeliefs" style={{fontSize:'14pt', color:'#060e4e', backgroundColor: '#f0f7fd'}}> Update beliefs </Link>
+            <div className='info'>
+                <Link to="/changeCorpus"> Upload or update corpus </Link>
+            </div>
+            <div className='info'>
+                <Link to="/changeBeliefs"> Update beliefs </Link>
             </div>
         </DndProvider>
     );

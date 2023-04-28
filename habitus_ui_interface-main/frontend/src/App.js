@@ -1,24 +1,24 @@
-import Backend from "./Backend"
+import Backend from "./Backend";
 import Beliefs from './Beliefs';
 import Context from './Context';
-import CopyButton from  "./CopyButton"
-import Corpus from './Corpus.js'
-import Grid from  "./Grid"
-import InputBox from './InputBox'
-import KButton from './KButton'
-import RegenerateButton from  "./RegenerateButton"
+import CopyButton from  "./CopyButton";
+import Corpus from './Corpus.js';
+import Grid from  "./Grid";
+import InputBox from './InputBox';
+import KButton from './KButton';
+import RegenerateButton from  "./RegenerateButton";
 import noMetadata from './Metadata.js';
 
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 import {Link} from "react-router-dom";
 import {useEffect, useMemo, useState} from "react";
 
 import './App.css';
-import './CopyButton.css'
-import './InputBox.css'
-import './KButton.css'
-import './RegenerateButton.css'
+import './CopyButton.css';
+import './InputBox.css';
+import './KButton.css';
+import './RegenerateButton.css';
 import './Spinner.css';
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
@@ -28,12 +28,12 @@ export default function App({apiurl}) {
     const [anchor, setAnchor] = useState();
     const [corpus, setCorpus] = useState([]);
     const [metadata, setMetadata] = useState(noMetadata);
-    const [gridRows, setGridRows] = useState({})
-    const [colNumToName, setColNumToName] = useState({})
-    const [frozenColumns, setFrozenColumns] = useState([])
-    const [rowContents, setRowContents] = useState({})
-    const [waiting, setWaiting] = useState(false)
-    const [saveAs, setSaveAs] = useState()
+    const [gridRows, setGridRows] = useState({});
+    const [colNumToName, setColNumToName] = useState({});
+    const [frozenColumns, setFrozenColumns] = useState([]);
+    const [rowContents, setRowContents] = useState({});
+    const [waiting, setWaiting] = useState(false);
+    const [saveAs, setSaveAs] = useState();
     const [beliefsAvailable, setBeliefsAvailable] = useState(false);
 
     const backend = useMemo(() => new Backend(apiurl, setWaiting), [apiurl]);
@@ -51,18 +51,18 @@ export default function App({apiurl}) {
             setRowContents(data.row_contents);
             setBeliefsAvailable(beliefsAvailable);
         });
-    }, [backend])
+    }, [backend]);
 
-    const handleSaveTyping = (evt) => {
+    const handleSaveTyping = evt => {
         setSaveAs(evt.target.value);
-    }
+    };
 
-    const handleSaveAs = (saveAs) => {
+    const handleSaveAs = saveAs => {
         const request = backend.toRequest("saveAsGrid", ["text", saveAs]);
         backend.fetchThen(request, response => {
             setFilename(response.filename);
         });
-    }
+    };
 
     const handleSaveClick = () => {
         if (saveAs) {
@@ -81,7 +81,7 @@ export default function App({apiurl}) {
             const request = backend.toRequest("saveGrid");
             backend.fetch(request);
         }
-    }
+    };
 
     return (
         <DndProvider backend={HTML5Backend}>

@@ -4,9 +4,9 @@ import Callback from "./Callback";
 import {useDrop} from "react-dnd";
 import {useState} from "react";
 
-import "./Grid.css"
+import "./Grid.css";
 
-function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiurl}){
+function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive, apiurl}) {
     const gradientArray = [
         '#f0f7fd', '#cce6fe', '#a9d3ff', '#87c1ff', '#65adff', '#4099ff', '#0084ff', '#0084ff', '#117bf3', '#1972e6',
         '#1e69da', '#2160ce', '#2258c2', '#234fb6', '#2247aa', '#213f9f', '#203793', '#1e2f88', '#1b277d', '#182071',
@@ -19,28 +19,30 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
         '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
         '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236',
         '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236'
-    ]
+    ];
 
     const backend = new Backend(apiurl);
 
-    const handleLocalDrop = new Callback("GridCell.handleDrop").log1(item => {
+    const handleDrop = new Callback("GridCell.handleDrop").get(item => {
         const request = backend.toRequest("drag", ["row", rowName], ["col", colName], ["sent", item.text]);
         backend.fetchThen(request, response => {
-            onDrop(response)
+            onDrop(response);
         });
         console.log("rowName, colName, item:", [rowName, colName, item]);
     })
 
-    const [{ isOver }, dropRef] = useDrop({
-        accept: 'sentence',
-        drop: handleLocalDrop,
-        collect: (monitor) => ({
-            // A Callback doesn't work here because it needs to return something.
-            isOver: monitor.isOver() && rowContents[rowName].includes(monitor.getItem().text)
-        })
-    })
+    const handleCollect = new Callback("GridCell.handleCollect").get(monitor => {
+        const result = {isOver: monitor.isOver() && rowContents[rowName].includes(monitor.getItem().text)};
+        return result;
+    });
 
-    const handleLocalClick = new Callback("GridCell.handleClick").log1((evt) => {
+    const [{isOver}, dropRef] = useDrop({
+        accept: 'sentence',
+        drop: handleDrop,
+        collect: handleCollect
+    });
+
+    const handleClick = new Callback("GridCell.handleClick").get(evt => {
         const request = backend.toRequest("click", ["row", rowName], ["col", colName]);
         backend.fetchThen(request, response => {
             onChange(response);
@@ -48,20 +50,20 @@ function GridCell({id, colorValue, rowName, rowContents, colName, onChange, onDr
         });
     })
 
-    const index = Math.ceil(colorValue * 100)
-    const colorIndex = Math.min(index, gradientArray.length - 1)
-    const background = gradientArray[colorIndex]
-    const border = isActive ? '2px solid #BE1C06' : '2px transparent'
+    const index = Math.ceil(colorValue * 100);
+    const colorIndex = Math.min(index, gradientArray.length - 1);
+    const background = gradientArray[colorIndex];
+    const border = isActive ? '2px solid #BE1C06' : '2px transparent';
 
     return (
-        <td ref={dropRef} onClick={handleLocalClick} style={{width: "5em", height: "4em", background: background, border: border}}>
+        <td ref={dropRef} onClick={handleClick} style={{width: "5em", height: "4em", background: background, border: border}}>
             {isOver && "Drop"}
         </td>
     );
 }
 
-function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, activeCell, apiurl}){
-    let cells = Object.entries(data).map(([colName, v], ix) =>
+function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, activeCell, apiurl}) {
+    const cells = Object.entries(data).map(([colName, v], ix) =>
         <GridCell
             key={ix}
             id={rowName+colName}
@@ -75,7 +77,7 @@ function GridRow({rowName, rowContents, data, onChange, onDrop, activateCell, ac
             isActive={activeCell === rowName+colName}
             apiurl={apiurl}
         />
-    )
+    );
 
     return (
         <tr>

@@ -1,0 +1,15 @@
+div.info {
+  width: max-content;
+  margin-left: 6%;
+}
+
+link.gallery {
+  color: #060e4e;
+  font-size: 14pt;
+}
+
+div.info > a {
+  font-size: 14pt;
+  color: #060e4e;
+  background-color: #f0f7fd;
+}
