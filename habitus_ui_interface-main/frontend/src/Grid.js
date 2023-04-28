@@ -155,17 +155,14 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
             apiurl={apiurl}
         />
     );
-    // Get the col names from the first row
-    // let rowNames = Object.keys(data)
-    let rows = Object.values(data);
-    let footer = null;
-    if (rows.length > 0) {
-        let row = rows[0];
-        let colIDs = Object.keys(row);
-        let colNames = colIDs.map((colID) => col_num_to_name[colID]);
+
+    function getFooter(rows) {
+        const row = rows[0];
+        const colIDs = Object.keys(row);
+        const colNames = colIDs.map((colID) => col_num_to_name[colID]);
         // console.log('grid here');
         // console.log(col_num_to_name)
-        footer = colNames.map((name, ix) =>
+        const footer = colNames.map((name, ix) =>
             <Footer
                 key = {ix} id={ix}
                 colName={name}
@@ -175,7 +172,12 @@ export default function Grid({data, col_num_to_name, frozen_columns, row_content
                 apiurl={apiurl}
             />
         );
-    }
+        return footer;
+    };
+
+    // Get the col names from the first row
+    const rows = Object.values(data);
+    const footer = rows.length > 0 ? getFooter(rows) : null;
 
     return (
         <div>
