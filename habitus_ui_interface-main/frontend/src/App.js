@@ -18,7 +18,6 @@ import './App.css';
 import './CopyButton.css'
 import './InputBox.css'
 import './KButton.css'
-import './LoadBox.css'
 import './RegenerateButton.css'
 import './Spinner.css';
 
