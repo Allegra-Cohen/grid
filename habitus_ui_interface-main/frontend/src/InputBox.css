@@ -1,10 +1,17 @@
 
-.InputBox {
+div.InputBox {
   color: #e7f5f9;
   text-align: center;
   text-decoration: none;
   display: flex;
-  margin-left:7em;
-  margin-top:2em;
+  margin-left: 7em;
+  margin-top: 2em;
   width: 300px;
+}
+
+div.InputBox > input {
+  height: 3em;
+  width: 100%;
+  font-size: 20px;
+  border: 1.5px solid #90c5e1;
 }

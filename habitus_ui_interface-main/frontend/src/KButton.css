@@ -1,9 +1,16 @@
 
-.KButton {
+div.KButton {
   color: #e7f5f9;
   text-align: center;
   text-decoration: none;
   display: flex;
   margin-left:1em;
   margin-top:1.2em;
+}
+
+div.KButton > input {
+  height: 2em;
+  width: 60%;
+  font-size: 20px;
+  border: 1.5px solid #90c5e1;
 }

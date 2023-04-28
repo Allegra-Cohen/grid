@@ -1,17 +1,17 @@
 import Backend from "./Backend";
+import Callback from "./Callback";
 
 export default function KButton({apiurl}){
     const backend = new Backend(apiurl);
 
+    const handleInput = new Callback("KButton.handleInput").get(evt => {
+        const request = backend.toRequest("setK", ["k", evt.target.value]);
+        backend.fetch(request);
+    });
+
     return (
         <div className={"KButton"}>
-            <input style={{height:"2em", width:"60%", fontSize:'20px', border: '1.5px solid #90c5e1'}}
-                onInput={(evt) => {
-                    const request = backend.toRequest("setK", ["k", evt.target.value]);
-                    backend.fetch(request);
-                }}
-                placeholder=" Max. columns "
-            />
+            <input onInput={handleInput} placeholder=" Max. columns " />
         </div>
     );
 }
