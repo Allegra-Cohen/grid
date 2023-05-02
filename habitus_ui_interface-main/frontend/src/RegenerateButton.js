@@ -12,7 +12,7 @@ export default function RegenerateButton({onClick, apiurl}) {
 
     useEffect(() => {
         setDisabled(false);
-    });
+    }, []);
 
     const handleButtonClick = new Callback("RegenerateButton.handleButtonClick").get(evt => {
         setDisabled(true);
