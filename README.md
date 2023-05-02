@@ -35,7 +35,7 @@ Here are instructions for installing the libraries and packages you’ll need to
  
 ## Starting up the Grid
 Open two tabs in terminal, then:
-- In one tab, navigate to `habitus_ui_interface-main` and run `python3 -m uvicorn –reload main2:app`. This will use port 8000 by default, so to avoid complaints, free up the port before executing the command.
+- In one tab, navigate to `habitus_ui_interface-main` and run `python3 -m uvicorn -–reload main2:app`. This will use port 8000 by default, so to avoid complaints, free up the port before executing the command.
 - In the other tab, navigate to `habitus_ui_interface-main/frontend` and run `npm start`. This will start a web server on port 3000 and open a browser on http://localhost:3000.
  
 ## Using the Grid
