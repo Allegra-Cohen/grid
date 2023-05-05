@@ -1,18 +1,18 @@
+import csv
 import gensim.downloader as api
-from gensim.models import KeyedVectors
 import json
 import numpy as np
-import pandas as pd
-import spacy
 import os.path
+import pandas as pd
 import shutil
-import csv
-from eldar import Query
+import spacy
 
-from document import Document
-from linguist import Linguist
-from mathematician import get_dist_between_docs
-from row import Row
+from .document import Document
+from .linguist import Linguist
+from .mathematician import get_dist_between_docs
+from .row import Row
+from eldar import Query
+from gensim.models import KeyedVectors
 
 class Corpus():
 	def __init__(self, path: str, clean_supercorpus_filename: str, row_labels_filename: str, rows: list[Row], anchor: str, linguist: Linguist, preexisting = None):

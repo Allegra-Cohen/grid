@@ -1,4 +1,4 @@
-from backend import Backend
+from .backend import Backend
 
 class Frontend():
 	def __init__(self, path: str):

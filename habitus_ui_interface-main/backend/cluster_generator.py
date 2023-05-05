@@ -1,6 +1,6 @@
-from corpus import Corpus
-from document import Document
-from linguist import Linguist
+from .corpus import Corpus
+from .document import Document
+from .linguist import Linguist
 
 class ClusterGenerator():
 	def __init__(self, corpus: Corpus, linguist: Linguist):

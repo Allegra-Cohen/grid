@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
 
-from cluster import Cluster
-from corpus import Corpus
-from document import Document
-from surdeanu2005 import Surdeanu2005
-from soft_kmeans import SoftKMeans
+from .cluster import Cluster
+from .corpus import Corpus
+from .document import Document
+from .soft_kmeans import SoftKMeans
+from .surdeanu2005 import Surdeanu2005
 
 class Grid():
 	def __init__(self, path: str, supercorpus_filename: str, row_filename: str, unique_filename: str, corpus, k: int, clustering_algorithm, clusters: list[Cluster] = []):

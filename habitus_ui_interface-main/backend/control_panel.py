@@ -1,7 +1,7 @@
 import pandas as pd
 import sys
 
-from frontend import Frontend
+from .frontend import Frontend
 
 class ControlPanel(Frontend):
 	def __init__(self, path: str, k: int):

@@ -1,19 +1,15 @@
 
 print("This is main2.py")
 
-import sys
-sys.path.append("./backend")
-
-from document import Document
-from pydantic import BaseModel
-from fastapi import FastAPI, Depends
-from frontend import Frontend
-from pandas import DataFrame
-from starlette.middleware.cors import CORSMiddleware
-import time
 import pandas as pd
 import os
-import shutil
+import time
+
+from backend.document import Document
+from backend.frontend import Frontend
+from fastapi import FastAPI, Depends
+from pandas import DataFrame
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -24,9 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-class Text(BaseModel):
-    value: str
 
 class UvicornFrontend(Frontend):
     def __init__(self, path: str, k: int, clustering_algorithm: str):
