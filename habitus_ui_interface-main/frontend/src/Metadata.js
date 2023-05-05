@@ -5,7 +5,8 @@ const noMetadata = {
         at: "",
         post: ""
     },
-    beliefs: [ ]
+    beliefs: [ ],
+    scores: [ ]
 };
 
 export default noMetadata;

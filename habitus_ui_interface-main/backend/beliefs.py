@@ -62,7 +62,7 @@ class Grounder():
 	def reset(self) -> None:
 		self.beliefs = None
 
-	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
+	def ground(self, text_index: int, text: str, k: int) -> tuple[list[Belief], list[float]]:
 		pass
 
 	# Read in the beliefs in beliefs_filepath.
@@ -77,14 +77,17 @@ class RandomGrounder(Grounder):
 	def __init__(self, path: str):
 		super().__init__(path)
 
-	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
+	def ground(self, text_index: int, text: str, k: int) -> tuple[list[Belief], list[float]]:
 		if self.beliefs:
 			seed = hash(text)
 			rndgen = random.Random(seed)
 			beliefs = rndgen.sample(self.beliefs, k)
-			return beliefs
+			scores = [rndgen.random() for i in range(k)]
+			scores.sort()
+			scores.reverse()
+			return beliefs, scores
 		else:
-			return []
+			return [], []
 
 class RankedGloveGrounder(Grounder):
 	def __init__(self, path: str, linguist: Linguist):
@@ -124,7 +127,7 @@ class RankedGloveGrounder(Grounder):
 		tokens = [word.lemma_ for word in words]
 		return tokens
 
-	def tokenize_with_linguist(self, text: str) -> list [str]:
+	def tokenize_with_linguist(self, text: str) -> list[str]:
 		clean_text = self.linguist.clean_text(text, lemmatize = True)
 		tokens = self.linguist.tokenize(clean_text) # These are now lowercase.
 		return tokens
@@ -143,18 +146,19 @@ class RankedGloveGrounder(Grounder):
 			norm = self.empty_vector
 		return norm
 
-	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
+	def ground(self, text_index: int, text: str, k: int) -> tuple[list[Belief], list[float]]:
 		if self.beliefs and self.vectors and self.model:
 			vector = self.vectorize(text)
 			if vector is not self.empty_vector:
 				key_similarity_list = self.vectors.similar_by_vector(vector, k, None)
 				index_similarity_list = [(int(key), similarity) for key, similarity in key_similarity_list]
 				beliefs = [self.beliefs[index] for index, _ in index_similarity_list]
-				return beliefs
+				scores = [score for _, score in index_similarity_list]
+				return beliefs, scores
 			else:
-				return []
+				return [], []
 		else:
-			return []
+			return [], []
 
 	# For each belief, add a column for the vectors and then save the file as beliefs.csv.
 	def process(self, beliefs_filepath: str) -> None:
@@ -201,10 +205,12 @@ class RankedTransformerGrounder(Grounder):
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
 		embeddings = self.model.encode([text])
-		_, beliefs_indexes_collection = self.vectors.search(embeddings, k)
+		scores_collection, beliefs_indexes_collection = self.vectors.search(embeddings, k)
+		# TODO.  Test this by making sure beliefs@N returns N and score of 1.
 		beliefs_indexes = beliefs_indexes_collection[0]
 		beliefs = [self.beliefs[beliefs_index] for beliefs_index in beliefs_indexes]
-		return beliefs
+		scores = scores_collection[0].tolist()
+		return beliefs, scores
 
 	def process(self, beliefs_filepath: str) -> None:
 		super().process(beliefs_filepath)
@@ -229,7 +235,7 @@ class Beliefs():
 		except:
 			self.grounder.reset()
 
-	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
+	def ground(self, text_index: int, text: str, k: int) -> tuple[list[Belief], list[float]]:
 		indexless_text = text[text.index(' ') + 1:]
 		return self.grounder.ground(text_index, indexless_text, k)
 

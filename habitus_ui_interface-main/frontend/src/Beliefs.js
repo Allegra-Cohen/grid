@@ -29,7 +29,7 @@ class ColorSwatch {
 var posColorSwatch = new ColorSwatch([0, 1.0], [[255, 99], [255, 190], [255, 123]]);
 var negColorSwatch = new ColorSwatch([0, 1.0], [[255, 248], [255, 105], [255, 107]]);
 
-function Belief({belief_record}) {
+function Belief({belief_record, score}) {
     const {id, belief, title, author, year, sentiment} = belief_record;
     const cooked_id = id >= 0 ? id.toString() : "<id unknown>";
     const cooked_belief = belief != "" ? belief : "<belief unknown>";
@@ -39,20 +39,18 @@ function Belief({belief_record}) {
     const color = sentiment >= 0 ? posColorSwatch.sample(sentiment) : negColorSwatch.sample(-sentiment);
     return(
         <li style={{backgroundColor: color}}>{cooked_id}. &quot;{cooked_belief}&quot; in <i>{cooked_title}</i> by {cooked_author}, {cooked_year}.
-            sentiment = {sentiment}
+            score = {score.toFixed(3)}, sentiment = {sentiment.toFixed(3)}
         </li>
     );
 }
 
-
-export default function Beliefs({beliefsAvailable, beliefs}) {
-    const items = beliefs.map((belief, index) => <Belief key={index} belief_record={belief}/>);
-
+export default function Beliefs({beliefsAvailable, beliefs, scores}) {
+    const items = beliefs.map((belief, index) => <Belief key={index} belief_record={belief} score={scores[index]}/>);
     return (
         <div className={"beliefs " + (beliefsAvailable ? "beliefsAvailable" : "beliefsUnavailable")}>
             <div className="header"><u>Beliefs</u></div>
             <div className="content">
-                <ul className="beliefs style-3" sty>
+                <ul className="beliefs style-3">
                     {items}
                 </ul>
             </div>

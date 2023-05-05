@@ -200,7 +200,7 @@ function App({apiurl}) {
                             apiurl={apiurl}
                         />
                         <Context context={metadata.context}/>
-                        <Beliefs beliefsAvailable={beliefsAvailable} beliefs={metadata.beliefs}/>
+                        <Beliefs beliefsAvailable={beliefsAvailable} beliefs={metadata.beliefs} scores={metadata.scores}/>
                     </div>
                 </div>
             </div>
