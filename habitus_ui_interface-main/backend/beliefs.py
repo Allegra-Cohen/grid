@@ -19,16 +19,23 @@ class Belief:
 		self.title: str = self.clean_string(values[1], "")
 		self.author: str = self.clean_string(values[2], "")
 		self.year: int = self.clean_integer(values[3], -1)
+		self.context: string = self.clean_string(values[4], "")
+		self.sentiment: float = self.clean_float(values[5], 0.0)
 
-	def clean_string(self, string: str, default_value: str) -> str:
-		bad = string is None or string == "None" or (type(string) == float and math.isnan(string))
-		some_string = string if not bad else default_value
-		return some_string
+	def clean_string(self, value: str, default_value: str) -> str:
+		bad = value is None or value == "None" or (type(value) == float and math.isnan(value))
+		some_value = value if not bad else default_value
+		return some_value
 
-	def clean_integer(self, integer: int, default_value: str) -> str:
-		bad = integer is None or (type(integer) == float and math.isnan(integer))
-		some_integer = str(integer) if not bad else default_value
-		return some_integer
+	def clean_integer(self, value: int, default_value: str) -> str:
+		bad = value is None or (type(value) == float and math.isnan(value))
+		some_value = int(value) if not bad else default_value
+		return some_value
+
+	def clean_float(self, value: float, default_value: float) -> float:
+		bad = value is None or (type(value) == float and math.isnan(value))
+		some_value = value if not bad else default_value
+		return some_value
 
 	def to_json(self) -> dict:
 		return {
@@ -36,7 +43,9 @@ class Belief:
 			"belief": self.belief,
 			"title": self.title,
 			"author": self.author,
-			"year": self.year
+			"year": self.year,
+			# Skip the context.
+			"sentiment": self.sentiment
 		}
 
 class Grounder():
