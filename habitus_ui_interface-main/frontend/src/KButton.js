@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {toQuery} from "./toEncoding";
 
-export default function KButton({apiUrl}){
+export default function KButton({apiurl}){
     const [kInput, setKInput] = useState([]);
 
 	  return (
@@ -10,7 +10,7 @@ export default function KButton({apiUrl}){
 	      onInput={
       	     (evt) => {
  	        	let query = toQuery([["k", evt.target.value]]);
-		        fetch(`${apiUrl}/setK/${query}`)
+		        fetch(`${apiurl}/setK/${query}`)
 		            .then( response => response.json())}
            }
            placeholder=" Max. columns "

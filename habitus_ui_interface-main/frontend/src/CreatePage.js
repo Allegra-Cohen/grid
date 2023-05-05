@@ -8,7 +8,7 @@ import './info.css';
 import './Spinner.css';
 import {toQuery} from "./toEncoding";
 
-function CreatePage({apiUrl}) {
+function CreatePage({apiurl}) {
 
 	const [grids, setGrids] = useState([]);
 	const [filepath, setFilepath] = useState([]);
@@ -21,7 +21,7 @@ function CreatePage({apiUrl}) {
 	const [waiting, setWaiting] = useState(false);
 
 	useEffect(() => {
-        fetch(`${apiUrl}/showGrids/`)
+        fetch(`${apiurl}/showGrids/`)
             .then( response => response.json())
             .then( data => {
                 setGrids(data.grids);
@@ -58,7 +58,7 @@ function CreatePage({apiUrl}) {
     		setWaiting(true)
     		setError(false)
 			let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]);
-	    	fetch(`${apiUrl}/loadNewGrid/${query}`)
+	    	fetch(`${apiurl}/loadNewGrid/${query}`)
 	            .then(response => response.json())
 	            .then(data => {
 	            	setWaiting(false);
