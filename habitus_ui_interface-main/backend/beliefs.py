@@ -204,9 +204,19 @@ class RankedTransformerGrounder(Grounder):
 				self.vectors = index
 
 	def ground(self, text_index: int, text: str, k: int) -> list[Belief]:
+		# This is a sanity check.
+		# for i in range(len(self.beliefs)):
+		# 	embeddings = self.model.encode([self.beliefs[i].belief])
+		# 	scores_collection, beliefs_indexes_collection = self.vectors.search(embeddings, k)			
+		# 	first_score = scores_collection[0][0]
+		# 	first_index = beliefs_indexes_collection[0][0]
+		# 	second_index = beliefs_indexes_collection[0][0]
+		# 	print(i, first_index, first_score)
+			# assert first_index == i or second_index == i # doesn't always work
+		#	assert 0.99 <= first_score and first_score <= 1.01
+
 		embeddings = self.model.encode([text])
-		scores_collection, beliefs_indexes_collection = self.vectors.search(embeddings, k)
-		# TODO.  Test this by making sure beliefs@N returns N and score of 1.
+		scores_collection, beliefs_indexes_collection = self.vectors.search(embeddings, k)			
 		beliefs_indexes = beliefs_indexes_collection[0]
 		beliefs = [self.beliefs[beliefs_index] for beliefs_index in beliefs_indexes]
 		scores = scores_collection[0].tolist()
