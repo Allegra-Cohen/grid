@@ -20,7 +20,7 @@ class Belief:
 		self.author: str = self.clean_string(values[2], "")
 		self.year: int = self.clean_integer(values[3], -1)
 		self.context: string = self.clean_string(values[4], "")
-		self.sentiment: float = self.clean_float(values[5], 0.0)
+		self.sentiment: float = self.clean_float(values[6], 0.0)
 
 	def clean_string(self, value: str, default_value: str) -> str:
 		bad = value is None or value == "None" or (type(value) == float and math.isnan(value))
