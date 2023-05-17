@@ -98,7 +98,9 @@ class Backend():
 
 
 	def set_up_corpus(self, anchor: str):
-		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + self.row_labels_filename + '.csv').columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
+		data = pd.read_csv(self.path + self.row_labels_filename + '.csv')
+		columns = [column for column in data.columns if not column.startswith("Unnamed: 0") and column != 'stripped' and column != 'readable']
+		self.rows = [Row(row_name) for row_name in columns]
 		self.corpus = Corpus(self.path, self.clean_supercorpus_filename, self.row_labels_filename, self.rows, anchor, self.linguist)
 
 	# Not sure if this should be in backend, or a method of Grid
