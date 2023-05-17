@@ -46,7 +46,7 @@ class Backend():
 
 				Corpus(self.path, temporary_clean_supercorpus_filename, '', [], 'load_all', self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
 
-				return {'success': True, 'corpus_file': supercorpus_name, 'rows_file': row_labels_filename}
+				return {'success': True, 'corpus_file': supercorpus_name + '.csv', 'rows_file': row_labels_filename}
 		except IndexError:
 			print(f"String {supercorpus_filepath} is not a path")
 
