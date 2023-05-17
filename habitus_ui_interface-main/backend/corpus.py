@@ -131,7 +131,7 @@ class Corpus():
 		corpus_lines = Corpus.load_corpus_lines(path, corpus_filename)
 		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (False, False, True)).reset_index()['sentence'])
 		readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (True, False, False)).reset_index()['sentence'])
-		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename)
+		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename + '.csv')
 
 	# Question for Keith: Do we need these?
 	# @staticmethod

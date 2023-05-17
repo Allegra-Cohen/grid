@@ -31,8 +31,8 @@ class Backend():
 			if os.path.isdir(supercorpus_filepath):
 				corpus_parser.parse_supercorpus(supercorpus_name, supercorpus_filepath, self.path) # Preprocess the corpus
 				
-				if not os.path.isfile(self.path + temporary_clean_supercorpus_filename): # Clean the corpus if you need to
-					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename + '.csv')
+				if not os.path.isfile(self.path + temporary_clean_supercorpus_filename + '.csv'): # Clean the corpus if you need to
+					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename)
 
 				stripped = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped'] # Need to add "stripped" column to row labels
 				row_labels = pd.read_csv(self.path + row_labels_filename)
@@ -59,7 +59,7 @@ class Backend():
 			self.supercorpus_filename = supercorpus_filename.split(".")[0]
 			self.row_labels_filename = row_filename.split(".")[0]
 			self.clean_supercorpus_filename = 'cleaned_' + self.supercorpus_filename
-			if not os.path.isfile(self.path + self.clean_supercorpus_filename): # This line should be redundant if the user relied on us for corpus pre-processing, but they may want to provide their own corpus (e.g., different delimiters)
+			if not os.path.isfile(self.path + self.clean_supercorpus_filename + ".csv"): # This line should be redundant if the user relied on us for corpus pre-processing, but they may want to provide their own corpus (e.g., different delimiters)
 				Corpus.clean_corpus(self.path, self.supercorpus_filename, self.clean_supercorpus_filename)
 			return True
 		else:
