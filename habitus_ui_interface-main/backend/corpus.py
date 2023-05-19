@@ -1,18 +1,18 @@
+import csv
 import gensim.downloader as api
-from gensim.models import KeyedVectors
 import json
 import numpy as np
-import pandas as pd
-import spacy
 import os.path
+import pandas as pd
 import shutil
-import csv
-from eldar import Query
+import spacy
 
-from document import Document
-from linguist import Linguist
-from mathematician import get_dist_between_docs
-from row import Row
+from .document import Document
+from .linguist import Linguist
+from .mathematician import get_dist_between_docs
+from .row import Row
+from eldar import Query
+from gensim.models import KeyedVectors
 
 class Corpus():
 	def __init__(self, path: str, clean_supercorpus_filename: str, row_labels_filename: str, rows: list[Row], anchor: str, linguist: Linguist, preexisting = None):
@@ -131,7 +131,7 @@ class Corpus():
 		corpus_lines = Corpus.load_corpus_lines(path, corpus_filename)
 		stripped_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (False, False, True)).reset_index()['sentence'])
 		readable_corpus = list(corpus_lines['sentence'].apply(linguist.clean_text, args = (True, False, False)).reset_index()['sentence'])
-		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename)
+		pd.DataFrame({'stripped': stripped_corpus, "readable": readable_corpus}).to_csv(path + clean_filename + '.csv')
 
 	# Question for Keith: Do we need these?
 	# @staticmethod

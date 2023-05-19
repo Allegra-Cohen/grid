@@ -1,11 +1,10 @@
-from nltk.tokenize import sent_tokenize
-
 import io
 import os
+import pandas as pd
 import sys
 import textract
-import pandas as pd
 
+from nltk.tokenize import sent_tokenize
 
 class Parser():
     def parse(self, text: str) -> list[str]:
@@ -80,7 +79,7 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
 
     all_lines = []
     row_labels = []
-    for input_filename in os.listdir(input_dir):
+    for input_filename in sorted(os.listdir(input_dir)):
         if '.' in input_filename:
             split = input_filename.split('.')
             name = split[0]
@@ -102,6 +101,7 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
     pd.DataFrame({'sentence': all_lines}).to_csv(output_file + output_extension, encoding = encoding)
 
     rows = pd.DataFrame({'readable': all_lines, 'label': row_labels})
+    # In this process the columns seem to get sorted.
     df = pd.concat([rows.drop('label', 1), pd.get_dummies(rows.label)], axis = 1)
     for col in df.columns:
         if 'Unnamed:' in col:

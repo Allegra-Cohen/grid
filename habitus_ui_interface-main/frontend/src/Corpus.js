@@ -1,7 +1,8 @@
 import {useDrag} from "react-dnd";
 import {useId, useEffect, useState} from "react";
+import {toQuery} from "./toEncoding";
 
-function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
+function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'sentence',
         item: { text },
@@ -13,7 +14,8 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
                 style={{border: isActive ? '2px solid #BE1C06' : null}}
 
                 onClick={(evt) => {
-                        fetch(`${apiUrl}/sentenceClick/${text}`)
+                        let query = toQuery([["text", text]]);
+                        fetch(`${apiurl}/sentenceClick/${query}`)
                         .then( response => response.json())
                         .then( response => {
                         if (isActive){
@@ -31,12 +33,12 @@ function Sentence({text, onChange, activateSentence, isActive, apiUrl}) {
     >{text} {isDragging}</li>
 }
 
-export default function Corpus({sentences, onChange, apiUrl}) {
+export default function Corpus({sentences, onChange, apiurl}) {
 
     const [activeSentence, setActiveSentence] = useState();
     const activateSentence = (item) => setActiveSentence(item);
 
-    let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiUrl={apiUrl} />)
+    let items = sentences.map((s, ix) => <Sentence key={ix} text={s} onChange={onChange} activateSentence={activateSentence} isActive={activeSentence === s} apiurl={apiurl} />)
 
     useEffect(()=>{
         setActiveSentence();

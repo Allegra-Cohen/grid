@@ -1,18 +1,15 @@
 
 print("This is main2.py")
 
-import sys
-sys.path.append("./backend")
-
-from document import Document
-from fastapi import FastAPI, Depends
-from frontend import Frontend
-from pandas import DataFrame
-from starlette.middleware.cors import CORSMiddleware
-import time
 import pandas as pd
 import os
-import shutil
+import time
+
+from backend.document import Document
+from backend.frontend import Frontend
+from fastapi import FastAPI, Depends
+from pandas import DataFrame
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -225,9 +222,6 @@ class UvicornFrontend(Frontend):
 
 frontend = UvicornFrontend('../process_files/', 6,'kmeans')
 
-def fromHex(hex: str) -> str:
-    return "".join([chr(int(hex[i:i+4], 16)) for i in range(0, len(hex), 4)])
-
 # The purpose of the functions below is to
 # - provide the entrypoint with @app.get
 # - log the event for debugging and bookkeeping purposes
@@ -235,7 +229,7 @@ def fromHex(hex: str) -> str:
 # - call into the frontend to perform the action
 # - return the right kind of result, probably forwarded from the frontend
 
-@app.get("/data")
+@app.get("/data/")
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
     return data # returns to front end
 
@@ -249,15 +243,16 @@ async def showGrids():
     grids.sort()
     return {'grids': grids, 'filepath': frontend.path}
 
-@app.get("/processSupercorpus/{supercorpusFilepath}")
+@app.get("/processSupercorpus/")
 async def processSupercorpus(supercorpusFilepath: str):
-    return frontend.backend.process_supercorpus(fromHex(supercorpusFilepath))
+    print(supercorpusFilepath)
+    return frontend.backend.process_supercorpus(supercorpusFilepath)
 
-@app.get("/setSuperfiles/{corpusFilename}/{rowFilename}")
+@app.get("/setSuperfiles/")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
     return frontend.backend.set_superfiles(corpusFilename, rowFilename)
 
-@app.get("/loadNewGrid/{corpusFilename}/{rowFilename}/{newFilename}/{newAnchor}")
+@app.get("/loadNewGrid/")
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     print("loadNewGrid", newFilename, newAnchor)
     if frontend.backend.set_superfiles(corpusFilename, rowFilename):
@@ -265,7 +260,7 @@ async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, n
     else:
         return False
 
-@app.get("/loadGrid/{text}")
+@app.get("/loadGrid/")
 async def loadGrid(text: str):
     print("loading grid ", text)
     grid = frontend.load_grid(text)
@@ -276,50 +271,47 @@ async def saveGrid():
     print("saving grid")
     return frontend.save_grid()
 
-@app.get("/saveAsGrid/{text}")
+@app.get("/saveAsGrid/")
 async def saveAsGrid(text: str):
     print("saving grid as ", text)
     return frontend.save_as_grid(text)
 
-@app.get("/deleteGrid/{text}")
+@app.get("/deleteGrid/")
 async def deleteGrid(text: str):
     print("deleting ", text)
     return frontend.delete_grid(text)
 
-@app.get("/drag/{row}/{col}/{sent}")
-async def drag(row: str, col: str, sent: str):
+@app.get("/drag/")
+async def drag(row: str, col: int, sent: str):
     print("drag", f"Row: {row}\tCol: {col}\tText: {sent}")
-    row, col, sent = row, int(col), sent
     return frontend.move(row, col, sent)
 
-@app.get("/click/{row}/{col}")
-async def click(row: str, col: str):
+@app.get("/click/")
+async def click(row: str, col: int):
     print("click", row, col)
-    row, col = row, int(col)
     return frontend.click(row, col)
 
-@app.get("/sentenceClick/{text}")
+@app.get("/sentenceClick/")
 async def sentenceClick(text: str):
     print("sentenceClick", text)
     return frontend.sentence_click(text)
 
-@app.get("/editName/{ix}/{newName}")
-async def editName(ix: int, newName: str):
-    print("editName", ix, newName)
-    return frontend.set_name(int(ix), newName)
+@app.get("/editName/")
+async def editName(id: int, name: str):
+    print("editName", id, name)
+    return frontend.set_name(id, name)
 
-@app.get("/deleteFrozenColumn/{ix}")
-async def deleteFrozenColumn(ix: int):
-    print("deleteFrozen", ix)
-    return frontend.delete_frozen(int(ix))
+@app.get("/deleteFrozenColumn/")
+async def deleteFrozenColumn(id: int):
+    print("deleteFrozen", id)
+    return frontend.delete_frozen(id)
 
-@app.get("/textInput/{hexText}")
-async def textInput(hexText: str):
-    text = fromHex(hexText)
+@app.get("/textInput/")
+async def textInput(text: str):
     print("textInput", text)
     return frontend.create_cluster(text)
 
-@app.get("/setK/{k}")
+@app.get("/setK/")
 async def setK(k: int):
     print("setK", k)
     return frontend.set_k(k)
@@ -334,7 +326,7 @@ async def copyToggle():
     print("copyToggle")
     return frontend.toggle_copy()
 
-@app.get("/trash/{text}")
+@app.get("/trash/")
 async def trash(text: str):
     print("trash ", text)
     return frontend.trash(text)

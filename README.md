@@ -35,7 +35,7 @@ Here are instructions for installing the libraries and packages you’ll need to
  
 ## Starting up the Grid
 Open two tabs in terminal, then:
-- In one tab, navigate to `habitus_ui_interface-main` and run `python3 -m uvicorn –reload main2:app`. This will use port 8000 by default, so to avoid complaints, free up the port before executing the command.
+- In one tab, navigate to `habitus_ui_interface-main` and run `python3 -m uvicorn -–reload main2:app`. This will use port 8000 by default, so to avoid complaints, free up the port before executing the command.
 - In the other tab, navigate to `habitus_ui_interface-main/frontend` and run `npm start`. This will start a web server on port 3000 and open a browser on http://localhost:3000.
  
 ## Using the Grid
@@ -75,13 +75,13 @@ A last couple rules of operation:
 ## Using your own corpus
  
 ### Preprocessing your corpus
-The above tutorial uses a corpus that we created for you, but you presumably want to curate your own! Click on the “create a corpus” button.
+The above tutorial uses a corpus that we created for you, but you presumably want to curate your own! Click on the “Upload or update corpus” button.
  
-This page asks for a filepath to a folder with text files in it. You can use .docx or .rtf files. *The name of the corpus comes from the name of the folder, and the default row labels of a Grid comes from the names of the text files.* For example, if you have three text files containing interviews with three different experts, you might want to name them “Expert A”, “Expert B”, and “Expert C”; if you do that, then text in your Grid will be organized by expert. (We go further into the rows issue in the FAQs section.)
+This page asks for a filepath to a folder with documents in it. (Important: End the filepath with a slash!) You can use .doc, .docx, .txt or .rtf documents. *The name of the corpus comes from the name of the folder, and the default row labels of a Grid comes from the names of the documents.* For example, if you have three text documents containing interviews with three different experts, you might want to name them “Expert A”, “Expert B”, and “Expert C”; if you do that, then text in your Grid will be organized by expert. (We go further into the rows issue in the FAQs section.)
  
-Creating a corpus is simple, but it’s worth knowing what goes on behind the scenes. Clicking on — will trigger a series of events. First, the text is split into sentences and cleaned (see FAQs for how to deal with document delimitation.) This will produce a file `process_files/cleaned_[your_corpus_name]`. Row labels are also assigned to sentences, which produces `process_files/[your_corpus_name]_row_labels`. 
+Creating a corpus is simple, but it’s worth knowing what goes on behind the scenes. Clicking on “Ready!” will trigger a series of events. First, the text is split into sentences and cleaned (see FAQs for how to deal with document delimitation.) This will produce the files `process_files/[your_corpus_name].csv` and `process_files/cleaned_[your_corpus_name].csv`. Row labels are also assigned to sentences, which produces `process_files/[your_corpus_name]_row_labels.csv`. 
  
-Then, a Corpus object is initialized with a list of Document objects containing information about the sentences. (If you’re anchoring your Grid, meaning restricting the corpus to a subcorpus of documents containing just a keyword or a Boolean query, this happens now.) 
+Then, internal to the program, a Corpus object is initialized with a list of Document objects containing information about the sentences. (If you’re anchoring your Grid, meaning restricting the corpus to a subcorpus of documents containing just a keyword or a Boolean query, this happens now.) 
  
 Lastly, vector embeddings are calculated and stored for each Document. This is why you had to download the GloVe model. This step will also take *a very long time* if your corpus is large (>100 sentences; see “A word about runtime” below.) It will produce files called `[your_corpus_name]_doc_distances_lem.npy`, which contains a matrix of the distances between each document, and `[your_corpus_name]_doc_vecs_lem.json` which contains the vector embeddings of the documents. 
  
@@ -91,15 +91,20 @@ All of the files generated during this step will be stored in the `process_files
  
 ### Referring to your corpus
 Once your corpus is processed, you’re ready to use it to create a Grid! Navigate back to the Gallery and click on “Create Grid.” This page asks you for a bunch of filenames, all of which use the `../process_files/` file path:
-- * *Which corpus will you use?*  Use the name of the cleaned corpus file, which should be `cleaned_[your_corpus_name].csv`.
+- * *Which corpus will you use?*  Just use the name of the corpus file, which should be `[your_corpus_name].csv`.
 - * *Which row labels will you use?*  Here you can either put the default, which should be `[your_corpus_name]_row_labels.csv`, or your own labels file (see FAQs).
 - * *Do you want to anchor your Grid?*  Here you can enter an anchor, either a keyword like “harvest” or a Boolean query like “planting OR harvest”. Or you can keep it blank to look at the whole corpus (see “A word about runtime” below.)
 - * *What filename do you want to save your Grid with?*  Self-explanatory. The Grid will save in `process_files/`.
  
-Clicking “Ready” will generate a Grid using your corpus! This step should not take as long as the corpus preprocessing, but refer to “A word about runtime” below.
+Clicking “Ready!” will generate a Grid using your corpus! This step should not take as long as the corpus preprocessing, but refer to “A word about runtime” below.
  
 ## Other files in process_files/
-Grids are saved and loaded using four files. The `specs` file records Grid specifics like the anchor and relevant filenames. The `cells` file records which documents go in which columns and rows; this file is used to reconstruct saved Grids. `vectors` and `tokens` are not currently used by the rest of the Grid.
+Grids are saved and loaded using five files:
+* The `specs` file (`[your_grid_name]_specs.csv`) records Grid specifics like the anchor and relevant filenames.
+* The `cells` file (`[your_grid_name]_cells.csv`) records which documents go in which columns and rows; this file is used to reconstruct saved Grids.
+* `vectors` (`[your_grid_name]_vectors.csv`) and
+* `tokens` (`[your_grid_name]_tokens.csv`) are not currently used by the rest of the Grid.
+* There is also per grid a documents file (`[your_grid_name]_documents.csv`).
  
 ## FAQs
 These are primarily pointers to where in the code an excited and industrious person might answer their own question.

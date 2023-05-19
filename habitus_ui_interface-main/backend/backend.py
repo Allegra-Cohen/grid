@@ -1,11 +1,12 @@
-from corpus import Corpus
-from grid import Grid
-from cluster import Cluster
-from linguist import Linguist
-from row import Row
-import corpus_parser
 import os.path
 import pandas as pd
+
+from . import corpus_parser
+from .cluster import Cluster
+from .corpus import Corpus
+from .grid import Grid
+from .linguist import Linguist
+from .row import Row
 
 class Backend():
 	def __init__(self, path: str):
@@ -30,8 +31,8 @@ class Backend():
 			if os.path.isdir(supercorpus_filepath):
 				corpus_parser.parse_supercorpus(supercorpus_name, supercorpus_filepath, self.path) # Preprocess the corpus
 				
-				if not os.path.isfile(self.path + temporary_clean_supercorpus_filename): # Clean the corpus if you need to
-					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename + '.csv')
+				if not os.path.isfile(self.path + temporary_clean_supercorpus_filename + '.csv'): # Clean the corpus if you need to
+					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename)
 
 				stripped = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped'] # Need to add "stripped" column to row labels
 				row_labels = pd.read_csv(self.path + row_labels_filename)
@@ -45,7 +46,7 @@ class Backend():
 
 				Corpus(self.path, temporary_clean_supercorpus_filename, '', [], 'load_all', self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
 
-				return {'success': True, 'corpus_file': supercorpus_name, 'rows_file': row_labels_filename}
+				return {'success': True, 'corpus_file': supercorpus_name + '.csv', 'rows_file': row_labels_filename}
 		except IndexError:
 			print(f"String {supercorpus_filepath} is not a path")
 
@@ -58,7 +59,7 @@ class Backend():
 			self.supercorpus_filename = supercorpus_filename.split(".")[0]
 			self.row_labels_filename = row_filename.split(".")[0]
 			self.clean_supercorpus_filename = 'cleaned_' + self.supercorpus_filename
-			if not os.path.isfile(self.path + self.clean_supercorpus_filename): # This line should be redundant if the user relied on us for corpus pre-processing, but they may want to provide their own corpus (e.g., different delimiters)
+			if not os.path.isfile(self.path + self.clean_supercorpus_filename + ".csv"): # This line should be redundant if the user relied on us for corpus pre-processing, but they may want to provide their own corpus (e.g., different delimiters)
 				Corpus.clean_corpus(self.path, self.supercorpus_filename, self.clean_supercorpus_filename)
 			return True
 		else:
@@ -97,7 +98,9 @@ class Backend():
 
 
 	def set_up_corpus(self, anchor: str):
-		self.rows = [Row(row_name) for row_name in pd.read_csv(self.path + self.row_labels_filename + '.csv').columns if row_name != 'stripped' and row_name != 'readable' and row_name != 'Unnamed: 0']
+		data = pd.read_csv(self.path + self.row_labels_filename + '.csv')
+		columns = [column for column in data.columns if not column.startswith("Unnamed: 0") and column != 'stripped' and column != 'readable']
+		self.rows = [Row(row_name) for row_name in columns]
 		self.corpus = Corpus(self.path, self.clean_supercorpus_filename, self.row_labels_filename, self.rows, anchor, self.linguist)
 
 	# Not sure if this should be in backend, or a method of Grid

@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
+import {toQuery} from "./toEncoding";
 
 
-export default function LoadBox({text, onKeyPress, apiUrl}){
+export default function LoadBox({text, onKeyPress, apiurl}){
 
 	  return (
 	    <div className={"LoadBox"}>
@@ -9,8 +10,8 @@ export default function LoadBox({text, onKeyPress, apiUrl}){
 	      onKeyPress={
       	     (evt) => {
      	        if (evt.key === "Enter") {
-     	        	let text = evt.target.value;
-			        fetch(`${apiUrl}/loadGrid/${text}`)
+					let query = toQuery([["text", evt.target.value]]);
+			        fetch(`${apiurl}/loadGrid/${query}`)
 			            .then( response => response.json())
 			            .then( response => {console.log(response);
 			                console.log(response);

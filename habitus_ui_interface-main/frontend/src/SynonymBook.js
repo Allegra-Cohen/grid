@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
+import {toQuery} from "./toEncoding";
 
 
 
-
-function SynonymEntry({entryIndex, entry, onUpdate, apiUrl}){
+function SynonymEntry({entryIndex, entry, onUpdate, apiurl}){
 
 	const [newWord, setNewWord] = useState();
 
@@ -12,7 +12,8 @@ function SynonymEntry({entryIndex, entry, onUpdate, apiUrl}){
 	}
 
 	const handleDeleteWord = (entryIndex, word) => {
-		fetch(`${apiUrl}/removeFromSynBook/${entryIndex}/${word}/`)
+		let query = toQuery([["entryIndex", entryIndex], ["word", word]]);
+		fetch(`${apiurl}/removeFromSynBook/${query}`)
 			.then( response => response.json())
             .then( response => {
             	onUpdate(response);
@@ -20,7 +21,8 @@ function SynonymEntry({entryIndex, entry, onUpdate, apiUrl}){
 	}
 
 	const handleAddWord = (entryIndex) => {
-		fetch(`${apiUrl}/addToSynBook/${entryIndex}/${newWord}/`)
+		let query = toQuery([["entryIndex", entryIndex], ["newWord", newWord]]);
+		fetch(`${apiurl}/addToSynBook/${query}`)
 			.then( response => response.json())
             .then( response => {
             	onUpdate(response);
@@ -47,7 +49,7 @@ function SynonymEntry({entryIndex, entry, onUpdate, apiUrl}){
 
 }
 
-export default function SynonymBook({synonymBook, onUpdate, apiUrl}){
+export default function SynonymBook({synonymBook, onUpdate, apiurl}){
 
 	const [newEntry, setNewEntry] = useState();
 
@@ -56,7 +58,8 @@ export default function SynonymBook({synonymBook, onUpdate, apiUrl}){
 	}
 
 	const handleAddEntry = () => {
-		fetch(`${apiUrl}/addToSynBook/${synonymBook.length + 1}/${newEntry}/`)
+		let query = toQuery([["id", synonymBook.length + 1], ["newEntry", newEntry]]);
+		fetch(`${apiurl}/addToSynBook/${query}`)
 			.then( response => response.json())
             .then( response => {
             	onUpdate(response);
@@ -64,7 +67,7 @@ export default function SynonymBook({synonymBook, onUpdate, apiUrl}){
 	}
 
 
-	let entries = synonymBook.map((entry, i) => <SynonymEntry key={entry} entryIndex={i} entry={entry} onUpdate={onUpdate} apiUrl={apiUrl}/>)
+	let entries = synonymBook.map((entry, i) => <SynonymEntry key={entry} entryIndex={i} entry={entry} onUpdate={onUpdate} apiurl={apiurl}/>)
 
 	return (<div style={{padding:'1%', marginTop:'5%', marginLeft: '6%', background:'#f0f7fd', border: 'solid', borderColor: '#87c1ff', borderWidth: '1pt', width: 'max-content'}}>
 				<div style={{fontSize:'18pt', color:'#0c1057'}}> Synonyms </div>

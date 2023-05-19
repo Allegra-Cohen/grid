@@ -2,9 +2,9 @@ import numpy as np
 import re
 import string
 import spacy
-from eldar import Query
 
-from document import Document
+from .document import Document
+from eldar import Query
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import CountVectorizer
