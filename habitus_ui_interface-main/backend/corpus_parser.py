@@ -85,6 +85,7 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
             name = split[0]
             input_extension = split[1]
         else:
+            input_extension = None
             name = input_filename
         input_pathname = os.path.join(input_dir, input_filename)
         if not os.path.isfile(input_pathname):

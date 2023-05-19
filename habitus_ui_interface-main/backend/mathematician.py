@@ -227,8 +227,9 @@ def betweenness(clusters, docs):
 	to_sum = []
 	for ci in clusters:
 		ni = len(ci)
-		dist = (1 - cosine_similarity(get_composite(ci), meta_centroid))
-		to_sum.append(ni * (dist**2))
+		if ni > 0: # Don't run stuff for empty clusters
+			dist = (1 - cosine_similarity(get_composite(ci), meta_centroid))
+			to_sum.append(ni * (dist**2))
 	return np.sum(to_sum)
 
 def withinness(clusters):
