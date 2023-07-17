@@ -110,8 +110,14 @@ class Corpus():
 					except IndexError:
 						memberships = []
 						# print("Line not found in row_labels: ", readable)
-					pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
-					post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
+					try:
+						pre_context = ' '.join(list(lines.loc[index - 2:index-1, 'readable']))
+					except:
+						pre_context = ""
+					try:
+						post_context = ' '.join(list(lines.loc[index+1:index+2, 'readable']))
+					except:
+						post_context = ""
 					document = Document(doc_i, stripped, readable, tokens, pre_context, post_context, memberships = memberships)
 					documents.append(document)
 					doc_i += 1 # Need to keep this separate because might be a subset of label file
