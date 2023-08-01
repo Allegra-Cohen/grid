@@ -74,15 +74,23 @@ class UvicornFrontend(Frontend):
             "grid": heat_map,
             "col_num_to_name": col_num_to_name,
             "frozen_columns": frozen_columns,
-            "row_contents": row_contents
+            "row_contents": row_contents,
+            "error": False
         }
 
     def load_new_grid(self, newFilename: str, newAnchor: str):
         k = 5
-        self.grid = self.backend.get_grid(k, newAnchor, newFilename, self.clustering_algorithm)
-        self.clicked_row, self.clicked_col = None, None
-        self.update_track_actions(['human', 'new_grid', time.time(), 'grid', newAnchor, None])
-        return self.show_grid()
+        grid = self.backend.get_grid(k, newAnchor, newFilename, self.clustering_algorithm)
+        if grid != None:
+            self.grid = grid
+            self.clicked_row, self.clicked_col = None, None
+            self.update_track_actions(['human', 'new_grid', time.time(), 'grid', newAnchor, None])
+            return self.show_grid()
+        else:
+            if len(self.backend.corpus.documents) == 0:
+                return {"error": "Your anchor was not found in the corpus. Please keep in mind that the Grid cannot handle very new words like 'COVID' and proper names."}
+            else:
+                return {"error": "Your anchor was not common enough in the corpus to generate columns for a Grid."}
 
 
     def toggle_copy(self) -> bool:
@@ -255,10 +263,12 @@ async def setSuperfiles(corpusFilename: str, rowFilename: str):
 @app.get("/loadNewGrid/")
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     print("loadNewGrid", newFilename, newAnchor)
+    print("!!!!!", frontend.backend.set_superfiles(corpusFilename, rowFilename))
     if frontend.backend.set_superfiles(corpusFilename, rowFilename):
-        return frontend.load_new_grid(newFilename, newAnchor)
+        return frontend.load_new_grid(newFilename, newAnchor) # If this is false, it means the anchor didn't work
     else:
-        return False
+        print("gotcha")
+        return {"error": "Please double check your corpus and row label files. One or more of them does not exist in the filepath you provided."} # Files don't exist
 
 @app.get("/loadGrid/")
 async def loadGrid(text: str):

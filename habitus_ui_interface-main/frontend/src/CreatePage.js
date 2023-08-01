@@ -18,6 +18,7 @@ function CreatePage({apiurl}) {
 	const [supercorpus, setSupercorpus] = useState([]);
 	const [validFile, setValidFile] = useState([]);
 	const [error, setError] = useState(false);
+	const [errorText, setErrorText] = useState(false);
 	const [waiting, setWaiting] = useState(false);
 
 	useEffect(() => {
@@ -61,9 +62,12 @@ function CreatePage({apiurl}) {
 	    	fetch(`${apiurl}/loadNewGrid/${query}`)
 	            .then(response => response.json())
 	            .then(data => {
+	            	console.log(data);
 	            	setWaiting(false);
-	            	if (!data) {
-	            		setError(true)
+	            	if (data.error) {
+	            		setError(true);
+	            		setErrorText(data.error);
+	            		console.log(data.error)
 	            	} else {
 	            		navigate('/grid')
 	            	}
@@ -93,7 +97,7 @@ function CreatePage({apiurl}) {
       </div>
       <button style={{width:'max-content', marginLeft:'44%', fontSize:'14pt', padding:'0.5%', backgroundColor:'#54f07d'}} onClick={(evt)=>handleButton()}>Ready!</button>
       <div>
-      {error ? <div style={{marginLeft: '26%', margin: '0.5%', padding: '1%', color: 'red'}}>Please double check your corpus and row label files. One or more of them does not exist in the folder {filepath}</div> : <div/> }
+      {error ? <div style={{marginLeft: '26%', margin: '0.5%', padding: '1%', color: 'red'}}>{errorText}</div> : <div/> }
       {waiting ? <div><div style={{marginLeft:'34%', marginTop:'2%', marginBottom:'1%'}}>Loading corpus...If this is a new corpus, this step may take several minutes.</div><div className='spinner' style={{marginLeft:'44%'}}></div></div>: <div/>}
       </div>
       </DndProvider>

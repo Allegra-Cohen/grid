@@ -26,8 +26,9 @@ class Corpus():
 		self.model = None
 		self.model_filename = "../process_files/glove.6B.300d.txt"
 		self.linguist = linguist
-		self.documents: list[Document] = self.load_anchored_documents(anchor == 'load_all')
-		self.initialize(preexisting)
+		self.documents: list[Document] = self.load_anchored_documents(anchor == 'load_all') # Reminder: This is a bool. Anchor is passed via self.
+		if len(self.documents) > 0: # Check or this will throw an error. Whether there are enough docs to keep going will be checked in backend.set_up_corpus()
+			self.initialize(preexisting)
 
 	def initialize(self, preexisting = None):
 		vector_texts = [document.get_vector_text() for document in self.documents]

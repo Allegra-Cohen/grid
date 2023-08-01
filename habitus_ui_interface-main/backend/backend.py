@@ -71,9 +71,9 @@ class Backend():
 	def get_grid(self, k: int, anchor: str, grid_filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
 		unique_filename = grid_filename.split(".")[0]
-		self.set_up_corpus(anchor)
-		grid = Grid.generate(self.path, self.clean_supercorpus_filename, self.row_labels_filename, grid_filename, self.corpus, k, clustering_algorithm)
-		return grid
+		if self.set_up_corpus(anchor): # If the corpus setup went well
+			grid = Grid.generate(self.path, self.clean_supercorpus_filename, self.row_labels_filename, grid_filename, self.corpus, k, clustering_algorithm)
+			return grid
 
 
 	def load_grid(self, unique_filename: str, clustering_algorithm: str) -> Grid:
@@ -102,6 +102,9 @@ class Backend():
 		columns = [column for column in data.columns if not column.startswith("Unnamed: 0") and column != 'stripped' and column != 'readable']
 		self.rows = [Row(row_name) for row_name in columns]
 		self.corpus = Corpus(self.path, self.clean_supercorpus_filename, self.row_labels_filename, self.rows, anchor, self.linguist)
+		if len(self.corpus.documents) < 4: # This is specific to the way I initialize the kmeans clusters (by pairs, thus you need four documents minimum for the minimum two clusters) -- so, can be done away with when clustering is improved
+			return False
+		return True
 
 	# Not sure if this should be in backend, or a method of Grid
 	def load_clusters(self, cells, col_names: list[str]):
