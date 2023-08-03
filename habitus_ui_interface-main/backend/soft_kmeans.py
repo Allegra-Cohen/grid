@@ -12,6 +12,7 @@ from .mathematician import withinness
 from .mathematician import get_composite
 from .mathematician import check_convergence
 
+# See also https://en.wikipedia.org/wiki/Fuzzy_clustering
 class SoftKMeans(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
 		super().__init__(corpus, linguist) # I don't think we actually need corpus and linguist here
@@ -20,7 +21,7 @@ class SoftKMeans(ClusterGenerator):
 		self.documents = []
 		self.doc_vecs = []
 
-		self.beta = 1.1
+		self.beta = 1.1 # This is called m in the wikipedia article.
 		self.exponent = np.divide(2, (self.beta - 1))
 		self.threshold = 0.6
 
@@ -29,24 +30,7 @@ class SoftKMeans(ClusterGenerator):
 		self.seed = seed # Should I use this here?
 		self.rndgen = random.Random(self.seed)
 
-
-	def initialize_clusters_plus_plus(self):
-		first = self.documents[random.sample(range(0, len(self.documents)), 1)][0]
-		centroids = [first]
-		for i in range(self.k):
-			Ds = []
-			for doc in self.documents:
-				Ds.append(min([1 - cosine_similarity(doc.vector, centroid.vector) for centroid in centroids]))
-			Ds = np.array(Ds)
-			Dsq = Ds**2
-			pDs = (Dsq)/np.sum(Dsq)
-			next_centroid = np.random.choice(self.documents, p = pDs)
-			centroids.append(next_centroid)
-		centroids = [[c] for c in centroids]
-		self.clusters = np.array(centroids, dtype = 'object')
-
-
-	def initialize_clusters_random_pair(self, seeded_clusters: list[list[Document]]):
+	def _initialize_clusters_random_pair(self, seeded_clusters: list[list[Document]]):
 		self.clusters = seeded_clusters.copy()
 		initial = self.rndgen.sample(range(0, len(self.documents)), (self.k-len(seeded_clusters))*2)
 		for i in range(0, len(initial), 2):
@@ -54,7 +38,7 @@ class SoftKMeans(ClusterGenerator):
 			self.clusters.append(pair)
 		self.clusters = np.array(self.clusters, dtype = 'object')
 
-	def print_clusters(self):
+	def _print_clusters(self):
 		for i, cluster in enumerate(self.clusters):
 			print("Cluster ", i, ": ")
 			for doc in cluster:
@@ -63,7 +47,7 @@ class SoftKMeans(ClusterGenerator):
 		print("\n")
 
 
-	def assign_soft_labels(self, d2s_extended):
+	def _assign_soft_labels(self, d2s_extended):
 		# Replace the matrix with the appropriate assignments for the seeded documents:
 		seeded_matrix = self.matrix.copy()
 		if d2s_extended.size != 0:
@@ -71,7 +55,7 @@ class SoftKMeans(ClusterGenerator):
 		self.clusters = list(map(lambda i: self.documents[np.where(seeded_matrix[:, i] >= self.threshold)[0]], range(seeded_matrix.shape[1])))
 
 
-	def get_label_list(self):
+	def _get_label_list(self):
 		labels_list = []
 		for doc in self.documents:
 			labels = []
@@ -109,9 +93,9 @@ class SoftKMeans(ClusterGenerator):
 				d2s_extended = np.array([])
 
 			for j in range(0, 10):
-				self.initialize_clusters_random_pair(seeded_document_clusters)
-				self.run_soft_clustering(d2s_extended)
-				self.assign_soft_labels(d2s_extended)
+				self._initialize_clusters_random_pair(seeded_document_clusters)
+				self._run_soft_clustering(d2s_extended)
+				self._assign_soft_labels(d2s_extended)
 				score = C_score(list(self.documents) + frozen_documents, frozen_document_clusters + self.clusters) # Now append frozen clusters here -- don't need to worry about redundancy because frozen docs are not clustered in algo()
 				if type(score) == np.float64: # C_score can return [nans]
 					scores.append(score)
@@ -121,11 +105,11 @@ class SoftKMeans(ClusterGenerator):
 
 		self.clusters = best_model # Don't add frozen clusters because grid.py does that for you
 
-		labels = self.get_label_list() # Could do this using matrix but then we'd have to keep the matrix
+		labels = self._get_label_list() # Could do this using matrix but then we'd have to keep the matrix
 	
 		return labels, len(self.clusters) # What should actually get returned here?
 
-	def update_soft_centroids(self):
+	def _update_soft_centroids(self):
 		centroids = []
 		docs_T = self.doc_vecs.T
 		for i in range(self.matrix.shape[1]):
@@ -134,24 +118,24 @@ class SoftKMeans(ClusterGenerator):
 			centroids.append(centroid)
 		return np.array(centroids)
 
-	def calculate_coefficient(self, vector, centroids):
+	def _calculate_coefficient(self, vector, centroids):
 		norms = np.linalg.norm(np.subtract(vector, centroids + 0.0000000000001), axis = 1)
 		b = np.sum(np.power(np.divide(1, norms), self.exponent))
 		a = np.power(norms, self.exponent)
 		return np.divide(1, (np.multiply(a,b)))
 
-	def calculate_matrix(self, d2s_extended, centroids):
-		# Without seeding: np.apply_along_axis(lambda x: self.calculate_coefficient(x, centroids), 1, self.doc_vecs)
+	def _calculate_matrix(self, d2s_extended, centroids):
+		# Without seeding: np.apply_along_axis(lambda x: self._calculate_coefficient(x, centroids), 1, self.doc_vecs)
 		matrix = []
 		for d_index, doc in enumerate(self.documents):
 			if d2s_extended.size == 0 or np.sum(d2s_extended[d_index, :]) == 0:
-				matrix.append(self.calculate_coefficient(self.doc_vecs[d_index], centroids))
+				matrix.append(self._calculate_coefficient(self.doc_vecs[d_index], centroids))
 			else:
 				matrix.append(d2s_extended[d_index, :])
 		self.matrix = np.array(matrix)
 
 
-	def run_soft_clustering(self, d2s_extended):
+	def _run_soft_clustering(self, d2s_extended):
 		centroids = np.array([np.mean([d.vector for d in cluster], axis = 0) for cluster in self.clusters])
 		last_centroids = []
 
@@ -159,9 +143,9 @@ class SoftKMeans(ClusterGenerator):
 		while not converged:
 			if len(last_centroids) > 0 and len(centroids) > 0:
 				converged = check_convergence(centroids, last_centroids, i)
-			self.calculate_matrix(d2s_extended, centroids)
+			self._calculate_matrix(d2s_extended, centroids)
 			last_centroids = centroids
-			centroids = self.update_soft_centroids()
+			centroids = self._update_soft_centroids()
 			i += 1
 
 
