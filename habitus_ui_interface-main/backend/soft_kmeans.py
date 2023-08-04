@@ -2,13 +2,14 @@ from .cluster_generator import ClusterGenerator
 from .corpus import Corpus
 from .document import Document
 from .linguist import Linguist
+# Gradually move optimized parts of the mathematician to this class.
 from .mathematician import C_score
 from .mathematician import cosine_similarity
 from .mathematician import betweenness
 from .mathematician import withinness
 from .mathematician import get_composite
 from .mathematician import check_convergence
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import numpy as np
 import random
@@ -20,22 +21,23 @@ class SoftKMeans(ClusterGenerator):
 		self.beta = 1.1 # This is called m in the wikipedia article.
 		self.exponent = np.divide(2, (self.beta - 1))
 		self.threshold = 0.6
-		self.rndgen = random.Random(seed)
 		self.loop_count = 10
+		self.perturbance = 0.0000000000001
+		self.rndgen = random.Random(seed)
 
 	# Generate k more clusters by choosing randomly from the documents.  This means that some
 	# documents which may already have been used in seeded clusters can be reused.
 	def _generate_clusters_random_pair(self, k, documents):
 		return self.rndgen.sample(documents, k * 2)[::2]
 	
-	def _assign_soft_labels(self, d2s_extended, matrix, np_documents):
+	def _assign_soft_labels(self, np_doc_to_seeded_k, np_matrix, np_documents):
+		# TODO: I do not understand this!
 		# Replace the matrix with the appropriate assignments for the seeded documents:
-		seeded_matrix = matrix.copy()
-		if d2s_extended.size != 0:
-			seeded_matrix += d2s_extended # Zeros won't affect non-seeded, but seeded will become greater than one and thus will always match the threshold
+		seeded_matrix = np_matrix.copy()
+		if np_doc_to_seeded_k.size != 0:
+			seeded_matrix += np_doc_to_seeded_k # Zeros won't affect non-seeded, but seeded will become greater than one and thus will always match the threshold
 		clusters = list(map(lambda i: np_documents[np.where(seeded_matrix[:, i] >= self.threshold)[0]], range(seeded_matrix.shape[1])))
 		return clusters
-
 
 	# For each document, what are the indices of the clusters it belongs to?
 	# These were previously assigned and can be extracted from the matrix, can't they?
@@ -57,14 +59,15 @@ class SoftKMeans(ClusterGenerator):
 
 		def loop() -> Tuple[List[List[int]], float]:
 			generated_clusters = self._generate_clusters_random_pair(k, documents, k - k_seeded)
-			all_clusters = seeded_clusters + generated_clusters
+			seeded_and_generated_clusters = seeded_clusters + generated_clusters
 			# There should now be k clusters, in the np_doc_to_seeded we only have membership of the seeded ones
 			# Nothing is keeping track of the generated ones.  OK, because they will not belong 100% to those anyway.
-			matrix = self._run_soft_clustering(np_doc_to_seeded_k, all_clusters, np_documents, np_doc_vecs, document_seed_counts)
-			clusters = self._assign_soft_labels(np_doc_to_seeded_k, matrix, np_documents)
+			np_matrix = self._run_soft_clustering(np_doc_to_seeded_k, seeded_and_generated_clusters, np_documents, np_doc_vecs, document_seed_counts)
+			# TODO What should these clusters be named?
+			clusters = self._assign_soft_labels(np_doc_to_seeded_k, np_matrix, np_documents)
 			# Now append frozen clusters here -- don't need to worry about redundancy because frozen docs are not clustered in algo()
 			# We just need all documents here.
-			all_documents = list(np_documents) + frozen_documents
+			all_documents = documents + frozen_documents
 			all_clusters = frozen_document_clusters + clusters
 			score = C_score(all_documents, all_clusters)
 			model = clusters
@@ -151,7 +154,7 @@ class SoftKMeans(ClusterGenerator):
 		return np.array(centroids)
 
 	def _calculate_coefficient(self, vector, centroids):
-		norms = np.linalg.norm(np.subtract(vector, centroids + 0.0000000000001), axis = 1)
+		norms = np.linalg.norm(np.subtract(vector, centroids + self.perturbance), axis = 1)
 		b = np.sum(np.power(np.divide(1, norms), self.exponent))
 		a = np.power(norms, self.exponent)
 		return np.divide(1, (np.multiply(a,b)))
@@ -170,9 +173,9 @@ class SoftKMeans(ClusterGenerator):
 		matrix = [get_coefficients(document_index, doc_vec) for document_index, doc_vec in enumerate(np_doc_vecs)]
 		return np.array(matrix)
 
-	def _run_soft_clustering(self, np_doc_to_seeded_k, all_clusters, np_documents, np_doc_vecs, document_seed_counts):
+	def _run_soft_clustering(self, np_doc_to_seeded_k, seeded_and_generated_clusters, np_documents, np_doc_vecs, document_seed_counts):
 		# This is just the initial value for the clusters.  It will be updated.
-		np_centroids = np.array([np.mean([d.vector for d in cluster], axis = 0) for cluster in all_clusters])
+		np_centroids = np.array([np.mean([d.vector for d in cluster], axis = 0) for cluster in seeded_and_generated_clusters])
 
 		i, converged = 0, False
 		while not converged:
