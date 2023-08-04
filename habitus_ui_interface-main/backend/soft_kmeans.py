@@ -1,6 +1,3 @@
-import numpy as np
-import random
-
 from .cluster_generator import ClusterGenerator
 from .corpus import Corpus
 from .document import Document
@@ -11,109 +8,139 @@ from .mathematician import betweenness
 from .mathematician import withinness
 from .mathematician import get_composite
 from .mathematician import check_convergence
+from typing import Dict, List, Tuple
+
+import numpy as np
+import random
 
 # See also https://en.wikipedia.org/wiki/Fuzzy_clustering
 class SoftKMeans(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
 		super().__init__(corpus, linguist) # I don't think we actually need corpus and linguist here
-		self.k = 0
-		self.k_max = None
-		self.documents = []
-		self.doc_vecs = []
-
 		self.beta = 1.1 # This is called m in the wikipedia article.
 		self.exponent = np.divide(2, (self.beta - 1))
 		self.threshold = 0.6
+		self.rndgen = random.Random(seed)
+		self.loop_count = 10
 
-		self.clusters = []
-		self.matrix = None
-		self.seed = seed # Should I use this here?
-		self.rndgen = random.Random(self.seed)
-
-	def _initialize_clusters_random_pair(self, seeded_clusters: list[list[Document]]):
-		self.clusters = seeded_clusters.copy()
-		initial = self.rndgen.sample(range(0, len(self.documents)), (self.k-len(seeded_clusters))*2)
+	def _initialize_clusters_random_pair(self, k, seeded_clusters: list[list[Document]], np_documents):
+		clusters = seeded_clusters.copy()
+		# Documents that are also seeds will be added to other clusters.  Is this the intention.
+		initial = self.rndgen.sample(range(0, len(np_documents)), (k - len(seeded_clusters)) * 2)
 		for i in range(0, len(initial), 2):
-			pair = self.documents[initial[i:i+2]]
-			self.clusters.append(pair)
-		self.clusters = np.array(self.clusters, dtype = 'object')
-
-	def _print_clusters(self):
-		for i, cluster in enumerate(self.clusters):
-			print("Cluster ", i, ": ")
-			for doc in cluster:
-				print(doc.text)
-			print("\n")
-		print("\n")
+			pair = np_documents[initial[i:i+2]]
+			clusters.append(pair)
+		np_clusters = np.array(clusters, dtype = 'object')
+		return np_clusters
 
 
-	def _assign_soft_labels(self, d2s_extended):
+	def _assign_soft_labels(self, d2s_extended, matrix, np_documents):
 		# Replace the matrix with the appropriate assignments for the seeded documents:
-		seeded_matrix = self.matrix.copy()
+		seeded_matrix = matrix.copy()
 		if d2s_extended.size != 0:
 			seeded_matrix += d2s_extended # Zeros won't affect non-seeded, but seeded will become greater than one and thus will always match the threshold
-		self.clusters = list(map(lambda i: self.documents[np.where(seeded_matrix[:, i] >= self.threshold)[0]], range(seeded_matrix.shape[1])))
+		clusters = list(map(lambda i: np_documents[np.where(seeded_matrix[:, i] >= self.threshold)[0]], range(seeded_matrix.shape[1])))
+		return clusters
 
 
-	def _get_label_list(self):
+	# For each document, what are the indices of the clusters it belongs to?
+	# These were previously assigned and can be extracted from the matrix, can't they?
+	def _get_label_list(self, clusters, documents) -> List[List[int]]:
 		labels_list = []
-		for doc in self.documents:
+		for doc in documents:
 			labels = []
-			for i, cluster in enumerate(self.clusters):
+			for i, cluster in enumerate(clusters):
 				if doc in cluster:
 					labels.append(i)
 			labels_list.append(labels)
 		return labels_list
- 
-	def generate(self, documents: list[Document], k: int, frozen_document_clusters: list[list[Document]] = [], seeded_document_clusters: list[list[Document]] = [], frozen_documents: list[Document] = []):
 
-		self.documents = np.array(documents, dtype = 'object')
-		self.doc_vecs = np.array([d.vector for d in self.documents])
-		self.k_max = min(int(np.floor(len(self.documents)/2)), k)
 
+	# For a particular k, generate the cluster and score.  In the process, seed with random pairs in 10 different ways.
+	def _generate(self, k, np_documents, seeded_document_clusters, np_doc_to_seeded, frozen_documents, frozen_document_clusters, np_doc_vecs) -> Tuple[List[List[int]], float]:
+		# This is document to seeded says for each document to what extent they belong to each cluster.
 		if seeded_document_clusters:
-			doc_to_seeded = np.zeros((len(self.documents), len(seeded_document_clusters)))
-			for d_index, d in enumerate(self.documents):
-				for s, sc in enumerate(seeded_document_clusters):
-					if d in sc:
-						doc_to_seeded[d_index, s] = 1
-			doc_to_seeded = np.nan_to_num(np.divide(doc_to_seeded, np.sum(doc_to_seeded, axis = 1)[:,None]))
+			d2s_extended = np.concatenate((np_doc_to_seeded, np.zeros((np_doc_to_seeded.shape[0], k - np_doc_to_seeded.shape[1]))), axis = 1)
+		else:
+			d2s_extended = np.array([])
 
+		def loop() -> Tuple[List[List[int]], float]:
+			np_clusters = self._initialize_clusters_random_pair(k, seeded_document_clusters, np_documents)
+			matrix = self._run_soft_clustering(d2s_extended, np_clusters, np_documents, np_doc_vecs)
+			clusters = self._assign_soft_labels(d2s_extended, matrix, np_documents)
+			# Now append frozen clusters here -- don't need to worry about redundancy because frozen docs are not clustered in algo()
+			score = C_score(list(np_documents) + frozen_documents, frozen_document_clusters + clusters)
+			model = clusters
+			return model, score
 
-		last_C_score = -10000
-		best_model = None
-		scores = []
+		model_score_tuples = [loop() for x in range(0, self.loop_count)]
+		valid_model_score_tuples = [model_score_tuple for model_score_tuple in model_score_tuples if type(model_score_tuple(1)) == np.float64]
+		scores = [model_score_tuple(1) for model_score_tuple in valid_model_score_tuples]
+		best_index = scores.index(max(scores))
+		return model_score_tuples(best_index)
 
-		for i in range(2, self.k_max + 1): # Must be inclusive
-			self.k = max(i, len(seeded_document_clusters)) # If the user has seeded more clusters than the k you're considering, then you can't reduce that number
+	# This sets up a matrix with a row for each document and a column for each seeded cluster.
+	# The values in the matrix tell to what extent the document belongs to that cluster.
+	def _seed_clusters(self, seeded_clusters, np_documents):
+		np_doc_to_seeded = np.zeros((len(np_documents), len(seeded_clusters)), dtype=np.float64)
+		for document_index, document in enumerate(np_documents):
+			count = sum([1 for seeded_cluster in seeded_clusters if document in seeded_cluster])
+			if count != 0:
+				seed = 1.0 / count
+				for seeded_cluster_index, seeded_cluster in enumerate(seeded_clusters):
+					if document in seeded_cluster:
+						np_doc_to_seeded[document_index, seeded_cluster_index] = seed
+		return np_doc_to_seeded
 
-			if seeded_document_clusters:
-				d2s_extended = np.concatenate((doc_to_seeded, np.zeros((doc_to_seeded.shape[0], self.k - doc_to_seeded.shape[1]))), axis = 1)
-			else:
-				d2s_extended = np.array([])
+	# Get the range of feasible k values, even if the suggested k is not in it.
+	def _get_k_range(self, k, document_count: int, seeded_cluster_count: int) -> range:
+		# The algorithm does not necessarily work on fewer than 4 documents.
+		# With 0 documents and none seeded, k_min = 2, k_max = 0.
+		# With 1 document  and none seeded, k_min = 2, k_max = 0.
+		# With 2 documents and none seeded, k_min = 2, k_max = 1.
+		# With 3 documents and none seeded, k_min = 2, k_max = 1.
+		# With 4 documents and none seeded, k_min = 2, k_max = 2.
+		assert 1 <= document_count
+		# We want at least two clusters, but also can't go less than the seeded cluster count.
+		k_min = max(2, seeded_cluster_count)
+		# We want to have at least two documents in every cluster, so don't allow more than half the document count.
+		# Here it is apparent that k is the maximum desired k, not necessarily the actual k to use.
+		k_max = min(int(np.floor(document_count / 2)), k)
+		# If there are lots of seeded document clusters, but they are seeded with just a single document,
+		# then it can look like there is no suitable k value.  In that case, go with the number seeded.
+		# For example, there are 5 seeded clusters, each with a single document, and there are 8 documents overall.
+		# k_min = 5, k_max = min(4, k), so there is no work to do.  Go with 5, the seeded cluster count.
+		if k_min <= k_max:
+			return range(k_min, k_max + 1) # The right endpoint should be inclusive.
+		else:
+			assert 1 <= seeded_cluster_count # There must be some clusters.
+			return range(seeded_cluster_count, seeded_cluster_count + 1)
 
-			for j in range(0, 10):
-				self._initialize_clusters_random_pair(seeded_document_clusters)
-				self._run_soft_clustering(d2s_extended)
-				self._assign_soft_labels(d2s_extended)
-				score = C_score(list(self.documents) + frozen_documents, frozen_document_clusters + self.clusters) # Now append frozen clusters here -- don't need to worry about redundancy because frozen docs are not clustered in algo()
-				if type(score) == np.float64: # C_score can return [nans]
-					scores.append(score)
-					if score > last_C_score:
-						last_C_score = score
-						best_model = self.clusters.copy()
+	# Documents here do not include the frozen ones which are in the frozen_document_clusters.
+	# They may be used in the seeding, however.  In fact, they are added to np_doc_to_seeded.
+	# The frozen documents are redundant and calculated externally.
+	def generate(self, documents: List[Document], k: int, frozen_clusters: List[List[Document]] = [], seeded_clusters: List[List[Document]] = [], frozen_documents: list[Document] = []) -> Tuple[List[List[int]], int]:
+		k_range = self._get_k_range(k, len(documents), len(seeded_clusters))
+		# For whatever documents are going to be run, find the major centroid thing once and for all.
+		np_documents = np.array(documents, dtype = 'object') # Could these just be the strings?
+		np_doc_vecs = np.array([d.vector for d in np_documents])
+		np_doc_to_seeded = self._seed_clusters(seeded_clusters, np_documents)
+		model_score_tuples = [
+			self._generate(k, np_documents, seeded_clusters, np_doc_to_seeded, frozen_documents, frozen_clusters, np_doc_vecs)
+			for k in k_range
+		]
+		scores = [model_score_tuple(1) for model_score_tuple in model_score_tuples]
+		best_index = scores.index(max(scores))
+		best_model = model_score_tuples(best_index)(0)
+		labels = self._get_label_list(best_model, np_documents) # Could do this using matrix but then we'd have to keep the matrix
+		return labels, len(best_model) # What should actually get returned here?
 
-		self.clusters = best_model # Don't add frozen clusters because grid.py does that for you
-
-		labels = self._get_label_list() # Could do this using matrix but then we'd have to keep the matrix
-	
-		return labels, len(self.clusters) # What should actually get returned here?
-
-	def _update_soft_centroids(self):
+	# Returns new centroids
+	def _update_soft_centroids(self, doc_vecs, matrix):
 		centroids = []
-		docs_T = self.doc_vecs.T
-		for i in range(self.matrix.shape[1]):
-			wk = self.matrix[:,i]
+		docs_T = doc_vecs.T
+		for i in range(matrix.shape[1]):
+			wk = matrix[:,i]
 			centroid = np.divide(np.sum(np.multiply(wk, docs_T), axis = 1), np.sum(wk))
 			centroids.append(centroid)
 		return np.array(centroids)
@@ -124,35 +151,24 @@ class SoftKMeans(ClusterGenerator):
 		a = np.power(norms, self.exponent)
 		return np.divide(1, (np.multiply(a,b)))
 
-	def _calculate_matrix(self, d2s_extended, centroids):
-		# Without seeding: np.apply_along_axis(lambda x: self._calculate_coefficient(x, centroids), 1, self.doc_vecs)
+	def _calculate_matrix(self, d2s_extended, centroids, documents, doc_vecs):
+		# Without seeding: np.apply_along_axis(lambda x: self._calculate_coefficient(x, centroids), 1, doc_vecs)
 		matrix = []
-		for d_index, doc in enumerate(self.documents):
+		for d_index, doc in enumerate(documents): # for each document, first dimension
 			if d2s_extended.size == 0 or np.sum(d2s_extended[d_index, :]) == 0:
-				matrix.append(self._calculate_coefficient(self.doc_vecs[d_index], centroids))
+				matrix.append(self._calculate_coefficient(doc_vecs[d_index], centroids))
 			else:
 				matrix.append(d2s_extended[d_index, :])
-		self.matrix = np.array(matrix)
+		return np.array(matrix)
 
 
-	def _run_soft_clustering(self, d2s_extended):
-		centroids = np.array([np.mean([d.vector for d in cluster], axis = 0) for cluster in self.clusters])
-		last_centroids = []
+	def _run_soft_clustering(self, d2s_extended, clusters, np_documents, np_doc_vecs):
+		np_centroids = np.array([np.mean([d.vector for d in cluster], axis = 0) for cluster in clusters])
 
 		i, converged = 0, False
 		while not converged:
-			if len(last_centroids) > 0 and len(centroids) > 0:
-				converged = check_convergence(centroids, last_centroids, i)
-			self._calculate_matrix(d2s_extended, centroids)
-			last_centroids = centroids
-			centroids = self._update_soft_centroids()
+			last_np_centroids = np_centroids
+			matrix = self._calculate_matrix(d2s_extended, np_centroids, np_documents, np_doc_vecs)
+			np_centroids = self._update_soft_centroids(np_doc_vecs, matrix)
+			converged = check_convergence(np_centroids, last_np_centroids, i)
 			i += 1
-
-
-
-
-
-
-
-
-
