@@ -1,4 +1,6 @@
+from .document import Document
 from .soft_kmeans import SoftKMeans
+from .soft_kmeans2 import SoftKMeans2
 
 import math
 import numpy as np
@@ -9,62 +11,57 @@ class Corpus():
 class Linguist():
 	pass
 
-class Document():
-	def __init__(self, vector, text):
-		self.vector = np.array(vector)
-		self.text = text
+def newDocument(index, text, vector):
+	document = Document(index, text, text, text.split(" "), "", "")
+	document.set_vector(vector)
+	return document
 
-	def __str__(self):
-		return self.text + self.vector
 
 tolerance = 1.0e-12
-
-documents = [
-	Document([1.0, 1.1, 1.2], "doc0"),
-	Document([2.0, 2.1, 2.2], "doc1"),
-	Document([3.0, 3.1, 3.2], "doc2"),
-	Document([4.0, 4.1, 4.2], "doc3"),
-	Document([5.0, 5.1, 5.2], "doc4")
-]
-clusters = [
-	[documents[0], documents[1]],
-	[documents[2], documents[3], documents[4]]
-]
-
 corpus = Corpus()
 linguist = Linguist()
-k = 3
-soft_k_means = SoftKMeans(corpus, linguist)
-# soft_k_means.documents = np.array(documents, dtype = "object") # as per generate()
-# soft_k_means.doc_vecs = np.array([document.vector for document in documents])
-# soft_k_means.k_max = min(int(math.floor(len(documents) / 2)), k)
-# soft_k_means.clusters = clusters
-# i = 2
 
 def test_generate() -> None:
-	labels_k_tuple = soft_k_means.generate(documents, 2)
-	result = soft_k_means.clusters
-	print(result)
-	return result
-
-def test_initialize_cluster_random_pair() -> float:
-	seeded_clusters = [
-		[documents[0], documents[1]]
+	soft_kmeans = SoftKMeans(corpus, linguist)
+	soft_kmeans2 = SoftKMeans2(corpus, linguist)
+	documents = [
+		newDocument(0, "doc0", [1.0, 1.1, 1.2]),
+		newDocument(1, "doc1", [2.0, 2.1, 2.2]),
+		newDocument(2, "doc2", [3.0, 3.1, 3.2]),
+		newDocument(3, "doc3", [4.0, 4.1, 4.2]),
+		newDocument(4, "doc4", [5.0, 5.1, 5.2])
+	]
+	clusters = [
+		[documents[0], documents[1]],
+		[documents[2], documents[3], documents[4]]
 	]
 
-	soft_k_means.k = max(2, len(seeded_clusters))
-	soft_k_means._initialize_clusters_random_pair(seeded_clusters)
-	result1 = soft_k_means.clusters.tolist()
-	result2 = result1.tolist()
-	result3 = str(result2)
-	print("initialize_cluster_random_pair", result3)
+	labels_k_tuple = soft_kmeans.generate(documents, 2)
+	labels_k2_tuple = soft_kmeans2.generate(documents, 2)
+
 	return result
 
+# This one runs without seeding.
 def test_run_soft_clustering() -> None:
-	soft_k_means.clusters = clusters
-	d2s_extended = np.array([])
-	soft_k_means._run_soft_clustering(d2s_extended)
-	actual_result = soft_k_means.matrix
+	soft_kmeans = SoftKMeans(corpus, linguist)
+	documents = [
+		newDocument(0, "doc0", [1.0, 1.1, 1.2]),
+		newDocument(1, "doc1", [2.0, 2.1, 2.2]),
+		newDocument(2, "doc2", [3.0, 3.1, 3.2]),
+		newDocument(3, "doc3", [4.0, 4.1, 4.2]),
+		newDocument(4, "doc4", [5.0, 5.1, 5.2])
+	]
+	soft_kmeans.documents = documents
+	np_doc_vecs = np.array([document.vector for document in documents])
+	soft_kmeans.doc_vecs = np.array(np_doc_vecs)
+	clusters = [
+		[documents[0], documents[1]],
+		[documents[2], documents[3], documents[4]]
+	]
+	soft_kmeans.clusters = clusters
+	np_doc_to_seeded_k = np.array([])
+	soft_kmeans.run_soft_clustering(np_doc_to_seeded_k)
+	actual_result = soft_kmeans.matrix
 	expected_result = [
 		[1.00000000e+00, 2.75815402e-16],
 		[1.00000000e+00, 9.00379925e-13],
@@ -72,11 +69,19 @@ def test_run_soft_clustering() -> None:
 		[1.27300093e-88, 1.00000000e+00],
 		[1.31318672e-11, 1.00000000e+00]
 	]
-	print("run_soft_clustering", result)
-	return result
+	print("run_soft_clustering", actual_result)
+	passes = np.allclose(actual_result, expected_result, tolerance)
+
+	soft_kmeans2 = SoftKMeans2(corpus, linguist)
+	document_seeded_counts = [0, 0, 0, 0, 0]
+	actual_result = soft_kmeans2._run_soft_clustering(np_doc_to_seeded_k, clusters, np_doc_vecs, document_seeded_counts)
+	print("run_soft_clustering2", actual_result)
+	passes = np.allclose(actual_result, expected_result, tolerance)
+
+	return passes
 
 
 if __name__ == "__main__":
-	result = test_generate()
+	# result = test_generate()
 	# result = test_initialize_cluster_random_pair()
-	# result = test_run_soft_clustering()
+	result = test_run_soft_clustering()
