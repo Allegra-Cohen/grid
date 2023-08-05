@@ -185,5 +185,5 @@ class SoftKMeans2(ClusterGenerator):
 				return np_matrix
 			last_np_centroids = np_centroids
 			np_centroids = self._update_soft_centroids(np_doc_vecs, np_matrix)
-			converged = check_convergence(np_centroids, last_np_centroids, count)
 			count += 1
+			converged = check_convergence(np_centroids, last_np_centroids, count)

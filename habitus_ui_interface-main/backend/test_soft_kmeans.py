@@ -77,7 +77,6 @@ def test_run_soft_clustering() -> None:
 	actual_result = soft_kmeans2._run_soft_clustering(np_doc_to_seeded_k, clusters, np_doc_vecs, document_seeded_counts)
 	print("run_soft_clustering2", actual_result)
 	passes = np.allclose(actual_result, expected_result, tolerance)
-
 	return passes
 
 
