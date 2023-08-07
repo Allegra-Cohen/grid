@@ -64,17 +64,17 @@ class SoftKMeans2(ClusterGenerator):
 			clusters = self._assign_soft_labels(np_doc_to_seeded_k, np_matrix, np_documents)
 			# Now append frozen clusters here -- don't need to worry about redundancy because frozen docs are not clustered in algo()
 			# We just need all documents here.
-			all_documents = documents + frozen_documents
+			all_documents = frozen_documents + documents
 			all_clusters = frozen_document_clusters + clusters
 			score = C_score(all_documents, all_clusters)
 			return clusters, score, np_matrix
 
 		# The matrix has been added to the tuple.
 		clusters_score_tuples = [loop() for x in range(self.loop_count)]
-		valid_clusters_score_tuples = [clusters_score_tuples for clusters_score_tuple in clusters_score_tuples if type(clusters_score_tuple[1]) == np.float64]
+		valid_clusters_score_tuples = [clusters_score_tuple for clusters_score_tuple in clusters_score_tuples if type(clusters_score_tuple[1]) == np.float64]
 		scores = [clusters_score_tuple[1] for clusters_score_tuple in valid_clusters_score_tuples]
 		best_index = scores.index(max(scores))
-		return clusters_score_tuples[best_index]
+		return valid_clusters_score_tuples[best_index]
 
 	# This sets up a matrix with a row for each document and a column for each seeded cluster.
 	# The values in the matrix tell to what extent the document belongs to that cluster.
@@ -155,7 +155,7 @@ class SoftKMeans2(ClusterGenerator):
 		norms = np.linalg.norm(np.subtract(vector, centroids + self.perturbance), axis = 1)
 		b = np.sum(np.power(np.divide(1, norms), self.exponent))
 		a = np.power(norms, self.exponent)
-		return np.divide(1, (np.multiply(a,b)))
+		return np.divide(1, (np.multiply(a, b)))
 
 	def _calculate_matrix(self, np_doc_to_seeded_k, np_centroids, np_doc_vecs, document_seed_counts):
 		# Without seeding: np.apply_along_axis(lambda x: self._calculate_coefficient(x, centroids), 1, doc_vecs)

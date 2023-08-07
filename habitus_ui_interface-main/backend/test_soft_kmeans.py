@@ -21,7 +21,7 @@ tolerance = 1.0e-12
 corpus = Corpus()
 linguist = Linguist()
 
-def test_generate() -> None:
+def test_generate() -> bool:
 	soft_kmeans = SoftKMeans(corpus, linguist)
 	documents = [
 		newDocument(0, "doc0", [1.0, 1.1, 1.2]),
@@ -73,8 +73,63 @@ def test_generate() -> None:
 
 	return passes and passes2
 
-# This one runs without seeding.
-def test_run_soft_clustering() -> None:
+
+def test_generate_seeded() -> None:
+	soft_kmeans = SoftKMeans(corpus, linguist)
+	documents = [
+		newDocument(0, "doc0", [1.0, 1.1, 1.2]),
+		newDocument(1, "doc1", [2.0, 2.1, 2.2]),
+		newDocument(2, "doc2", [3.0, 3.1, 3.2]),
+		newDocument(3, "doc3", [4.0, 4.1, 4.2]),
+		newDocument(4, "doc4", [5.0, 5.1, 5.2])
+	]
+	seeded_clusters = [
+		[documents[1], documents[3]]
+	]
+
+	expected_labels = [[1], [0], [0], [0], [0]] # last should be 1
+	expected_k = 2
+	expected_matrix = [
+		[4.96918279e-167, 1.00000000e+000],
+		[1.00000000e+000, 0.00000000e+000],
+		[1.00000000e+000, 9.09494771e-013],
+		[1.00000000e+000, 0.00000000e+000],
+		[9.99999997e-001, 3.02430360e-009]
+	]
+
+	labels_k_tuple = soft_kmeans.generate(documents, 2, seeded_document_clusters=seeded_clusters)
+
+	actual_labels = labels_k_tuple[0]
+	actual_k = labels_k_tuple[1]
+	actual_matrix = soft_kmeans.best_matrix
+
+	print("generate seeded")
+	print(actual_labels)
+	print(actual_k)
+	print(actual_matrix)
+
+	passes = actual_labels == expected_labels and \
+			actual_k == expected_k and \
+			np.allclose(actual_matrix, expected_matrix, tolerance)
+
+	soft_kmeans2 = SoftKMeans2(corpus, linguist)
+	labels_k2_tuple = soft_kmeans2.generate(documents, 2, seeded_clusters=seeded_clusters)
+	actual_labels2 = labels_k2_tuple[0]
+	actual_k2 = labels_k2_tuple[1]
+	actual_matrix2 = labels_k2_tuple[2]
+
+	print("generate seeded")
+	print(actual_labels2)
+	print(actual_k2)
+	print(actual_matrix2)
+
+	passes2 = actual_labels2 == expected_labels and \
+			actual_k2 == expected_k and \
+			np.allclose(actual_matrix2, expected_matrix, tolerance)
+
+	return passes and passes2
+
+def test_run_soft_clustering() -> bool:
 	soft_kmeans = SoftKMeans(corpus, linguist)
 	documents = [
 		newDocument(0, "doc0", [1.0, 1.1, 1.2]),
@@ -113,7 +168,9 @@ def test_run_soft_clustering() -> None:
 
 
 if __name__ == "__main__":
-	result = test_generate()
+	# result = test_generate()
+	# print(result)
+	result = test_generate_seeded()
 	print(result)
-	result = test_run_soft_clustering()
-	print(result)
+	# result = test_run_soft_clustering()
+	# print(result)

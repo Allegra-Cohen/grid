@@ -94,7 +94,12 @@ class SoftKMeans(ClusterGenerator):
 				for s, sc in enumerate(seeded_document_clusters):
 					if d in sc:
 						doc_to_seeded[d_index, s] = 1
-			doc_to_seeded = np.nan_to_num(np.divide(doc_to_seeded, np.sum(doc_to_seeded, axis = 1)[:,None]))
+			sum = np.sum(doc_to_seeded, axis = 1)
+			sum2 = np.array([max(1, value) for value in sum])[:,None]
+			if 0 in sum:
+				print("What to do?")
+			div = np.divide(doc_to_seeded, sum2)
+			doc_to_seeded = div
 
 
 		last_C_score = -10000
