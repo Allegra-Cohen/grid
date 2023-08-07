@@ -95,11 +95,9 @@ class SoftKMeans(ClusterGenerator):
 					if d in sc:
 						doc_to_seeded[d_index, s] = 1
 			sum = np.sum(doc_to_seeded, axis = 1)
-			sum2 = np.array([max(1, value) for value in sum])[:,None]
-			if 0 in sum:
-				print("What to do?")
-			div = np.divide(doc_to_seeded, sum2)
-			doc_to_seeded = div
+			# Change any 0 to 1 so that division of zeros uses identity element.
+			divisor = np.array([max(1, value) for value in sum])[:,None]
+			doc_to_seeded= np.divide(doc_to_seeded, divisor)
 
 
 		last_C_score = -10000

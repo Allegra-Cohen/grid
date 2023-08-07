@@ -168,9 +168,9 @@ def test_run_soft_clustering() -> bool:
 
 
 if __name__ == "__main__":
-	# result = test_generate()
-	# print(result)
+	result = test_generate()
+	print(result)
 	result = test_generate_seeded()
 	print(result)
-	# result = test_run_soft_clustering()
-	# print(result)
+	result = test_run_soft_clustering()
+	print(result)
