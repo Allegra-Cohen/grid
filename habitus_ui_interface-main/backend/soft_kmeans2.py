@@ -33,25 +33,21 @@ class SoftKMeans2(ClusterGenerator):
 		return paired_sample
 	
 	def _assign_soft_labels(self, np_doc_to_seeded_k, np_matrix, np_documents):
-		# TODO: I do not understand this!
-		# Replace the matrix with the appropriate assignments for the seeded documents:
-		seeded_matrix = np_matrix.copy()
-		if np_doc_to_seeded_k.size != 0:
-			seeded_matrix += np_doc_to_seeded_k # Zeros won't affect non-seeded, but seeded will become greater than one and thus will always match the threshold
+		# These are added in place, giving a boost to the documents in the seeded clusters.
+		# Zeros won't affect non-seeded, but seeded will become greater than one and thus will always match the threshold.
+		# If documents were split between several clusters, they might not make the threshold, though.
+		seeded_matrix = np_matrix + np_doc_to_seeded_k
+		# Alternatively, just remember where they were seeded and keep them there.
 		clusters = list(map(lambda i: np_documents[np.where(seeded_matrix[:, i] >= self.threshold)[0]], range(seeded_matrix.shape[1])))
 		return clusters
 
 	# For each document, what are the indices of the clusters it belongs to?
-	# These were previously assigned and can be extracted from the matrix, can't they?
 	def _get_label_list(self, clusters, documents) -> List[List[int]]:
-		labels_list = []
-		for doc in documents:
-			labels = []
-			for i, cluster in enumerate(clusters):
-				if doc in cluster:
-					labels.append(i)
-			labels_list.append(labels)
-		return labels_list
+		labels = [
+			[cluster_index for cluster_index, cluster in enumerate(clusters) if document in cluster]
+			for document in documents
+		]
+		return labels
 
 	# For a particular k, generate the cluster and score.  In the process, seed with random pairs in 10 different ways.
 	def _generate(self, k, k_seeded, documents, np_documents, np_doc_to_seeded, frozen_documents, frozen_document_clusters, np_doc_vecs, document_seed_counts, seeded_clusters) -> Tuple[List[List[int]], float]:
@@ -133,17 +129,16 @@ class SoftKMeans2(ClusterGenerator):
 			for document in documents
 		]
 		doc_to_seeded = self._seed_clusters(seeded_clusters, np_documents, document_seed_counts)
-		model_score_tuples = [
+		clusters_score_tuples = [
 			self._generate(k, k_seeded, documents, np_documents, doc_to_seeded, frozen_documents, frozen_clusters, np_doc_vecs, document_seed_counts, seeded_clusters)
 			for k in k_range
 		]
-		scores = [model_score_tuple[1] for model_score_tuple in model_score_tuples]
+		scores = [model_score_tuple[1] for model_score_tuple in clusters_score_tuples]
 		best_index = scores.index(max(scores))
-		best_model = model_score_tuples[best_index][0]
-		# TODO Call this something better?
-		labels = self._get_label_list(best_model, np_documents) # Could do this using matrix but then we'd have to keep the matrix
-		self.best_matrix = model_score_tuples[best_index][2] # TODO: Use this to check answers.
-		return labels, len(best_model), model_score_tuples[best_index][2] # What should actually get returned here?
+		best_clusters = clusters_score_tuples[best_index][0]
+		labels = self._get_label_list(best_clusters, np_documents)
+		self.best_matrix = clusters_score_tuples[best_index][2] # Use this to check answers.
+		return labels, len(best_clusters), clusters_score_tuples[best_index][2] # What should actually get returned here?
 
 	def _update_soft_centroids(self, np_doc_vecs, np_matrix):
 		np_doc_vecs_T = np_doc_vecs.T # T is for transpose!
