@@ -140,7 +140,7 @@ class SoftKMeans2(ClusterGenerator):
 		scores = [model_score_tuple[1] for model_score_tuple in model_score_tuples]
 		best_index = scores.index(max(scores))
 		best_model = model_score_tuples[best_index][0]
-		# TODO Call this something betterr?
+		# TODO Call this something better?
 		labels = self._get_label_list(best_model, np_documents) # Could do this using matrix but then we'd have to keep the matrix
 		self.best_matrix = model_score_tuples[best_index][2] # TODO: Use this to check answers.
 		return labels, len(best_model), model_score_tuples[best_index][2] # What should actually get returned here?

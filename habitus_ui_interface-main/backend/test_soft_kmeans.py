@@ -30,26 +30,48 @@ def test_generate() -> None:
 		newDocument(3, "doc3", [4.0, 4.1, 4.2]),
 		newDocument(4, "doc4", [5.0, 5.1, 5.2])
 	]
-	labels_k_tuple = soft_kmeans.generate(documents, 2)
-	labels = labels_k_tuple[0]
-	k = labels_k_tuple[1]
-	matrix = soft_kmeans.matrix
 
-	print(labels)
-	print(k)
-	print(matrix)
+	expected_labels = [[1], [1], [], [0], [0]]
+	expected_k = 2
+	expected_matrix = [
+		[9.09494702e-13, 1.00000000e+00],
+		[1.48643628e-21, 1.00000000e+00],
+		[5.00000000e-01, 5.00000000e-01],
+		[1.00000000e+00, 1.48643628e-21],
+		[1.00000000e+00, 9.09494702e-13]
+	]
+
+	labels_k_tuple = soft_kmeans.generate(documents, 2)
+
+	actual_labels = labels_k_tuple[0]
+	actual_k = labels_k_tuple[1]
+	actual_matrix = soft_kmeans.best_matrix
+
+	print("generate")
+	print(actual_labels)
+	print(actual_k)
+	print(actual_matrix)
+
+	passes = actual_labels == expected_labels and \
+			actual_k == expected_k and \
+			np.allclose(actual_matrix, expected_matrix, tolerance)
 
 	soft_kmeans2 = SoftKMeans2(corpus, linguist)
 	labels_k2_tuple = soft_kmeans2.generate(documents, 2)
-	labels2 = labels_k2_tuple[0]
-	k2 = labels_k2_tuple[1]
-	matrix2 = labels_k2_tuple[2]
+	actual_labels2 = labels_k2_tuple[0]
+	actual_k2 = labels_k2_tuple[1]
+	actual_matrix2 = labels_k2_tuple[2]
 
-	print(labels2)
-	print(k2)
-	print(matrix2)
+	print("generate")
+	print(actual_labels2)
+	print(actual_k2)
+	print(actual_matrix2)
 
-	return True
+	passes2 = actual_labels2 == expected_labels and \
+			actual_k2 == expected_k and \
+			np.allclose(actual_matrix2, expected_matrix, tolerance)
+
+	return passes and passes2
 
 # This one runs without seeding.
 def test_run_soft_clustering() -> None:
@@ -84,12 +106,14 @@ def test_run_soft_clustering() -> None:
 
 	soft_kmeans2 = SoftKMeans2(corpus, linguist)
 	document_seeded_counts = [0, 0, 0, 0, 0]
-	actual_result = soft_kmeans2._run_soft_clustering(np_doc_to_seeded_k, clusters, np_doc_vecs, document_seeded_counts)
+	actual_result2 = soft_kmeans2._run_soft_clustering(np_doc_to_seeded_k, clusters, np_doc_vecs, document_seeded_counts)
 	print("run_soft_clustering2", actual_result)
-	passes = np.allclose(actual_result, expected_result, tolerance)
-	return passes
+	passes2 = np.allclose(actual_result2, expected_result, tolerance)
+	return passes and passes2
 
 
 if __name__ == "__main__":
 	result = test_generate()
-	# result = test_run_soft_clustering()
+	print(result)
+	result = test_run_soft_clustering()
+	print(result)

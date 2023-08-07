@@ -26,6 +26,7 @@ class SoftKMeans(ClusterGenerator):
 
 		self.clusters = []
 		self.matrix = None
+		self.best_matrix = None
 		self.seed = seed # Should I use this here?
 		self.rndgen = random.Random(self.seed)
 
@@ -118,6 +119,7 @@ class SoftKMeans(ClusterGenerator):
 					if score > last_C_score:
 						last_C_score = score
 						best_model = self.clusters.copy()
+						self.best_matrix = self.matrix
 
 		self.clusters = best_model # Don't add frozen clusters because grid.py does that for you
 

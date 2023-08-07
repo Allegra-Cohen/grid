@@ -235,10 +235,13 @@ def betweenness(clusters, docs):
 def withinness(clusters):
 	to_sum = []
 	for ci in clusters:
-		centroid = get_composite(ci)
-		for di in ci:
-			dist = (1 - cosine_similarity(di.vector, centroid))
-			to_sum.append((dist**2))
+		if len(ci) != 0:
+			centroid = get_composite(ci)
+			for di in ci:
+				dist = (1 - cosine_similarity(di.vector, centroid))
+				to_sum.append((dist**2))
+		else:
+			to_sum.append(0.0)
 	return np.sum(to_sum)
 
 
@@ -275,7 +278,7 @@ def C_score(docs, clusters):
 	w = withinness(clusters)
 
 	# print("Num docs: ", n, ", num clusters: ", k, ", betweenness: ", b, "withinness: ", w)
-	if k > 1:
+	if k > 1 and w != 0.0:
 		return (b * (n - k))/(w * (k - 1))
 	else:
 		return np.nan # Don't want a single cluster
