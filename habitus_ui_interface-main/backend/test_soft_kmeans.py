@@ -23,7 +23,6 @@ linguist = Linguist()
 
 def test_generate() -> None:
 	soft_kmeans = SoftKMeans(corpus, linguist)
-	soft_kmeans2 = SoftKMeans2(corpus, linguist)
 	documents = [
 		newDocument(0, "doc0", [1.0, 1.1, 1.2]),
 		newDocument(1, "doc1", [2.0, 2.1, 2.2]),
@@ -31,15 +30,26 @@ def test_generate() -> None:
 		newDocument(3, "doc3", [4.0, 4.1, 4.2]),
 		newDocument(4, "doc4", [5.0, 5.1, 5.2])
 	]
-	clusters = [
-		[documents[0], documents[1]],
-		[documents[2], documents[3], documents[4]]
-	]
-
 	labels_k_tuple = soft_kmeans.generate(documents, 2)
-	labels_k2_tuple = soft_kmeans2.generate(documents, 2)
+	labels = labels_k_tuple[0]
+	k = labels_k_tuple[1]
+	matrix = soft_kmeans.matrix
 
-	return result
+	print(labels)
+	print(k)
+	print(matrix)
+
+	soft_kmeans2 = SoftKMeans2(corpus, linguist)
+	labels_k2_tuple = soft_kmeans2.generate(documents, 2)
+	labels2 = labels_k2_tuple[0]
+	k2 = labels_k2_tuple[1]
+	matrix2 = labels_k2_tuple[2]
+
+	print(labels2)
+	print(k2)
+	print(matrix2)
+
+	return True
 
 # This one runs without seeding.
 def test_run_soft_clustering() -> None:
@@ -81,6 +91,5 @@ def test_run_soft_clustering() -> None:
 
 
 if __name__ == "__main__":
-	# result = test_generate()
-	# result = test_initialize_cluster_random_pair()
-	result = test_run_soft_clustering()
+	result = test_generate()
+	# result = test_run_soft_clustering()
