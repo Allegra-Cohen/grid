@@ -72,9 +72,13 @@ class SoftKMeans2(ClusterGenerator):
 		# The matrix has been added to the tuple.
 		clusters_score_tuples = [loop() for x in range(self.loop_count)]
 		valid_clusters_score_tuples = [clusters_score_tuple for clusters_score_tuple in clusters_score_tuples if type(clusters_score_tuple[1]) == np.float64]
-		scores = [clusters_score_tuple[1] for clusters_score_tuple in valid_clusters_score_tuples]
-		best_index = scores.index(max(scores))
-		return valid_clusters_score_tuples[best_index]
+		
+		if len(valid_clusters_score_tuples) == 0:
+			return None
+		else:
+			scores = [clusters_score_tuple[1] for clusters_score_tuple in valid_clusters_score_tuples]
+			best_index = scores.index(max(scores))
+			return valid_clusters_score_tuples[best_index]
 
 	# This sets up a matrix with a row for each document and a column for each seeded cluster.
 	# The values in the matrix tell to what extent the document belongs to that cluster.
@@ -133,12 +137,15 @@ class SoftKMeans2(ClusterGenerator):
 			self._generate(k, k_seeded, documents, np_documents, doc_to_seeded, frozen_documents, frozen_clusters, np_doc_vecs, document_seed_counts, seeded_clusters)
 			for k in k_range
 		]
-		scores = [model_score_tuple[1] for model_score_tuple in clusters_score_tuples]
+		valid_clusters_score_tuples = [clusters_score_tuple for clusters_score_tuple in clusters_score_tuples if clusters_score_tuple]
+		if len(valid_clusters_score_tuples) == 0:
+			print("What now?")
+		scores = [model_score_tuple[1] for model_score_tuple in valid_clusters_score_tuples]
 		best_index = scores.index(max(scores))
-		best_clusters = clusters_score_tuples[best_index][0]
+		best_clusters = valid_clusters_score_tuples[best_index][0]
 		labels = self._get_label_list(best_clusters, np_documents)
-		self.best_matrix = clusters_score_tuples[best_index][2] # Use this to check answers.
-		return labels, len(best_clusters), clusters_score_tuples[best_index][2] # What should actually get returned here?
+		self.best_matrix = valid_clusters_score_tuples[best_index][2] # Use this to check answers.
+		return labels, len(best_clusters), valid_clusters_score_tuples[best_index][2] # What should actually get returned here?
 
 	def _update_soft_centroids(self, np_doc_vecs, np_matrix):
 		np_doc_vecs_T = np_doc_vecs.T # T is for transpose!
