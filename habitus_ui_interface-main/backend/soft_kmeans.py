@@ -73,15 +73,20 @@ class SoftKMeans(ClusterGenerator):
 
 
 	def get_label_list(self):
-		labels_list = []
-		for doc in self.documents:
-			labels = []
-			for i, cluster in enumerate(self.clusters):
-				if doc in cluster:
-					labels.append(i)
-			labels_list.append(labels)
-		return labels_list
- 
+		if self.clusters:
+			labels_list = []
+			for doc in self.documents:
+				labels = []
+				for i, cluster in enumerate(self.clusters):
+					if doc in cluster:
+						labels.append(i)
+				labels_list.append(labels)
+			return labels_list
+		else:
+			print("We're in trouble!")
+			return None
+
+
 	def generate(self, documents: list[Document], k: int, frozen_document_clusters: list[list[Document]] = [], seeded_document_clusters: list[list[Document]] = [], frozen_documents: list[Document] = []):
 
 		self.documents = np.array(documents, dtype = 'object')
@@ -127,8 +132,11 @@ class SoftKMeans(ClusterGenerator):
 		self.clusters = best_model # Don't add frozen clusters because grid.py does that for you
 
 		labels = self.get_label_list() # Could do this using matrix but then we'd have to keep the matrix
-	
-		return labels, len(self.clusters) # What should actually get returned here?
+		if self.clusters:
+			cluster_len = len(self.clusters)
+		else:
+			cluster_len = 0
+		return labels, cluster_len # What should actually get returned here?
 
 	def update_soft_centroids(self):
 		centroids = []

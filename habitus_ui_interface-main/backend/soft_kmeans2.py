@@ -8,7 +8,6 @@ from .mathematician import cosine_similarity
 from .mathematician import betweenness
 from .mathematician import withinness
 from .mathematician import get_composite
-from .mathematician import check_convergence
 from typing import List, Tuple
 
 import numpy as np
@@ -22,6 +21,8 @@ class SoftKMeans2(ClusterGenerator):
 		self.exponent = np.divide(2, (self.beta - 1))
 		self.threshold = 0.6
 		self.loop_count = 10
+		self.update_count = 100
+		self.update_limit = 0.00001
 		self.perturbance = 0.0000000000001
 		self.rndgen = random.Random(seed)
 
@@ -138,14 +139,16 @@ class SoftKMeans2(ClusterGenerator):
 			for k in k_range
 		]
 		valid_clusters_score_tuples = [clusters_score_tuple for clusters_score_tuple in clusters_score_tuples if clusters_score_tuple]
-		if len(valid_clusters_score_tuples) == 0:
+		if valid_clusters_score_tuples:
+			scores = [model_score_tuple[1] for model_score_tuple in valid_clusters_score_tuples]
+			best_index = scores.index(max(scores))
+			best_clusters = valid_clusters_score_tuples[best_index][0]
+			labels = self._get_label_list(best_clusters, np_documents)
+			self.best_matrix = valid_clusters_score_tuples[best_index][2] # Use this to check answers.
+			return labels, len(best_clusters), valid_clusters_score_tuples[best_index][2] # What should actually get returned here?
+		else:
 			print("What now?")
-		scores = [model_score_tuple[1] for model_score_tuple in valid_clusters_score_tuples]
-		best_index = scores.index(max(scores))
-		best_clusters = valid_clusters_score_tuples[best_index][0]
-		labels = self._get_label_list(best_clusters, np_documents)
-		self.best_matrix = valid_clusters_score_tuples[best_index][2] # Use this to check answers.
-		return labels, len(best_clusters), valid_clusters_score_tuples[best_index][2] # What should actually get returned here?
+			return None, 0, None
 
 	def _update_soft_centroids(self, np_doc_vecs, np_matrix):
 		np_doc_vecs_T = np_doc_vecs.T # T is for transpose!
@@ -178,6 +181,16 @@ class SoftKMeans2(ClusterGenerator):
 		matrix = [get_coefficients(document_index, doc_vec) for document_index, doc_vec in enumerate(np_doc_vecs)]
 		return np.array(matrix)
 
+	def check_convergence(self, centroids, last_centroids, j):
+		diffs = []
+		for i, centroid in enumerate(centroids):
+			# TODO The mean might be negative and thereby pass the updateLimit test.
+			diffs.append(np.mean(centroid - last_centroids[i]))
+		if max(diffs) < self.update_limit or j > self.update_count:
+			return True
+		else:
+			return False
+
 	def _run_soft_clustering(self, np_doc_to_seeded_k, seeded_and_generated_clusters, np_doc_vecs, document_seed_counts):
 		# This is just the initial value for the clusters.  It will be updated.
 		np_centroids = np.array([np.mean([d.vector for d in cluster], axis = 0) for cluster in seeded_and_generated_clusters])
@@ -191,4 +204,4 @@ class SoftKMeans2(ClusterGenerator):
 			last_np_centroids = np_centroids
 			np_centroids = self._update_soft_centroids(np_doc_vecs, np_matrix)
 			count += 1
-			converged = check_convergence(np_centroids, last_np_centroids, count)
+			converged = self.check_convergence(np_centroids, last_np_centroids, count)
