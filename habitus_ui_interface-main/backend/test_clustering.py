@@ -71,7 +71,7 @@ def test_clustering(round: int, n: int) -> Tuple[int, int, bool]:
 
 
 if __name__ == "__main__":
-	sizes = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]
+	sizes = [10, 20, 50, 100, 200, 500, 1000] # 2000, 5000, 10000, 20000, 50000, 100000]
 	for round in range(10):
 		for size in sizes:
 			elapsed, elapsed2, result = test_clustering(round, size)

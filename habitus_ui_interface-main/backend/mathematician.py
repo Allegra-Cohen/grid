@@ -279,7 +279,7 @@ def C_score(docs, clusters):
 
 	# print("Num docs: ", n, ", num clusters: ", k, ", betweenness: ", b, "withinness: ", w)
 	if k > 1 and w != 0.0:
-		return (b * (n - k))/(w * (k - 1))
+		return (b * (n - k)) / (w * (k - 1))
 	else:
 		return np.nan # Don't want a single cluster
 

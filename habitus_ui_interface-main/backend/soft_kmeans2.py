@@ -3,11 +3,11 @@ from .corpus import Corpus
 from .document import Document
 from .linguist import Linguist
 # Gradually move optimized parts of the mathematician to this class.
-from .mathematician import C_score
+# from .mathematician import C_score
 from .mathematician import cosine_similarity
-from .mathematician import betweenness
-from .mathematician import withinness
-from .mathematician import get_composite
+# from .mathematician import betweenness
+# from .mathematician import withinness
+# from .mathematician import get_composite
 from typing import List, Tuple
 
 import numpy as np
@@ -50,8 +50,61 @@ class SoftKMeans2(ClusterGenerator):
 		]
 		return labels
 
+	def get_composite(self, cluster):
+		if len(cluster) > 0:
+			vecs = []
+			for d in cluster:
+				vecs.append(d.vector)
+			return np.mean(vecs, axis = 0)
+		else:
+			return None
+	
+	def C_score(self, docs, clusters, meta_centroid):
+		# centroids = [get_composite(cluster) for cluster in clusters]
+
+		def betweenness():
+			to_sum = []
+			for index in range(len(clusters)):
+				cluster = clusters[index]
+				cluster_len = len(cluster)
+				if cluster_len > 0: # Don't run stuff for empty clusters
+					centroid = self.get_composite(cluster)
+					dist = (1 - cosine_similarity(centroid, meta_centroid))
+					to_sum.append(cluster_len * (dist**2))
+				else:
+					to_sum.append(0.0)
+			return np.sum(to_sum)
+
+		def withinness():
+			to_sum = []
+			for index in range(len(clusters)):
+				cluster = clusters[index]
+				cluster_len = len(cluster)
+				if cluster_len > 0:
+					centroid = self.get_composite(cluster)
+					for document in cluster:
+						dist = (1 - cosine_similarity(document.vector, centroid))
+						to_sum.append((dist**2))
+				else:
+					to_sum.append(0.0)
+			return np.sum(to_sum)
+
+		n = len(docs)
+		k = len(clusters)
+
+		b = betweenness()
+		w = withinness()
+
+		# print("Num docs: ", n, ", num clusters: ", k, ", betweenness: ", b, "withinness: ", w)
+		if k > 1 and w != 0.0:
+			return (b * (n - k)) / (w * (k - 1))
+		else:
+			return np.nan # Don't want a single cluster
+
+
+
 	# For a particular k, generate the cluster and score.  In the process, seed with random pairs in 10 different ways.
-	def _generate(self, k, k_seeded, documents, np_documents, np_doc_to_seeded, frozen_documents, frozen_document_clusters, np_doc_vecs, document_seed_counts, seeded_clusters) -> Tuple[List[List[int]], float]:
+	def _generate(self, k, k_seeded, documents, np_documents, np_doc_to_seeded, frozen_document_clusters, np_doc_vecs, document_seed_counts, seeded_clusters, all_documents, meta_centroid) -> Tuple[List[List[int]], float]:
 		# Pad doc_to_seeded to account for k clusters.  Everything added will be zero, because the seeded documents
 		# will not belong at all to the generated clusters even if they are in the cluster.
 		np_doc_to_seeded_k = np.concatenate((np_doc_to_seeded, np.zeros((len(np_documents), k - k_seeded))), axis = 1)
@@ -65,9 +118,8 @@ class SoftKMeans2(ClusterGenerator):
 			clusters = self._assign_soft_labels(np_doc_to_seeded_k, np_matrix, np_documents)
 			# Now append frozen clusters here -- don't need to worry about redundancy because frozen docs are not clustered in algo()
 			# We just need all documents here.
-			all_documents = frozen_documents + documents
 			all_clusters = frozen_document_clusters + clusters
-			score = C_score(all_documents, all_clusters)
+			score = self.C_score(all_documents, all_clusters, meta_centroid)
 			return clusters, score, np_matrix
 
 		# The matrix has been added to the tuple.
@@ -128,6 +180,8 @@ class SoftKMeans2(ClusterGenerator):
 		# A document can be used for seeding a cluster or generating a cluster or nothing.
 		np_documents = np.array(documents, dtype = 'object') # Could these just be the strings?
 		np_doc_vecs = np.array([d.vector for d in np_documents])
+		all_documents = frozen_documents + documents
+		meta_centroid = self.get_composite(all_documents)
 		# For each document, count how many times it is in a seeded_cluster.
 		document_seed_counts = [
 			sum([1 for seeded_cluster in seeded_clusters if document in seeded_cluster])
@@ -135,7 +189,7 @@ class SoftKMeans2(ClusterGenerator):
 		]
 		doc_to_seeded = self._seed_clusters(seeded_clusters, np_documents, document_seed_counts)
 		clusters_score_tuples = [
-			self._generate(k, k_seeded, documents, np_documents, doc_to_seeded, frozen_documents, frozen_clusters, np_doc_vecs, document_seed_counts, seeded_clusters)
+			self._generate(k, k_seeded, documents, np_documents, doc_to_seeded, frozen_clusters, np_doc_vecs, document_seed_counts, seeded_clusters, all_documents, meta_centroid)
 			for k in k_range
 		]
 		valid_clusters_score_tuples = [clusters_score_tuple for clusters_score_tuple in clusters_score_tuples if clusters_score_tuple]
