@@ -1,5 +1,4 @@
 import numpy as np
-import random
 
 from .cluster_generator import ClusterGenerator
 from .corpus import Corpus
@@ -11,6 +10,9 @@ from .mathematician import betweenness
 from .mathematician import withinness
 from .mathematician import get_composite
 from .mathematician import check_convergence
+from .rng import RNG
+
+import random
 
 class SoftKMeans(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
@@ -28,11 +30,11 @@ class SoftKMeans(ClusterGenerator):
 		self.matrix = None
 		self.best_matrix = None
 		self.seed = seed # Should I use this here?
-		self.rndgen = random.Random(self.seed)
+		self.rndgen = RNG(self.seed)
 
 
 	def initialize_clusters_plus_plus(self):
-		first = self.documents[random.sample(range(0, len(self.documents)), 1)][0]
+		first = self.documents[self.rndgen.randomSample(range(0, len(self.documents)), 1)][0]
 		centroids = [first]
 		for i in range(self.k):
 			Ds = []
@@ -41,7 +43,7 @@ class SoftKMeans(ClusterGenerator):
 			Ds = np.array(Ds)
 			Dsq = Ds**2
 			pDs = (Dsq)/np.sum(Dsq)
-			next_centroid = np.random.choice(self.documents, p = pDs)
+			next_centroid = self.rndgen.randomChoice(self.documents, p = pDs)
 			centroids.append(next_centroid)
 		centroids = [[c] for c in centroids]
 		self.clusters = np.array(centroids, dtype = 'object')

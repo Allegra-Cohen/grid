@@ -1,7 +1,6 @@
 import itertools
 import numpy as np
 import pandas as pd
-import random
 
 from .document import Document
 

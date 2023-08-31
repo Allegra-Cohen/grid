@@ -1,10 +1,11 @@
 from .document import Document
+from .rng import RNG
 from .soft_kmeans import SoftKMeans
 from .soft_kmeans2 import SoftKMeans2
 from typing import List, Tuple
 
+import cProfile
 import numpy as np
-import random
 import time
 
 class Corpus():
@@ -13,7 +14,7 @@ class Corpus():
 class Linguist():
 	pass
 
-def newDocument(rndgen: random, index: int) -> Document:
+def newDocument(rndgen: RNG, index: int) -> Document:
 	text = f"doc{index}"
 	vector = [rndgen.random() for _ in range(vector_size)]
 	document = Document(index, text, text, text.split(" "), "", "")
@@ -28,27 +29,28 @@ corpus = Corpus()
 linguist = Linguist()
 
 
-def test_soft_clustering(documents: List[Document]) -> Tuple[List[List[Document]], int, np.array]:
-	soft_kmeans = SoftKMeans(corpus, linguist)
-	labels_k_tuple = soft_kmeans.generate(documents, 5)
+def test_soft_clustering(documents: List[Document], seed: int) -> Tuple[List[List[Document]], int, np.array]:
+	soft_kmeans = SoftKMeans(corpus, linguist, seed)
+	labels_k_tuple = soft_kmeans.generate(documents, cluster_count)
 	if labels_k_tuple[0]:
 		matrix = soft_kmeans.best_matrix
 	else:
 		matrix = None
 	return labels_k_tuple[0], labels_k_tuple[1], matrix
 
-def test_soft_clustering2(documents: List[Document]) -> Tuple[List[List[Document]], int, np.array]:
-	soft_kmeans = SoftKMeans2(corpus, linguist)
-	labels_k_tuple = soft_kmeans.generate(documents, 5)
+def test_soft_clustering2(documents: List[Document], seed: int) -> Tuple[List[List[Document]], int, np.array]:
+	soft_kmeans = SoftKMeans2(corpus, linguist, seed)
+	labels_k_tuple = soft_kmeans.generate(documents, cluster_count)
 	return labels_k_tuple
 
-def test_clustering(round: int, n: int) -> Tuple[int, int, bool]:
-	rndgen = random.Random(round + n)
+def test_clustering(round: int, n: int) -> Tuple[float, float, bool]:
+	seed = round + n
+	rndgen = RNG(seed)
 	documents = [newDocument(rndgen, i) for i in range(n)]
 
 	# time these separately
 	start = time.perf_counter_ns()
-	result = test_soft_clustering(documents)
+	result = test_soft_clustering(documents, seed)
 	stop = time.perf_counter_ns()
 	elapsed = (stop - start) / 1000000 / 1000 # convert from ns to s
 
@@ -70,9 +72,13 @@ def test_clustering(round: int, n: int) -> Tuple[int, int, bool]:
 	return elapsed, elapsed2, passes0 and passes1 and passes2
 
 
-if __name__ == "__main__":
+def run():
 	sizes = [10, 20, 50, 100, 200, 500, 1000] # 2000, 5000, 10000, 20000, 50000, 100000]
-	for round in range(10):
+	for round in range(1):
 		for size in sizes:
 			elapsed, elapsed2, result = test_clustering(round, size)
 			print(round, size, elapsed, elapsed2, result, sep="\t")
+
+if __name__ == "__main__":
+	print("Keith was here!")
+	cProfile.run("run()")

@@ -1,5 +1,3 @@
-import random
-
 from .cluster_generator import ClusterGenerator
 from .corpus import Corpus
 from .document import Document
@@ -9,6 +7,7 @@ from .mathematician import get_best_initial_model
 from .mathematician import get_best_initial_model_k
 from .mathematician import quality_scores
 from .mathematician import run_expect_max
+from .rng import RNG
 
 class Surdeanu2005(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
@@ -17,7 +16,7 @@ class Surdeanu2005(ClusterGenerator):
 		self.allowed_seed_size = 0.05
 		self.soft = 0.2
 		self.num_loops = 10
-		self.rndgen = random.Random(seed)
+		self.rndgen = RNG(seed)
 
 	def generate_clusters(self, documents: list[Document]) -> list[tuple[float, list[Document]]]:
 		clusters, siblings = generate_clusters(documents, self.corpus.doc_distances)
