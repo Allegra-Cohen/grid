@@ -18,11 +18,6 @@ class RNG():
   def sample(self, population, k):
     return self.rndgen.sample(population, k)
 
-  # From self_kmeans
-  # def sample(self, population, k):
-    # return self.rndgen.sample(population, k)
-
-
   # From soft_kmeans calls random.sample
   def randomSample(self, population, k):
     return self.rndgen.sample(population, k)

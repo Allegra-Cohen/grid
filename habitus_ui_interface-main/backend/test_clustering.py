@@ -57,7 +57,7 @@ def test_clustering(round: int, n: int) -> Tuple[float, float, bool]:
 	# time these separately
 	
 	start = time.perf_counter_ns()
-	result2 = test_soft_clustering2(documents)
+	result2 = test_soft_clustering2(documents, seed)
 	stop = time.perf_counter_ns()
 	elapsed2 = (stop - start) / 1000000 / 1000 # convert from ns to s
 
