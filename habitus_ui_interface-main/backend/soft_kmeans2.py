@@ -8,10 +8,10 @@ from .mathematician import cosine_similarity
 # from .mathematician import betweenness
 # from .mathematician import withinness
 # from .mathematician import get_composite
+from .rng import RNG
 from typing import List, Tuple
 
 import numpy as np
-import random
 
 # See also https://en.wikipedia.org/wiki/Fuzzy_clustering
 class SoftKMeans2(ClusterGenerator):
@@ -24,7 +24,7 @@ class SoftKMeans2(ClusterGenerator):
 		self.update_count = 100
 		self.update_limit = 0.00001
 		self.perturbance = 0.0000000000001
-		self.rndgen = random.Random(seed)
+		self.rndgen = RNG(seed)
 
 	# Generate k more clusters by choosing randomly from the documents.  This means that some
 	# documents which may already have been used in seeded clusters can be reused.
@@ -60,42 +60,26 @@ class SoftKMeans2(ClusterGenerator):
 			return None
 	
 	def C_score(self, docs, clusters, meta_centroid):
-		# centroids = [get_composite(cluster) for cluster in clusters]
+		centroids = [self.get_composite(cluster) for cluster in clusters]
 
-		def betweenness():
-			to_sum = []
-			for index in range(len(clusters)):
-				cluster = clusters[index]
-				cluster_len = len(cluster)
-				if cluster_len > 0: # Don't run stuff for empty clusters
-					centroid = self.get_composite(cluster)
-					dist = (1 - cosine_similarity(centroid, meta_centroid))
-					to_sum.append(cluster_len * (dist**2))
-				else:
-					to_sum.append(0.0)
-			return np.sum(to_sum)
-
-		def withinness():
-			to_sum = []
+		def b_and_w():
+			betweenness_sum = 0.0
+			withinness_sum = 0.0
 			for index in range(len(clusters)):
 				cluster = clusters[index]
 				cluster_len = len(cluster)
 				if cluster_len > 0:
-					centroid = self.get_composite(cluster)
+					centroid = centroids[index]
+					betweenness_dist = (1 - cosine_similarity(centroid, meta_centroid))
+					betweenness_sum += cluster_len * (betweenness_dist**2)
 					for document in cluster:
-						dist = (1 - cosine_similarity(document.vector, centroid))
-						to_sum.append((dist**2))
-				else:
-					to_sum.append(0.0)
-			return np.sum(to_sum)
+						withinness_dist = (1 - cosine_similarity(document.vector, centroid))
+						withinness_sum += withinness_dist**2
+			return betweenness_sum, withinness_sum
 
-		n = len(docs)
-		k = len(clusters)
+		n, k = len(docs), len(clusters)
+		b, w = b_and_w()
 
-		b = betweenness()
-		w = withinness()
-
-		# print("Num docs: ", n, ", num clusters: ", k, ", betweenness: ", b, "withinness: ", w)
 		if k > 1 and w != 0.0:
 			return (b * (n - k)) / (w * (k - 1))
 		else:
