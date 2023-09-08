@@ -34,7 +34,7 @@ class SoftKMeans(ClusterGenerator):
 
 
 	def initialize_clusters_plus_plus(self):
-		first = self.documents[self.rndgen.randomSample(range(0, len(self.documents)), 1)][0]
+		first = self.rndgen.choice(self.documents)
 		centroids = [first]
 		for i in range(self.k):
 			Ds = []
@@ -43,7 +43,7 @@ class SoftKMeans(ClusterGenerator):
 			Ds = np.array(Ds)
 			Dsq = Ds**2
 			pDs = (Dsq)/np.sum(Dsq)
-			next_centroid = self.rndgen.randomChoice(self.documents, p = pDs)
+			next_centroid = self.rndgen.randomSample(self.documents, p = pDs)
 			centroids.append(next_centroid)
 		centroids = [[c] for c in centroids]
 		self.clusters = np.array(centroids, dtype = 'object')
