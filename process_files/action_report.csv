@@ -1,0 +1,21 @@
+,actor,action,time,object_type,object_value,other_details
+0,human,load,1694455933.1230638,grid,example,
+1,human,click,1694455940.2016907,cell,1_4,
+2,human,move,1694455942.3498394,sentence,"25. In artificial intelligence, an expert system is a computer system emulating the decision-making ability of a human expert.",from_4_to_3
+3,human,save,1694455942.4042616,grid,example,
+4,human,click,1694455945.2548404,cell,1_3,
+5,human,move,1694455947.3749757,sentence,"25. In artificial intelligence, an expert system is a computer system emulating the decision-making ability of a human expert.",from_3_to_4
+6,human,save,1694455947.4287782,grid,example,
+7,human,set_k,1694455953.919529,k,4,
+8,human,set_k,1694455955.0436924,k,3,
+9,human,save,1694455957.4700003,grid,example,
+10,human,update,1694455957.4719946,grid,example,
+11,human,set_k,1694455961.761574,k,5,
+12,human,save,1694455963.945507,grid,example,
+13,human,update,1694455963.9474995,grid,example,
+14,human,save,1694455968.3371189,grid,example,
+15,human,update,1694455968.339115,grid,example,
+16,human,save,1694455971.0273898,grid,example,
+17,human,update,1694455971.0303829,grid,example,
+18,human,click,1694455984.8803678,cell,4_3,
+19,human,load,1694456212.8059084,grid,example,
