@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Gallery from './Gallery';
 import CreatePage from './CreatePage';
 import ChangeCorpus from './ChangeCorpus';

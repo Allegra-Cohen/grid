@@ -1,25 +1,37 @@
 li {
-    list-style-type: none;
-    background: #F0F0F0;
-    padding: .3em;
-    margin-right: 1em;
-    margin-left: -2em;
-    font-family: "InaiMathi";
-    width: 400px;
-    overflow: 'scroll';
+  list-style-type: none;
+  background-color: #fff;
+  cursor: pointer;
+  margin: 10px 0;
+  border-radius: 15px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease; /* Adiciona uma transição suave */
+  font-size: 14px;
+  &:hover{
+    background-color: #eee; /* Muda a cor de fundo no hover */
+
+  }
 }
 
-li:nth-child(odd) { background: #F8F8F8; }
-
-
-.legend{
-    font-family: "InaiMathi";
+.legend {
+  font-family: "InaiMathi";
 }
-
 
 .footer::placeholder {
   color: var(--placeholder-color);
   font-family: "InaiMathi";
   font-size: 12pt;
   width: max-content;
+}
+
+.contextCard {
+  list-style-type: none;
+  background-color: #fff;
+  margin: 15px 0;
+  border-radius: 15px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #eee;
+  font-size: 14px;
 }

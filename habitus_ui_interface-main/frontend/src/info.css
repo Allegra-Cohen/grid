@@ -24,3 +24,44 @@
   break-inside: avoid-column;         /* Chrome, Safari, IE 11 */
   display:table; 
 }
+
+.inputCreate {
+  display: flex;
+  align-items: center;  
+  width: 50%;
+  justify-content: space-between;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+/* Estilize o botão personalizado */
+.custom-file-input-label {
+
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #006ee5;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Estilize o container do nome do arquivo */
+.custom-file-name {
+  display: inline-block;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  color: #757575;
+  flex: 1;
+  height: 20px;
+  font-size: 14px;
+}

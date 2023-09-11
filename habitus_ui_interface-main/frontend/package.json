@@ -15,6 +15,7 @@
     "react-router-dom": "^6.6.1",
     "react-scripts": "^5.0.1",
     "serve": "^13.0.2",
+    "styled-components": "^6.0.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -40,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@iconify/react": "^4.1.1"
   }
 }

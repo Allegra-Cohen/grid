@@ -11,7 +11,7 @@ function Sentence({text, onChange, activateSentence, isActive, apiurl}) {
         })
     })
     return <li ref={dragRef} onDrag={(evt) => {activateSentence()}}
-                style={{border: isActive ? '2px solid #BE1C06' : null}}
+                style={{border: isActive ? '2px solid #BE1C06' : '2px solid #eee'}}
 
                 onClick={(evt) => {
                         let query = toQuery([["text", text]]);
@@ -47,9 +47,7 @@ export default function Corpus({sentences, onChange, apiurl}) {
     return (
 
             <ul style={{
-                marginLeft:".2em",
-                height: "1200px",
-                overflow: "auto",
+                padding: 0
             }}>
                 {items}
             </ul>
