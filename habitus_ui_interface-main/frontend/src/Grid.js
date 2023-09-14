@@ -145,7 +145,7 @@ export default function Grid({ data, col_num_to_name, frozen_columns, row_conten
     const activateCell = (item) => setActiveCell(item);
 
 
-    let gridRows = Object.entries(data).map(([name, cells], ix) => <GridRow key={ix} rowName={name} rowContents={row_contents} data={cells} onChange={onChange} onDrop={onDrop} activateCell={activateCell} activeCell={activeCell} apiurl={apiurl} />)
+    let gridRows = data && Object.entries(data).map(([name, cells], ix) => <GridRow key={ix} rowName={name} rowContents={row_contents} data={cells} onChange={onChange} onDrop={onDrop} activateCell={activateCell} activeCell={activeCell} apiurl={apiurl} />)
     // Get the col names from the first row
     // let rowNames = Object.keys(data)
     let rows = Object.values(data);

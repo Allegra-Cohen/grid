@@ -4,6 +4,6 @@ export const StyledLoading = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80vh;
+  width: 50%;
   overflow: hidden;
 `;

@@ -16,11 +16,11 @@ import Trash from './Trash'
 import { useEffect, useState } from "react";
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './Spinner.css';
 import './index.css';
 import { toQuery } from "./toEncoding";
-import { BackButton, Header, Button, Input, Loading } from './components';
+import { BackButton, Header, Button, Input, Loading, Modal } from './components';
 import { Icon } from '@iconify/react';
 
 // This is the real application. "App" is currently a modified version to allow people with small screens to read the text.
@@ -35,10 +35,16 @@ function App({ apiurl }) {
     const [frozenColumns, setFrozenColumns] = useState([])
     const [rowContents, setRowContents] = useState({})
     const [waiting, setWaiting] = useState(false)
-    const [saveAs, setSaveAs] = useState()
+    const [waitingFileName, setWaitingFilename] = useState(false)
+    const [saveAs, setSaveAs] = useState('')
+    const [openModalSave, setOpenModalSave] = useState(false)
+    const [openModalDelete, setOpenModalDelete] = useState(false)
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         setWaiting(true)
+        setWaitingFilename(true)
         fetch(`${apiurl}/data/`)
             .then(response => response.json())
             .then(data => {
@@ -50,6 +56,7 @@ function App({ apiurl }) {
                 setFrozenColumns(data.frozen_columns);
                 setRowContents(data.row_contents);
                 setWaiting(false);
+                setWaitingFilename(false);
             });
     }, [])
 
@@ -66,16 +73,26 @@ function App({ apiurl }) {
             });
     }
 
+    const handleDeleteClick = () => {
+        let query = toQuery([["text", filename]]);
+        fetch(`${apiurl}/deleteGrid/${query}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                navigate('/');
+
+            });
+    }
+
+
     const handleSaveClick = () => {
+        console.log('handleSaveClick')
         if (saveAs) {
             fetch(`${apiurl}/showGrids/`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.grids.includes(saveAs)) {
-                        let safe = window.confirm("A Grid with this name already exists. Would you like to overwrite?");
-                        if (safe) {
-                            handleSaveAs(saveAs);
-                        }
+                        setOpenModalSave(true)
                     } else {
                         handleSaveAs(saveAs)
                     }
@@ -85,23 +102,44 @@ function App({ apiurl }) {
         }
     }
 
-
     return (
         <DndProvider backend={HTML5Backend}>
             <Header>
                 <div className="leftContent">
-                    <BackButton screenName={filename + ` (${anchor})`} />
+                    {waitingFileName ? <Loading /> : <BackButton screenName={filename + ` (${anchor})`} />}
                 </div>
 
                 <div className="rightContent">
-                    <Input placeholder="Save as..." icon="fluent:save-24-regular" />
-                    <Button label="Delete Grid" color="red" icon="octicon:trash-16" marginLeft />
+                    <Input
+                        placeholder="Save as..."
+                        onInput={(evt) => handleSaveTyping(evt)}
+                    />
+                    <Button color="green" icon="teenyicons:save-outline" onClick={() => handleSaveClick()} noGap />
+                    <Button color="red" icon="octicon:trash-16" onClick={() => setOpenModalDelete(true)} noGap />
                 </div>
             </Header>
-
-            {waiting ? <Loading /> :
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px', borderBottom: corpus.length > 0 ? '1px solid #DDDDDD' : 'none' }}>
+            <Modal
+                title="Delete Grid?"
+                description="This cannot be undone."
+                onSave={() => {
+                    handleDeleteClick()
+                    setOpenModalDelete(false)
+                }}
+                open={openModalDelete}
+                onClose={() => setOpenModalDelete(false)}
+            />
+            <Modal
+                title="A Grid with this name already exists."
+                description="Would you like to overwrite ?"
+                onSave={() => {
+                    handleSaveAs()
+                    setOpenModalSave(false)
+                }}
+                open={openModalSave}
+                onClose={() => setOpenModalSave(false)}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px', borderBottom: corpus && corpus.length > 0 ? '1px solid #DDDDDD' : 'none' }}>
+                {waiting ? <Loading /> :
                     <Grid data={gridRows} col_num_to_name={colNumToName} frozen_columns={frozenColumns} row_contents={rowContents} onChange={
                         (evt) => {
                             setCorpus(evt);
@@ -137,35 +175,54 @@ function App({ apiurl }) {
                             }
                         }
                         apiurl={apiurl} />
+                }
+                <div style={{ gap: 5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', maxWidth: '220px' }}>
 
-                    <div style={{ gap: 5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', maxWidth: '220px' }}>
-                        <Input placeholder="Create new column..." />
+                    <InputBox
+                        onKeyPress={(evt) => {
+                            console.log(evt);
+                            setCorpus(evt.clicked_sentences);
+                            setGridRows(evt.grid);
+                            setColNumToName(evt.col_num_to_name);
+                            setFrozenColumns(evt.frozen_columns)
+                        }
+                        }
+                        apiurl={apiurl} />
 
-                        <Input placeholder="Max. Columns..." />
-                        <Button label="Update Grid" color="green" icon="ci:arrow-reload-02" onClick={() => {
-                            fetch(`${apiurl}/regenerate/`)
+
+                    <Input placeholder="Max. Columns" onInput={
+                        (evt) => {
+                            let query = toQuery([["k", evt.target.value]]);
+                            fetch(`${apiurl}/setK/${query}`)
                                 .then(response => response.json())
-                                .then(response => {
-                                    console.log(response);
-                                    setCorpus(response.clicked_sentences);
-                                    setGridRows(response.grid);
-                                    setColNumToName(response.col_num_to_name);
-                                    setFrozenColumns(response.frozen_columns)
-                                });
+                        }
+                    } />
 
+                    <Button label="Update Grid" color="green" icon="ci:arrow-reload-02" onClick={() => {
+                        setWaiting(true)
+                        fetch(`${apiurl}/regenerate/`)
+                            .then(response => response.json())
+                            .then(response => {
+                                setCorpus(response.clicked_sentences);
+                                setGridRows(response.grid);
+                                setColNumToName(response.col_num_to_name);
+                                setFrozenColumns(response.frozen_columns);
+                                setWaiting(false);
+                            });
+                    }} />
 
-
-                        }} />
-                        <Button label="Copy" color="blue" icon="lucide:copy" />
-
-                      
-                    </div>
-
-
+                    <CopyButton className="CopyButton" onClick={(evt) => {
+                        console.log("copy button: ", evt)
+                    }
+                    }
+                        apiurl={apiurl} />
                 </div>
-            }
 
-            {corpus.length > 0 && (
+
+            </div>
+
+
+            {corpus && corpus.length > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px' }}>
                     <div style={{ width: '48%' }}>
                         <h2 style={{

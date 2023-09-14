@@ -144,7 +144,7 @@ function CreatePage({ apiurl }) {
 					<div style={{ width: '50%', display: 'flex' }}>
 						<label for="file-upload" class="custom-file-input-label">
 							<Icon icon="solar:file-outline" width="20" height="20" />
-							<div style={{ marginLeft: 10 }}>Choose File</div>
+							<div style={{ marginLeft: 5 }}>Choose File</div>
 						</label>
 						<span class="custom-file-name" id="file-name">Corpus filename</span>
 						<input type="file" id="file-upload" onChange={() => updateFileName()} />
@@ -169,7 +169,7 @@ function CreatePage({ apiurl }) {
 					<div style={{ width: '50%', display: 'flex' }}>
 						<label for="file-upload" class="custom-file-input-label">
 							<Icon icon="solar:file-outline" width="20" height="20" />
-							<div style={{ marginLeft: 10 }}>Choose File</div>
+							<div style={{ marginLeft: 5 }}>Choose File</div>
 						</label>
 						<span class="custom-file-name" id="file-name">Row labels filename</span>
 						<input type="file" id="file-upload" onChange={() => updateFileName()} />
@@ -223,7 +223,7 @@ function CreatePage({ apiurl }) {
 
 			<div style={{ display: 'flex', justifyContent: 'center', }}>
 
-				<Button label="Ready!" color="green" icon="fluent:save-24-regular" />
+				<Button label="Ready!" color="green" icon="solar:upload-outline" />
 
 			</div>
 
