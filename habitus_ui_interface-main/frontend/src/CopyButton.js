@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "./components";
+import { fetchDataFromApi } from "./services";
 
 
-export default function CopyButton({ onClick, apiurl }) {
+export default function CopyButton({ onClick }) {
 
     const [clicked, setClicked] = useState([false]);
 
@@ -16,16 +17,15 @@ export default function CopyButton({ onClick, apiurl }) {
 
     return (
 
-        <Button label={clicked ? 'Copy' : 'Copied'} color="blue" icon= {clicked ? "icon-park-outline:copy" : 'icon-park-solid:copy'}
+        <Button label={clicked ? 'Copy' : 'Copied'} color="blue" icon={clicked ? "icon-park-outline:copy" : 'icon-park-solid:copy'}
 
             onClick={(evt) => {
-                fetch(`${apiurl}/copyToggle/`)
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response);
-                    console.log('copy click!');
-                    onClick(response);
-                });
+                fetchDataFromApi(`/copyToggle/`)
+                    .then(response => {
+                        console.log(response);
+                        console.log('copy click!');
+                        onClick(response);
+                    });
                 onLaunchClicked(evt);
             }
             }

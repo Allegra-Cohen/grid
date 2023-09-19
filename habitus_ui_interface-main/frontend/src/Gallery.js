@@ -5,20 +5,20 @@ import { Header, Button } from './components';
 import "./index.css";
 import "./Gallery.css";
 import './info.css';
+import { fetchDataFromApi } from './services'
 
-function Gallery({ apiurl }) {
+function Gallery() {
 
     const [grids, setGrids] = useState([]);
 
     const handleGridClick = (gridName) => {
         console.log(gridName)
         let query = toQuery([["text", gridName]]);
-        fetch(`${apiurl}/loadGrid/${query}`);
+        fetchDataFromApi(`/loadGrid/${query}`);
     }
 
     useEffect(() => {
-        fetch(`${apiurl}/showGrids/`)
-            .then(response => response.json())
+        fetchDataFromApi(`/showGrids/`)
             .then(data => {
                 setGrids(data.grids);
             });
@@ -32,6 +32,9 @@ function Gallery({ apiurl }) {
                     Gallery
                 </div>
                 <div className="rightContent">
+                    <Link to="/tutorial/training1" style={{ textDecoration: 'none' }}>
+                        <Button label="Tutorial" color="darkBlue" icon="fluent:learning-app-20-regular" onClick={() => handleGridClick('example')} />
+                    </Link>
                     <Link to="/changeCorpus" style={{ textDecoration: 'none' }}>
                         <Button label="Upload or Update Corpus" color="blue" icon="solar:upload-outline" />
                     </Link>
@@ -45,10 +48,10 @@ function Gallery({ apiurl }) {
                 {grids && grids.map(e => {
                     return (
                         <Link to="/grid" style={{ textDecoration: "none" }} onClick={() => handleGridClick(e)}>
-                            <div class="card" >
+                            <div className="card" >
                                 <div>{e}</div>
-                                <div class="go-corner">
-                                    <div class="go-arrow">
+                                <div className="go-corner">
+                                    <div className="go-arrow">
                                         →
                                     </div>
                                 </div>

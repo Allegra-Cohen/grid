@@ -1,0 +1,126 @@
+.info {
+  margin: 0.5%;
+  padding: 1%;
+  background-color: #f0f7fd;
+  border-style: solid;
+  border-color: #060e4e;
+  border-width: 1pt;
+  border-top-left-radius: 5% 35%;
+  border-top-right-radius: 5% 35%;
+  border-bottom-left-radius: 5% 35%;
+  border-bottom-right-radius: 5% 35%;
+}
+
+.checkbox {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+
+#inputPreview {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.checkbox+label {
+  position: relative;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  color: rgb(0, 0, 0);
+  margin-top: 10px;
+}
+
+.checkbox+label::before {
+  content: " ";
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #ddd;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.checkbox:checked+label::after {
+  content: " ";
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNTIgNTEyIj48cGF0aCBmaWxsPSIiIGQ9Ik0yNDIuNzIgMjU2bDEwMC4wNy0xMDAuMDdjMTIuMjgtMTIuMjggMTIuMjgtMzIuMTkgMC00NC40OGwtMjIuMjQtMjIuMjRjLTEyLjI4LTEyLjI4LTMyLjE5LTEyLjI4LTQ0LjQ4IDBMMTc2IDE4OS4yOCA3NS45MyA4OS4yMWMtMTIuMjgtMTIuMjgtMzIuMTktMTIuMjgtNDQuNDggMEw5LjIxIDExMS40NWMtMTIuMjggMTIuMjgtMTIuMjggMzIuMTkgMCA0NC40OEwxMDkuMjggMjU2IDkuMjEgMzU2LjA3Yy0xMi4yOCAxMi4yOC0xMi4yOCAzMi4xOSAwIDQ0LjQ4bDIyLjI0IDIyLjI0YzEyLjI4IDEyLjI4IDMyLjIgMTIuMjggNDQuNDggMEwxNzYgMzIyLjcybDEwMC4wNyAxMDAuMDdjMTIuMjggMTIuMjggMzIuMiAxMi4yOCA0NC40OCAwbDIyLjI0LTIyLjI0YzEyLjI4LTEyLjI4IDEyLjI4LTMyLjE5IDAtNDQuNDhMMjQyLjcyIDI1NnoiLz48L3N2Zz4=");
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: center center;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px;
+  left: 0px;
+  top: 0px;
+  text-align: center;
+  background-color: transparent;
+  font-size: 10px;
+  height: 26px;
+  width: 26px;
+}
+
+
+.loginPageCard {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #B5B5B5;
+  background: #fff;
+  border-radius: 10px;
+  margin: 20px;
+  padding: 20px;
+  color: #2c2c2c;
+  font-weight: 500;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 2% 4%;
+  justify-content: center;
+  /* Centralizar horizontalmente */
+  align-items: center;
+  /* Centralizar verticalmente */
+
+  gap: 20px;
+  color: '#2c2c2c';
+
+}
+
+.image {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #3498db;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.styledTrainingPage{
+  border: 1px solid #B5B5B5;
+  background-color: #FFF;
+  border-radius: 5px;
+  padding: 20px;
+}

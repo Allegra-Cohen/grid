@@ -13,6 +13,10 @@ const colors = {
     color: "#DC3545",
     hoverColor: "#c62f3e",
   },
+  darkBlue: {
+    color: "#283B62",
+    hoverColor: "#202f4e"
+  }
 }
 
 export const StyledButton = styled.button`

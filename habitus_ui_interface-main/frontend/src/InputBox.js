@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { toQuery } from "./toEncoding";
 import { Input } from "./components";
+import { fetchDataFromApi } from "./services";
 
 
-export default function InputBox({ text, onKeyPress, apiurl }) {
-	const [textInput, setTextInput] = useState([]);
+export default function InputBox({ onKeyPress }) {
 
 	return (
 		<Input
@@ -13,8 +13,7 @@ export default function InputBox({ text, onKeyPress, apiurl }) {
 					if (evt.key === "Enter") {
 						if (evt.target.value.length > 0) {
 							let query = toQuery([["text", evt.target.value]]);
-							fetch(`${apiurl}/textInput/${query}`)
-								.then(response => response.json())
+							fetchDataFromApi(`/textInput/${query}`)					
 								.then(response => {
 									console.log(response);
 									console.log(response);

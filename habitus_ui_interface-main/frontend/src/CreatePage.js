@@ -9,8 +9,9 @@ import './Spinner.css';
 import { toQuery } from "./toEncoding";
 import { BackButton, Button, Header } from './components'
 import { Icon } from '@iconify/react';
+import { fetchDataFromApi } from './services';
 
-function CreatePage({ apiurl }) {
+function CreatePage() {
 
 	const [grids, setGrids] = useState([]);
 	const [filepath, setFilepath] = useState([]);
@@ -24,8 +25,7 @@ function CreatePage({ apiurl }) {
 	const [waiting, setWaiting] = useState(false);
 
 	useEffect(() => {
-		fetch(`${apiurl}/showGrids/`)
-			.then(response => response.json())
+		fetchDataFromApi(`/showGrids/`)
 			.then(data => {
 				setGrids(data.grids);
 				setFilepath(data.filepath);
@@ -61,8 +61,7 @@ function CreatePage({ apiurl }) {
 			setWaiting(true)
 			setError(false)
 			let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]);
-			fetch(`${apiurl}/loadNewGrid/${query}`)
-				.then(response => response.json())
+			fetchDataFromApi(`/loadNewGrid/${query}`)
 				.then(data => {
 					console.log(data);
 					setWaiting(false);
@@ -142,11 +141,11 @@ function CreatePage({ apiurl }) {
 
 				<div style={{ display: 'flex', justifyContent: 'center' }}>
 					<div style={{ width: '50%', display: 'flex' }}>
-						<label for="file-upload" class="custom-file-input-label">
+						<label for="file-upload" className="custom-file-input-label">
 							<Icon icon="solar:file-outline" width="20" height="20" />
 							<div style={{ marginLeft: 5 }}>Choose File</div>
 						</label>
-						<span class="custom-file-name" id="file-name">Corpus filename</span>
+						<span className="custom-file-name" id="file-name">Corpus filename</span>
 						<input type="file" id="file-upload" onChange={() => updateFileName()} />
 					</div>
 
@@ -167,11 +166,11 @@ function CreatePage({ apiurl }) {
 
 				<div style={{ display: 'flex', justifyContent: 'center' }}>
 					<div style={{ width: '50%', display: 'flex' }}>
-						<label for="file-upload" class="custom-file-input-label">
+						<label for="file-upload" className="custom-file-input-label">
 							<Icon icon="solar:file-outline" width="20" height="20" />
 							<div style={{ marginLeft: 5 }}>Choose File</div>
 						</label>
-						<span class="custom-file-name" id="file-name">Row labels filename</span>
+						<span className="custom-file-name" id="file-name">Row labels filename</span>
 						<input type="file" id="file-upload" onChange={() => updateFileName()} />
 					</div>
 
@@ -192,7 +191,7 @@ function CreatePage({ apiurl }) {
 				<div style={{ display: 'flex', justifyContent: 'center' }}>
 					<div style={{ width: '50%', display: 'flex' }}>
 
-						<input class="custom-file-name" id="file-name" placeholder='Anchor term' />
+						<input className="custom-file-name" id="file-name" placeholder='Anchor term' />
 
 					</div>
 
@@ -215,7 +214,7 @@ function CreatePage({ apiurl }) {
 				<div style={{ display: 'flex', justifyContent: 'center' }}>
 					<div style={{ width: '50%', display: 'flex' }}>
 
-						<input class="custom-file-name" id="file-name" placeholder='Filename' />
+						<input className="custom-file-name" id="file-name" placeholder='Filename' />
 					</div>
 
 				</div>

@@ -8,9 +8,10 @@ import './info.css';
 import './Spinner.css';
 import { BackButton, Button, Header } from './components';
 import { Icon } from '@iconify/react';
+import { fetchDataFromApi } from './services';
 
 
-export default function ChangeCorpus({ apiurl }) {
+export default function ChangeCorpus() {
 
 	const [filepath, setFilepath] = useState([]);
 	const [error, setError] = useState();
@@ -28,8 +29,7 @@ export default function ChangeCorpus({ apiurl }) {
 			setWaiting(true);
 			console.log('eee');
 			let query = toQuery([["supercorpusFilepath", filepath]]);
-			fetch(`${apiurl}/processSupercorpus/${query}`)
-				.then(response => response.json())
+			fetchDataFromApi(`/processSupercorpus/${query}`)
 				.then(data => {
 					setWaiting(false);
 					setError(!data.success);
@@ -51,7 +51,7 @@ export default function ChangeCorpus({ apiurl }) {
 
 		if (input.files.length > 0) {
 			fileNameContainer.textContent = input.files[0].name;
-			
+
 		} else {
 			fileNameContainer.textContent = "Nenhum arquivo selecionado";
 		}
@@ -81,11 +81,11 @@ export default function ChangeCorpus({ apiurl }) {
 				</div>
 				<div style={{ display: 'flex', justifyContent: 'center' }}>
 					<div style={{ width: '50%', display: 'flex' }}>
-						<label for="file-upload" class="custom-file-input-label">
+						<label for="file-upload" className="custom-file-input-label">
 							<Icon icon="solar:file-outline" width="20" height="20" />
 							<div style={{ marginLeft: 5 }}>Choose File</div>
 						</label>
-						<span class="custom-file-name" id="file-name">Corpus filename</span>
+						<span className="custom-file-name" id="file-name">Corpus filename</span>
 						<input type="file" id="file-upload" onChange={() => updateFileName()} />
 					</div>
 
@@ -98,7 +98,7 @@ export default function ChangeCorpus({ apiurl }) {
 
 			</div>
 
-{ /*   
+			{ /*   
 
 	<div style={{ marginTop: '5%' }}>
 				<div style={{ display: "flex", flexDirection: "row", justifyContent: 'center' }}>
@@ -115,7 +115,7 @@ export default function ChangeCorpus({ apiurl }) {
 				{waiting ? <div><div style={{ textAlign: 'center', marginTop: '2%', marginBottom: '1%' }}>Preparing corpus...If this is a new corpus, this step can take a long time.</div><div className='spinner'></div></div> : <div />}
 			</div>
 */}
-		
+
 		</DndProvider>
 	);
 }

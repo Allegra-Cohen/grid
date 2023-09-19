@@ -1,16 +1,16 @@
 import {useEffect, useState} from "react";
-import {toQuery} from "./toEncoding";
 
-export default function SaveAsBox({text, apiurl}){
+
+export default function SaveBox({text, apiUrl}){
 
 	  return (
 	    <div className={"SaveBox"}>
-	      <input style={{height:"2em", color:'black', fontSize: '13pt', border: '1.5px solid #90c5e1'}}
+	      <input style={{height:"2.2em", width:"200px", fontSize:'18px', border: '1.5px solid #90c5e1'}}
 	      onKeyPress={
       	     (evt) => {
      	        if (evt.key === "Enter") {
-     	        	let query = toQuery([["text", evt.target.value]]);
-			        fetch(`${apiurl}/saveAsGrid/${query}`)
+     	        	let text = evt.target.value;
+			        fetch(`${apiUrl}/saveGrid/${text}`)
 			            .then( response => response.json())
 			            .then( response => {console.log(response)})
 			            .then(evt.target.value = '')
@@ -18,7 +18,7 @@ export default function SaveAsBox({text, apiurl}){
 	               }
 	           }
            } 
-           placeholder=" Save as "
+           placeholder=" Save grid "
            />
 	    </div>
 	  );
