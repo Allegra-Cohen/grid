@@ -13,35 +13,31 @@ code {
     monospace;
 }
 
-.leftContent {
-  flex: 1;
+.align-horizontal {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  font-size: 24px;
-  font-weight: 600;
-  color: #2c2c2c;
   gap: 10px;
-  
 }
 
-.rightContent {
+.center-component {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: center;
 }
 
+.provide-fileName {
+  color: red;
+  display: flex; 
+  justify-content: flex-end;
+  flex: 1;
+}
 
-.floating-div {
-  font-size: 16px;
-  width: 78px;
-  position: fixed;
-  bottom: 20px; /* Posição no canto inferior */
-  right: 20px; /* Posição no canto direito */
-  background-color: #283B62;
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+.container-input-fileName {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-  border-radius: 5px;
-  color: #fff;
+.input-text {
+  width: 50%;
+  display: flex;
 }

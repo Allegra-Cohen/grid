@@ -1,11 +1,11 @@
-import { StyledHeader } from './styles'
+import './styles.css'
 
 function Header({ children }) {
 
   return (
-    <StyledHeader>
+    <div className="styled-header">
       {children}
-    </StyledHeader>
+    </div>
   );
 }
 

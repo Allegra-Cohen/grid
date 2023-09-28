@@ -15,7 +15,7 @@ const style = {
   padding: '20px',
 };
 
-const Modal = ({ open, onClose, title, description, onSave }) => {
+const Modal = ({ open, onClose, title, description, onConfirm }) => {
 
   return (
     <div>
@@ -36,7 +36,7 @@ const Modal = ({ open, onClose, title, description, onSave }) => {
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer', gap: 5, marginTop: 10 }}>
             <Button label="Discard" color="red" onClick={onClose} noGap />
-            <Button label="Save" color="green" onClick={onSave} noGap />
+            <Button label="Confirm" color="green" onClick={onConfirm} noGap />
           </div>
         </Box>
       </ModalMui>
