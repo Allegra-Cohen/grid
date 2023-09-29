@@ -6,8 +6,8 @@ import { fetchDataFromApi, toQuery } from "services"
 import './styles.css';
 
 function GridPage() {
-    const [filename, setFilename] = useState();
-    const [anchor, setAnchor] = useState();
+    const [filename, setFilename] = useState('');
+    const [anchor, setAnchor] = useState('');
     const [waitingFileName, setWaitingFilename] = useState(false)
     const [saveAs, setSaveAs] = useState('')
     const [openModalSave, setOpenModalSave] = useState(false)
