@@ -4,7 +4,7 @@ import { useId, useEffect, useState } from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import { BackButton, Button, ChooseFolder, Header } from 'components'
+import { BackButton, Button, Header, Loading } from 'components'
 import { Icon } from '@iconify/react';
 import { fetchDataFromApi, toQuery } from 'services';
 
@@ -41,10 +41,6 @@ function CreateCorpus() {
 			}
 		} else if (variable === 'anchor') {
 			setAnchor(text)
-		} else if (variable === 'rowname') {
-			setRowFilename(text)
-		} else {
-			setSupercorpus(text)
 		}
 	}
 
@@ -60,7 +56,6 @@ function CreateCorpus() {
 			let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]);
 			fetchDataFromApi(`/loadNewGrid/${query}`)
 				.then(data => {
-					console.log(data);
 					setWaiting(false);
 					if (data.error) {
 						setError(true);
@@ -69,19 +64,34 @@ function CreateCorpus() {
 					} else {
 						navigate('/grid')
 					}
+				}).catch(err => {
+					setErrorText(err.message)
+					setWaiting(false)
 				})
 		}
 	}
 
-	function updateFileName() {
-		console.log('updateFileName')
-		const input = document.getElementById("file-upload");
-		const fileNameContainer = document.getElementById("file-name");
-		console.log(fileNameContainer, input)
+	function updateSuperCorpus() {
+
+		const input = document.getElementById('superCorpus-upload');
+		const fileNameContainer = document.getElementById("superCorpus-name");
 
 		if (input.files.length > 0) {
 			fileNameContainer.textContent = input.files[0].name;
 			setSupercorpus(input.files[0].name)
+		} else {
+			fileNameContainer.textContent = "Nenhum arquivo selecionado";
+		}
+	}
+
+	function updateRowName() {
+
+		const input = document.getElementById('rowName-upload');
+		const fileNameContainer = document.getElementById("rowName-name");
+
+		if (input.files.length > 0) {
+			fileNameContainer.textContent = input.files[0].name;
+			setRowFilename(input.files[0].name)
 		} else {
 			fileNameContainer.textContent = "Nenhum arquivo selecionado";
 		}
@@ -93,46 +103,53 @@ function CreateCorpus() {
 				<BackButton screenName="Create a new Grid" />
 			</Header>
 
-			{/* 
-				<div style={{ marginTop: '5%' }}>
-				<div style={{ display: "flex", flexDirection: "row" }}>
-					<div className='info' style={{ width: 'max-content', marginLeft: '37%' }} onKeyUp={(evt) => handleInput('corpus', evt.target.value)}>Which corpus will you use? <input placeholder="Corpus filename" /></div>
-					{supercorpus.length == 0 && !error ? <div style={{ margin: '0.5%', padding: '1%', color: 'blue' }}>Please provide a filename</div> : <div />}
-				</div>
-				<div style={{ display: "flex", flexDirection: "row" }}>
-					<div className='info' style={{ width: 'max-content', marginLeft: '36.6%' }} onKeyUp={(evt) => handleInput('rowname', evt.target.value)}>Which row labels will you use? <input placeholder="Row labels filename" /></div>
-					{rowFilename.length == 0 && !error ? <div style={{ margin: '0.5%', padding: '1%', color: 'blue' }}>Please provide a filename</div> : <div />}
-				</div>
-				<div className='info' style={{ width: 'max-content', marginLeft: '36%' }} onKeyUp={(evt) => handleInput('anchor', evt.target.value)}>Do you want to anchor your Grid? <input placeholder="Anchor term" /></div>
-				<div style={{ display: "flex", flexDirection: "row" }}>
-					<div className='info' style={{ width: 'max-content', marginLeft: '33%' }} onKeyUp={(evt) => handleInput('filename', evt.target.value)}>What filename do you want to save your Grid with? <input placeholder="Filename" /></div>
-					{validFile ? <div /> : <div style={{ margin: '0.5%', padding: '1%', color: 'red' }}>That filename already exists</div>}
-					{filename.length > 0 ? <div /> : <div style={{ margin: '0.5%', padding: '1%', color: 'blue' }}>Please provide a filename</div>}
-				</div>
-			</div>
-			<button style={{ width: 'max-content', marginLeft: '44%', fontSize: '14pt', padding: '0.5%', backgroundColor: '#54f07d' }} onClick={(evt) => handleButton()}>Ready!</button>
-			<div>
-				{error ? <div style={{ marginLeft: '26%', margin: '0.5%', padding: '1%', color: 'red' }}>{errorText}</div> : <div />}
-				{waiting ? <div><div style={{ marginLeft: '34%', marginTop: '2%', marginBottom: '1%' }}>Loading corpus...If this is a new corpus, this step may take several minutes.</div><div className='spinner' style={{ marginLeft: '44%' }}></div></div> : <div />}
-			</div>
-		
-			
-			*/}
 			<div className='container-input-fileName'>
 				<div>
-					<ChooseFolder
-						label="Which corpus will you use?"
-						placeholder="Corpus filename"
-						onChange={() => updateFileName()}
-					/>
+					<div className='center-component'>
+						<div className='input-create'>
+							<div className='label' >
+								Which corpus will you use?
+							</div>
+							<div className="provide-fileName">
+								*Please provide a file
+							</div>
+						</div>
+					</div>
+					<div className='center-component'>
+						<div className='input-text'>
+							<label htmlFor="superCorpus-upload" className="custom-file-input-label">
+								<Icon icon="solar:file-outline" width="20" height="20" />
+								<div>Choose File</div>
+							</label>
+							<span className="custom-file-name" id="superCorpus-name">Corpus filename</span>
+							<input type="file" id="superCorpus-upload" onChange={() => updateSuperCorpus()} />
+						</div>
+					</div>
 				</div>
+
 				<div>
-					<ChooseFolder
-						label="Which row labels will you use?"
-						placeholder="Row labels filename"
-						onChange={() => updateFileName()}
-					/>
+					<div className='center-component'>
+						<div className='input-create'>
+							<div className='label' >
+								Which row labels will you use?
+							</div>
+							<div className="provide-fileName">
+								*Please provide a file
+							</div>
+						</div>
+					</div>
+					<div className='center-component'>
+						<div className='input-text'>
+							<label htmlFor="rowName-upload" className="custom-file-input-label">
+								<Icon icon="solar:file-outline" width="20" height="20" />
+								<div>Choose File</div>
+							</label>
+							<span className="custom-file-name" id="rowName-name">Row labels filename</span>
+							<input type="file" id="rowName-upload" onChange={() => updateRowName()} />
+						</div>
+					</div>
 				</div>
+
 				<div>
 					<div className='center-component'>
 						<div className='input-create'>
@@ -141,7 +158,7 @@ function CreateCorpus() {
 					</div>
 					<div className='center-component'>
 						<div className="input-text">
-							<input className="custom-file-name" id="file-name" placeholder='Anchor term' />
+							<input className="custom-file-name" id="file-name" placeholder='Anchor term' onChange={(evt) => handleInput('anchor', evt.target.value)} />
 						</div>
 					</div>
 				</div>
@@ -158,16 +175,30 @@ function CreateCorpus() {
 					</div>
 					<div className='center-component'>
 						<div className="input-text">
-							<input className="custom-file-name" id="file-name" placeholder='Filename' />
+							<input className="custom-file-name" id="file-name" placeholder='Filename' onChange={(evt) => handleInput('filename', evt.target.value)} />
 						</div>
 					</div>
 				</div>
 				<div className='center-component'>
-					<Button label="Ready!" color="green" icon="solar:upload-outline" />
+					<Button label="Ready!" color="green" icon="solar:upload-outline" onClick={() => handleButton()} />
 				</div>
 				<div>
-					{error ? <div style={{ marginLeft: '26%', margin: '0.5%', padding: '1%', color: 'red' }}>{errorText}</div> : <div />}
-					{waiting ? <div><div style={{ marginLeft: '34%', marginTop: '2%', marginBottom: '1%' }}>Loading corpus...If this is a new corpus, this step may take several minutes.</div><div className='spinner' style={{ marginLeft: '44%' }}></div></div> : <div />}
+					{true && 
+					 <div className='center-component'
+					 	style={{ color: 'red' }}>
+							{errorText}
+						</div>
+					}
+					{waiting &&
+						<div>
+							<div className='center-component'>
+								<Loading />
+							</div>
+							<div className='center-component'>
+								Loading corpus...If this is a new corpus, this step may take several minutes.
+							</div>
+						</div>
+					}
 				</div>
 			</div>
 

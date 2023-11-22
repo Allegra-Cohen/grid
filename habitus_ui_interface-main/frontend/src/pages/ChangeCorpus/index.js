@@ -1,24 +1,21 @@
-import { useState } from "react"
-import { BackButton, Button, ChooseFolder, Header } from 'components'
+import { useState, useCallback } from "react"
+import { BackButton, Button, Header, Loading } from 'components'
 import { fetchDataFromApi, toQuery } from 'services'
+import { useDropzone } from 'react-dropzone';
+import { Icon } from "@iconify/react";
 
 export default function ChangeCorpus() {
 
 	const [filepath, setFilepath] = useState([])
 	const [error, setError] = useState()
-	const [errorPath, setErrorPath] = useState([])
+	const [errorPath, setErrorPath] = useState()
 	const [waiting, setWaiting] = useState(false)
 	const [corpusFile, setCorpusFile] = useState([])
 	const [rowsFile, setRowsFile] = useState([])
 
-	const handleInput = (text) => {
-		setFilepath(text)
-	}
-
 	const handleButton = () => {
 		if (filepath.length > 0) {
 			setWaiting(true)
-			console.log('eee')
 			let query = toQuery([["supercorpusFilepath", filepath]])
 			fetchDataFromApi(`/processSupercorpus/${query}`)
 				.then(data => {
@@ -30,56 +27,82 @@ export default function ChangeCorpus() {
 					} else {
 						setErrorPath(filepath)
 					}
+				}).catch((err) => {
+					setError(err.message)
+					setWaiting(false)
 				})
 		}
 	}
 
-	function updateFileName() {
-		const input = document.getElementById("file-upload")
-		const fileNameContainer = document.getElementById("file-name")
-		console.log(fileNameContainer, input)
+	const onDrop = useCallback((acceptedFiles) => {
+		const folderPaths = acceptedFiles.map(file => {
+			const parts = file.path.split('\\');
+			const directoryPath = parts.slice(0, -1).join('/');
+			return directoryPath;
+		});
 
-		if (input.files.length > 0) {
-			fileNameContainer.textContent = input.files[0].name
+		const uniqueFolderPaths = Array.from(new Set(folderPaths));
 
-		} else {
-			fileNameContainer.textContent = "Nenhum arquivo selecionado"
-		}
-	}
+		const path = uniqueFolderPaths[0].slice(2) + "/"
+		setFilepath(path);
+	}, []);
+
+	const { getRootProps, getInputProps } = useDropzone({
+		onDrop,
+		multiple: true,
+		directory: true,
+		noClick: true
+	});
 
 	return (
 		<>
 			<Header>
 				<BackButton screenName="Upload or Update Corpus" />
 			</Header>
-			<div className='container-input-fileName'>
-				<ChooseFolder
-					label="Please enter the file that contains corpus documents:"
-					placeholder="Choose File"
-					onChange={() => updateFileName()}
-				/>
+			<div className='container-input-fileName' {...getRootProps({ className: 'dropzone' })}>
+			<input {...getInputProps()} />
+
 				<div className="center-component">
-					<Button label="Ready!" color="green" icon="solar:upload-outline" />
-				</div>
-			</div>
-			{ /*   
+					<div className="drop-input">
+						<div className="center-component">
+							<div className="align-horizontal">
+								<Icon icon="bi:folder" width="40px" height="40px" color="#2c2c2c" />
+							</div>
+						</div>
 
-	<div style={{ marginTop: '5%' }}>
-				<div style={{ display: "flex", flexDirection: "row", justifyContent: 'center' }}>
-					<div className='info' style={{ width: 'max-content', fontSize: '14pt', }} onKeyUp={(evt) => handleInput(evt.target.value)}>
-						Please enter the filepath to the folder that contains corpus documents: <br /><br /> <input placeholder="Corpus filename" style={{ width: '100%', fontSize: '14pt' }} />
+						<div >
+							<div className="center-component">
+								<p style={{ color: '#2c2c2c' }}>{filepath.length > 0 ? filepath : 'Please drag and drop the folder that contains corpus documents'}</p>
+							</div>
+						</div>
 					</div>
-					{filepath.length > 0 ? <div /> : <div style={{ margin: '0.5%', padding: '1%', color: 'blue' }}>Please provide a path</div>}
+				</div>
+
+				<div className="center-component" style={{ marginTop: 20 }}>
+					<Button label="Ready!" color="green" icon="solar:upload-outline" onClick={() => handleButton()} />
 				</div>
 			</div>
-			<div style={{ textAlign: 'center' }}><button style={{ width: 'max-content', fontSize: '14pt', padding: '0.5%', backgroundColor: '#54f07d' }} onClick={(evt) => handleButton()}>Ready!</button></div>
-			<div>
-				{error ? <div style={{ textAlign: 'center', padding: '1%', color: 'red' }}>Cannot locate {errorPath}.</div> : <div />}
-				{error === false ? <div style={{ marginLeft: '-8%', margin: '0.5%', padding: '1%', textAlign: 'center' }}>All done! Your corpus is now ready to be used. <br />The corpus name is <b>{corpusFile}</b> and its associated default row labels are stored in <b>{rowsFile}</b>.</div> : <div />}
-				{waiting ? <div><div style={{ textAlign: 'center', marginTop: '2%', marginBottom: '1%' }}>Preparing corpus...If this is a new corpus, this step can take a long time.</div><div className='spinner'></div></div> : <div />}
-			</div>
-*/}
 
+			<div style={{ marginTop: 20 }}>
+				{errorPath && <div className="center-component" style={{ color: 'red' }}>Cannot locate {errorPath}</div>}
+				{error && <div className="center-component" style={{ color: 'red' }}>{error}</div>}
+				{error === false && 
+					<div className="center-component">
+						All done! Your corpus is now ready to be used.
+						The corpus name is <b>{corpusFile}</b> and its associated default row labels are stored in <b>{rowsFile}</b>.
+					</div>
+				}
+				{waiting && 
+					<div>
+							<div className="center-component">
+							<Loading />
+					</div>
+					<div className="center-component">
+							Preparing corpus...If this is a new corpus, this step can take a long time.
+						</div>
+					</div>
+				}			
+			</div>
 		</>
 	)
 }
