@@ -1,7 +1,13 @@
-import io
-import os
-import pandas as pd
 import sys
+import os
+
+backend_path = os.path.dirname(os.path.abspath(__file__))
+venv_path = os.path.join(backend_path, 'python_modules', 'venv')
+site_packages_path = os.path.join(venv_path, 'lib', 'python3.10.11', 'site-packages')
+sys.path.insert(0, site_packages_path)
+
+import io
+import pandas as pd
 import textract
 
 from nltk.tokenize import sent_tokenize
@@ -102,13 +108,15 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
     pd.DataFrame({'sentence': all_lines}).to_csv(output_file + output_extension, encoding = encoding)
 
     rows = pd.DataFrame({'readable': all_lines, 'label': row_labels})
+
+    print("rows", rows)
     # In this process the columns seem to get sorted.
-    df = pd.concat([rows.drop('label', 1), pd.get_dummies(rows.label)], axis = 1)
-    for col in df.columns:
+    #df = pd.concat([rows.drop('label', 1), pd.get_dummies(rows.label)], axis = 1)
+    for col in rows:
         if 'Unnamed:' in col:
-            df.drop(col, inplace = True)
-    df['all'] = 1
-    df.to_csv(output_file + '_row_labels.csv')
+            rows.drop(col, inplace = True)
+    rows['all'] = 1
+    rows.to_csv(output_file + '_row_labels.csv')
 
     print(f"Output: {output_file}\n")
 

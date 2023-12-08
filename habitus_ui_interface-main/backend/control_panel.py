@@ -1,6 +1,12 @@
-import pandas as pd
 import sys
+import os.path
 
+backend_path = os.path.dirname(os.path.abspath(__file__))
+venv_path = os.path.join(backend_path, 'python_modules', 'venv')
+site_packages_path = os.path.join(venv_path, 'lib', 'python3.10.11', 'site-packages')
+sys.path.insert(0, site_packages_path)
+
+import pandas as pd
 from .frontend import Frontend
 
 class ControlPanel(Frontend):

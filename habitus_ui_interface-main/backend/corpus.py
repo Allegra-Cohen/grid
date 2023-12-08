@@ -1,8 +1,15 @@
+import os.path
+import sys
+
+backend_path = os.path.dirname(os.path.abspath(__file__))
+venv_path = os.path.join(backend_path, 'python_modules', 'venv')
+site_packages_path = os.path.join(venv_path, 'lib', 'python3.10.11', 'site-packages')
+sys.path.insert(0, site_packages_path)
+
 import csv
 import gensim.downloader as api
 import json
 import numpy as np
-import os.path
 import pandas as pd
 import shutil
 import spacy
@@ -24,11 +31,10 @@ class Corpus():
 		self.rows = rows
 
 		self.model = None
-		self.model_filename = "../process_files/glove.6B.300d.txt"
+		self.model_filename = "./process_files/glove.6B.300d.txt"
 		self.linguist = linguist
-		self.documents: list[Document] = self.load_anchored_documents(anchor == 'load_all') # Reminder: This is a bool. Anchor is passed via self.
-		if len(self.documents) > 0: # Check or this will throw an error. Whether there are enough docs to keep going will be checked in backend.set_up_corpus()
-			self.initialize(preexisting)
+		self.documents: list[Document] = self.load_anchored_documents(anchor == 'load_all')
+		self.initialize(preexisting)
 
 	def initialize(self, preexisting = None):
 		vector_texts = [document.get_vector_text() for document in self.documents]

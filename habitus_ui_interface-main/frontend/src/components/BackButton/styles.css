@@ -1,0 +1,43 @@
+.styled-back-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid #2c2c2c;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  color: #2c2c2c;
+  background-color: transparent;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.styled-back-button:hover {
+  color: #fff;
+  background-color: #283B62;
+  border-color: #283B62; 
+}
+
+.styled-back-button:hover:before {
+  color: #fff;
+  width: 50px;
+  height: 50px;
+}
+
+.styled-back-button:before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  background-color: #283B62;
+  color: #fff;
+  border-radius: 50%;
+  transition: width 0.3s ease, height 0.3s ease;
+  opacity: 0.5;
+}
+
+.link-back-button {
+  text-decoration: none;
+  color: #0a0f54;
+}

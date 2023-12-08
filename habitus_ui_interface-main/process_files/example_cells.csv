@@ -1,0 +1,107 @@
+,row,col,frozen_col,readable,seeded_doc
+0,wikipedia_article_1,Unassigned,False,43. Many of the early expert systems were developed by large consulting and system integration firms such as Andersen Consulting.,False
+1,wikipedia_article_1,Unassigned,False,44. These firms already had well tested conventional waterfall methodologies (e.g.,False
+2,wikipedia_article_1,Unassigned,False,48. In the 1980s few conventional software methods supported this type of approach.,False
+3,wikipedia_article_1,would | machine,False,38. In the earliest days of expert systems there was little or no formal process for the creation of the software.,False
+4,wikipedia_article_1,united | success,False,"36. Based on positive results from these initial prototypes, the technology was adopted by the US business community (and later worldwide) in the 1980s.",False
+5,wikipedia_article_1,united | success,False,54. KADS had great success in Europe and was also used in the United States.,False
+6,wikipedia_article_1,human | ai,False,35. Expert systems were first developed in artificial intelligence laboratories as an attempt to understand complex human decision making.,False
+7,wikipedia_article_1,human | ai,False,46. One trend in early expert systems development was to simply apply these waterfall methods to expert systems development.,False
+8,wikipedia_article_1,system | methodology,False,"33. One of the first examples of an expert system was MYCIN, an application to perform medical diagnosis.",False
+9,wikipedia_article_1,system | methodology,False,"34. In the MYCIN example, the domain experts were medical doctors and the knowledge represented was their expertise in diagnosis.",False
+10,wikipedia_article_1,system | methodology,False,37. The Stanford heuristic programming projects led by Edward Feigenbaum was one of the leaders in defining and developing the first expert systems.,False
+11,wikipedia_article_1,system | methodology,False,"39. Researchers just sat down with domain experts and started programming, often developing the required tools (e.g.",False
+12,wikipedia_article_1,system | methodology,False,41. As expert systems moved from academic prototypes to deployed business systems it was realized that a methodology was required to bring predictability and control to the process of building the software.,False
+13,wikipedia_article_1,system | methodology,False,"42. There were essentially two approaches that were attempted: Use conventional software development methodologies, and develop special methodologies tuned to the requirements of building expert systems.",False
+14,wikipedia_article_1,system | methodology,False,45. Method1 for Andersen) that they trained all their staff in and that were virtually always used to develop software for their clients.,False
+15,wikipedia_article_1,system | methodology,False,47. Another issue with using conventional methods to develop expert systems was that due to the unprecedented nature of expert systems they were one of the first applications to adopt rapid application development methods that feature iteration and prototyping as well as or instead of detailed analysis and design.,False
+16,wikipedia_article_1,system | methodology,False,49. The final issue with using conventional methods to develop expert systems was the need for knowledge acquisition.,False
+17,wikipedia_article_1,system | methodology,False,50. Knowledge acquisition refers to the process of gathering expert knowledge and capturing it in the form of rules and ontologies.,False
+18,wikipedia_article_1,system | methodology,False,51. Knowledge acquisition has special requirements beyond the conventional specification process used to capture most business requirements.,False
+19,wikipedia_article_1,system | methodology,False,52. These issues led to the second approach to knowledge engineering: development of custom methodologies specifically designed to build expert systems.,False
+20,wikipedia_article_1,system | methodology,False,53. One of the first and most popular of such methodologies custom designed for expert systems was the Knowledge Acquisition and Documentation Structuring (KADS) methodology developed in Europe.,False
+21,wikipedia_article_2,Unassigned,False,28. Expert systems were among the first truly successful forms of artificial intelligence (AI) software.,False
+22,wikipedia_article_2,Unassigned,False,29. An expert system is divided into two subsystems: the inference engine and the knowledge base.,False
+23,wikipedia_article_2,Unassigned,False,30. The knowledge base represents facts and rules.,False
+24,wikipedia_article_2,would | machine,False,31. The inference engine applies the rules to the known facts to deduce new facts.,False
+25,wikipedia_article_2,human | ai,False,"25. In artificial intelligence, an expert system is a computer system emulating the decision-making ability of a human expert.",False
+26,wikipedia_article_2,human | ai,False,27. The first expert systems were created in the 1970s and then proliferated in the 1980s.,False
+27,wikipedia_article_2,system | methodology,False,"26. Expert systems are designed to solve complex problems by reasoning through bodies of knowledge, represented mainly as if then rules rather than through conventional procedural code.",False
+28,wikipedia_article_3,Unassigned,False,"13. The conversation would be limited to a text-only channel, such as a computer keyboard and screen, so the result would not depend on the machine's ability to render words as speech.",False
+29,wikipedia_article_3,Unassigned,False,"20. Turing's new question is: ""Are there imaginable digital computers which would do well in the imitation game?""",False
+30,wikipedia_article_3,Unassigned,False,"24. Some of its criticisms, such as John Searle's Chinese room, are themselves controversial.",False
+31,wikipedia_article_3,would | machine,False,"12. The evaluator would be aware that one of the two partners in conversation was a machine, and all participants would be separated from one another.",False
+32,wikipedia_article_3,would | machine,False,"14. If the evaluator could not reliably tell the machine from the human, the machine would be said to have passed the test.",False
+33,wikipedia_article_3,would | machine,False,"15. The test results would not depend on the machine's ability to give correct answers to questions, only on how closely its answers resembled those a human would give.",False
+34,wikipedia_article_3,would | machine,False,"17. It opens with the words: ""I propose to consider the question, 'Can machines think?'""",False
+35,wikipedia_article_3,would | machine,False,"21. This question, Turing believed, was one that could actually be answered.",False
+36,wikipedia_article_3,would | machine,False,"22. In the remainder of the paper, he argued against all the major objections to the proposition that ""machines can think"".",False
+37,wikipedia_article_3,human | ai,False,11. Turing proposed that a human evaluator would judge natural language conversations between a human and a machine designed to generate human-like responses.,False
+38,wikipedia_article_3,system | methodology,False,"10. The Turing test, originally called the imitation game by Alan Turing in 1950, is a test of a machine's ability to exhibit intelligent behaviour equivalent to, or indistinguishable from, that of a human.",False
+39,wikipedia_article_3,system | methodology,False,"16. The test was introduced by Turing in his 1950 paper ""Computing Machinery and Intelligence"" while working at the University of Manchester.",False
+40,wikipedia_article_3,system | methodology,False,"18. Because ""thinking"" is difficult to define, Turing chooses to ""replace the question by another, which is closely related to it and is expressed in relatively unambiguous words.""",False
+41,wikipedia_article_3,system | methodology,False,"19. Turing describes the new form of the problem in terms of a three-person game called the ""imitation game"", in which an interrogator asks questions of a man and a woman in another room in order to determine the correct sex of the two players.",False
+42,wikipedia_article_3,system | methodology,False,"23. Since Turing introduced his test, it has been both highly influential and widely criticised, and has become an important concept in the philosophy of artificial intelligence.",False
+43,wikipedia_article_4,Unassigned,False,0. Human-AI collaboration is the study of how humans and artificial intelligence (AI) agents work together to accomplish a shared goal.,False
+44,wikipedia_article_4,Unassigned,False,1. AI systems can aid humans in everything from decision making tasks to art creation.,False
+45,wikipedia_article_4,human | ai,False,"4. When a human uses an AI's output, they often want to understand why a model gave a certain output.",False
+46,wikipedia_article_4,human | ai,False,"5. While some models, like decision trees, are inherently explainable, black box models do not have clear explanations.",False
+47,wikipedia_article_4,human | ai,False,"7. Studies have also found that explanations may not improve the performance of a human-AI team, but simply increase a human's reliance on the model's output.",False
+48,wikipedia_article_4,human | ai,False,"8. A human's trust in an AI agent is an important factor in human-AI collaboration, dictating whether the human should follow or override the AI's input.",False
+49,wikipedia_article_4,system | methodology,False,"2. Examples of collaboration include medical decision making aids., hate speech detection, and music generation.",False
+50,wikipedia_article_4,system | methodology,False,"3. As AI systems are able to tackle more complex tasks, studies are exploring how different models and explanation techniques can improve human-AI collaboration.",False
+51,wikipedia_article_4,system | methodology,False,"6. Various Explainable artificial intelligence methods aim to describe model outputs with post-hoc explanations or visualizations, these methods can often provide misleading and false explanations.",False
+52,wikipedia_article_4,system | methodology,False,"9. Various factors impact a person's trust in an AI system, including its accuracy and reliability.",False
+53,all,Unassigned,False,0. Human-AI collaboration is the study of how humans and artificial intelligence (AI) agents work together to accomplish a shared goal.,False
+54,all,Unassigned,False,1. AI systems can aid humans in everything from decision making tasks to art creation.,False
+55,all,Unassigned,False,"13. The conversation would be limited to a text-only channel, such as a computer keyboard and screen, so the result would not depend on the machine's ability to render words as speech.",False
+56,all,Unassigned,False,"20. Turing's new question is: ""Are there imaginable digital computers which would do well in the imitation game?""",False
+57,all,Unassigned,False,"24. Some of its criticisms, such as John Searle's Chinese room, are themselves controversial.",False
+58,all,Unassigned,False,28. Expert systems were among the first truly successful forms of artificial intelligence (AI) software.,False
+59,all,Unassigned,False,29. An expert system is divided into two subsystems: the inference engine and the knowledge base.,False
+60,all,Unassigned,False,30. The knowledge base represents facts and rules.,False
+61,all,Unassigned,False,43. Many of the early expert systems were developed by large consulting and system integration firms such as Andersen Consulting.,False
+62,all,Unassigned,False,44. These firms already had well tested conventional waterfall methodologies (e.g.,False
+63,all,Unassigned,False,48. In the 1980s few conventional software methods supported this type of approach.,False
+64,all,would | machine,False,"12. The evaluator would be aware that one of the two partners in conversation was a machine, and all participants would be separated from one another.",False
+65,all,would | machine,False,"14. If the evaluator could not reliably tell the machine from the human, the machine would be said to have passed the test.",False
+66,all,would | machine,False,"15. The test results would not depend on the machine's ability to give correct answers to questions, only on how closely its answers resembled those a human would give.",False
+67,all,would | machine,False,"17. It opens with the words: ""I propose to consider the question, 'Can machines think?'""",False
+68,all,would | machine,False,"21. This question, Turing believed, was one that could actually be answered.",False
+69,all,would | machine,False,"22. In the remainder of the paper, he argued against all the major objections to the proposition that ""machines can think"".",False
+70,all,would | machine,False,31. The inference engine applies the rules to the known facts to deduce new facts.,False
+71,all,would | machine,False,38. In the earliest days of expert systems there was little or no formal process for the creation of the software.,False
+72,all,united | success,False,"36. Based on positive results from these initial prototypes, the technology was adopted by the US business community (and later worldwide) in the 1980s.",False
+73,all,united | success,False,54. KADS had great success in Europe and was also used in the United States.,False
+74,all,human | ai,False,"4. When a human uses an AI's output, they often want to understand why a model gave a certain output.",False
+75,all,human | ai,False,"5. While some models, like decision trees, are inherently explainable, black box models do not have clear explanations.",False
+76,all,human | ai,False,"7. Studies have also found that explanations may not improve the performance of a human-AI team, but simply increase a human's reliance on the model's output.",False
+77,all,human | ai,False,"8. A human's trust in an AI agent is an important factor in human-AI collaboration, dictating whether the human should follow or override the AI's input.",False
+78,all,human | ai,False,11. Turing proposed that a human evaluator would judge natural language conversations between a human and a machine designed to generate human-like responses.,False
+79,all,human | ai,False,"25. In artificial intelligence, an expert system is a computer system emulating the decision-making ability of a human expert.",False
+80,all,human | ai,False,27. The first expert systems were created in the 1970s and then proliferated in the 1980s.,False
+81,all,human | ai,False,35. Expert systems were first developed in artificial intelligence laboratories as an attempt to understand complex human decision making.,False
+82,all,human | ai,False,46. One trend in early expert systems development was to simply apply these waterfall methods to expert systems development.,False
+83,all,system | methodology,False,"2. Examples of collaboration include medical decision making aids., hate speech detection, and music generation.",False
+84,all,system | methodology,False,"3. As AI systems are able to tackle more complex tasks, studies are exploring how different models and explanation techniques can improve human-AI collaboration.",False
+85,all,system | methodology,False,"6. Various Explainable artificial intelligence methods aim to describe model outputs with post-hoc explanations or visualizations, these methods can often provide misleading and false explanations.",False
+86,all,system | methodology,False,"9. Various factors impact a person's trust in an AI system, including its accuracy and reliability.",False
+87,all,system | methodology,False,"10. The Turing test, originally called the imitation game by Alan Turing in 1950, is a test of a machine's ability to exhibit intelligent behaviour equivalent to, or indistinguishable from, that of a human.",False
+88,all,system | methodology,False,"16. The test was introduced by Turing in his 1950 paper ""Computing Machinery and Intelligence"" while working at the University of Manchester.",False
+89,all,system | methodology,False,"18. Because ""thinking"" is difficult to define, Turing chooses to ""replace the question by another, which is closely related to it and is expressed in relatively unambiguous words.""",False
+90,all,system | methodology,False,"19. Turing describes the new form of the problem in terms of a three-person game called the ""imitation game"", in which an interrogator asks questions of a man and a woman in another room in order to determine the correct sex of the two players.",False
+91,all,system | methodology,False,"23. Since Turing introduced his test, it has been both highly influential and widely criticised, and has become an important concept in the philosophy of artificial intelligence.",False
+92,all,system | methodology,False,"26. Expert systems are designed to solve complex problems by reasoning through bodies of knowledge, represented mainly as if then rules rather than through conventional procedural code.",False
+93,all,system | methodology,False,"33. One of the first examples of an expert system was MYCIN, an application to perform medical diagnosis.",False
+94,all,system | methodology,False,"34. In the MYCIN example, the domain experts were medical doctors and the knowledge represented was their expertise in diagnosis.",False
+95,all,system | methodology,False,37. The Stanford heuristic programming projects led by Edward Feigenbaum was one of the leaders in defining and developing the first expert systems.,False
+96,all,system | methodology,False,"39. Researchers just sat down with domain experts and started programming, often developing the required tools (e.g.",False
+97,all,system | methodology,False,41. As expert systems moved from academic prototypes to deployed business systems it was realized that a methodology was required to bring predictability and control to the process of building the software.,False
+98,all,system | methodology,False,"42. There were essentially two approaches that were attempted: Use conventional software development methodologies, and develop special methodologies tuned to the requirements of building expert systems.",False
+99,all,system | methodology,False,45. Method1 for Andersen) that they trained all their staff in and that were virtually always used to develop software for their clients.,False
+100,all,system | methodology,False,47. Another issue with using conventional methods to develop expert systems was that due to the unprecedented nature of expert systems they were one of the first applications to adopt rapid application development methods that feature iteration and prototyping as well as or instead of detailed analysis and design.,False
+101,all,system | methodology,False,49. The final issue with using conventional methods to develop expert systems was the need for knowledge acquisition.,False
+102,all,system | methodology,False,50. Knowledge acquisition refers to the process of gathering expert knowledge and capturing it in the form of rules and ontologies.,False
+103,all,system | methodology,False,51. Knowledge acquisition has special requirements beyond the conventional specification process used to capture most business requirements.,False
+104,all,system | methodology,False,52. These issues led to the second approach to knowledge engineering: development of custom methodologies specifically designed to build expert systems.,False
+105,all,system | methodology,False,53. One of the first and most popular of such methodologies custom designed for expert systems was the Knowledge Acquisition and Documentation Structuring (KADS) methodology developed in Europe.,False
