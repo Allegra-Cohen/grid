@@ -1,0 +1,829 @@
+10:07:18:239 backendProcess {
+  _events: {},
+  _eventsCount: 0,
+  _closesNeeded: 3,
+  _closesGot: 0,
+  connected: false,
+  signalCode: null,
+  exitCode: null,
+  killed: false,
+  spawnfile: 'python3',
+  _handle: {
+    onexit: '[function] (exitCode, signalCode) => {\n' +
+      '    if (signalCode) {\n' +
+      '      this.signalCode = signalCode;\n' +
+      '    } else {\n' +
+      '      this.exitCode = exitCode;\n' +
+      '    }\n' +
+      '\n' +
+      '    if (this.stdin) {\n' +
+      '      this.stdin.destroy();\n' +
+      '    }\n' +
+      '\n' +
+      '    this._handle.close();\n' +
+      '    this._handle = null;\n' +
+      '\n' +
+      '    if (exitCode < 0) {\n' +
+      "      const syscall = this.spawnfile ? 'spawn ' + this.spawnfile : 'spawn';\n" +
+      '      const err = errnoException(exitCode, syscall);\n' +
+      '\n' +
+      '      if (this.spawnfile)\n' +
+      '        err.path = this.spawnfile;\n' +
+      '\n' +
+      '      err.spawnargs = ArrayPrototypeSlice(this.spawnargs, 1);\n' +
+      "      this.emit('error', err);\n" +
+      '    } else {\n' +
+      "      this.emit('exit', this.exitCode, this.signalCode);\n" +
+      '    }\n' +
+      '\n' +
+      '    // If any of the stdio streams have not been touched,\n' +
+      '    // then pull all the data through so that it can get the\n' +
+      "    // eof and emit a 'close' event.\n" +
+      '    // Do it on nextTick so that the user has one last chance\n' +
+      '    // to consume the output, if for example they only want to\n' +
+      '    // start reading the data once the process exits.\n' +
+      '    process.nextTick(flushStdio, this);\n' +
+      '\n' +
+      '    maybeClose(this);\n' +
+      '  }',
+    pid: 8156
+  },
+  spawnargs: [ 'python3', 'main2.py', 'chamar' ],
+  pid: 8156,
+  stdin: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: true,
+      endEmitted: true,
+      reading: false,
+      constructed: true,
+      sync: true,
+      needReadable: false,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null,
+      readable: false
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}'
+    },
+    _eventsCount: 1,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stdout: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}',
+      close: '[function] () => {\n          maybeClose(this);\n        }'
+    },
+    _eventsCount: 2,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stderr: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}',
+      close: '[function] () => {\n          maybeClose(this);\n        }'
+    },
+    _eventsCount: 2,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stdio: [ null, null, null ]
+}
+10:07:18:386 Aplicativo Electron iniciado.
+10:07:19:436 stderr {
+  type: 'Buffer',
+  data: [
+    112, 121, 116, 104, 111, 110,  51,  58,  32,  99,  97, 110,
+     39, 116,  32, 111, 112, 101, 110,  32, 102, 105, 108, 101,
+     32,  39,  67,  58,  92,  92,  85, 115, 101, 114, 115,  92,
+     92, 112, 111, 108, 101, 115,  92,  92,  68, 101, 115, 107,
+    116, 111, 112,  92,  92,  73, 110, 116, 101, 114,  99,  97,
+    109,  98, 105, 111,  92,  92, 101, 108, 101,  99, 116, 114,
+    111, 110,  84, 101, 115, 116,  92,  92, 102, 114, 111, 110,
+    116, 101, 110, 100,  92,  92, 109,  97, 105, 110,  50,  46,
+    112, 121,  39,  58,
+    ... 38 more items
+  ]
+}
+10:16:12:757 backendProcess {
+  _events: {},
+  _eventsCount: 0,
+  _closesNeeded: 3,
+  _closesGot: 0,
+  connected: false,
+  signalCode: null,
+  exitCode: null,
+  killed: false,
+  spawnfile: 'python3',
+  _handle: {
+    onexit: '[function] (exitCode, signalCode) => {\n' +
+      '    if (signalCode) {\n' +
+      '      this.signalCode = signalCode;\n' +
+      '    } else {\n' +
+      '      this.exitCode = exitCode;\n' +
+      '    }\n' +
+      '\n' +
+      '    if (this.stdin) {\n' +
+      '      this.stdin.destroy();\n' +
+      '    }\n' +
+      '\n' +
+      '    this._handle.close();\n' +
+      '    this._handle = null;\n' +
+      '\n' +
+      '    if (exitCode < 0) {\n' +
+      "      const syscall = this.spawnfile ? 'spawn ' + this.spawnfile : 'spawn';\n" +
+      '      const err = errnoException(exitCode, syscall);\n' +
+      '\n' +
+      '      if (this.spawnfile)\n' +
+      '        err.path = this.spawnfile;\n' +
+      '\n' +
+      '      err.spawnargs = ArrayPrototypeSlice(this.spawnargs, 1);\n' +
+      "      this.emit('error', err);\n" +
+      '    } else {\n' +
+      "      this.emit('exit', this.exitCode, this.signalCode);\n" +
+      '    }\n' +
+      '\n' +
+      '    // If any of the stdio streams have not been touched,\n' +
+      '    // then pull all the data through so that it can get the\n' +
+      "    // eof and emit a 'close' event.\n" +
+      '    // Do it on nextTick so that the user has one last chance\n' +
+      '    // to consume the output, if for example they only want to\n' +
+      '    // start reading the data once the process exits.\n' +
+      '    process.nextTick(flushStdio, this);\n' +
+      '\n' +
+      '    maybeClose(this);\n' +
+      '  }',
+    pid: 25044
+  },
+  spawnargs: [ 'python3', '../main2.py', 'chamar' ],
+  pid: 25044,
+  stdin: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: true,
+      endEmitted: true,
+      reading: false,
+      constructed: true,
+      sync: true,
+      needReadable: false,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null,
+      readable: false
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}'
+    },
+    _eventsCount: 1,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stdout: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}',
+      close: '[function] () => {\n          maybeClose(this);\n        }'
+    },
+    _eventsCount: 2,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stderr: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}',
+      close: '[function] () => {\n          maybeClose(this);\n        }'
+    },
+    _eventsCount: 2,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stdio: [ null, null, null ]
+}
+10:16:12:867 Aplicativo Electron iniciado.
+10:16:49:062 stderr {
+  type: 'Buffer',
+  data: [
+     67,  58,  92,  85, 115, 101, 114, 115,  92, 112, 111, 108,
+    101, 115,  92,  65, 112, 112,  68,  97, 116,  97,  92,  76,
+    111,  99,  97, 108,  92,  80,  97,  99, 107,  97, 103, 101,
+    115,  92,  80, 121, 116, 104, 111, 110,  83, 111, 102, 116,
+    119,  97, 114, 101,  70, 111, 117, 110, 100,  97, 116, 105,
+    111, 110,  46,  80, 121, 116, 104, 111, 110,  46,  51,  46,
+     49,  48,  95, 113,  98, 122,  53, 110,  50, 107, 102, 114,
+     97,  56, 112,  48,  92,  76, 111,  99,  97, 108,  67,  97,
+     99, 104, 101,  92,
+    ... 438 more items
+  ]
+}
+10:16:50:121 stderr {
+  type: 'Buffer',
+  data: [
+     73,  78,  70,  79,  58,  32,  32,  32,  32,  32,  83, 116,
+     97, 114, 116, 101, 100,  32, 115, 101, 114, 118, 101, 114,
+     32, 112, 114, 111,  99, 101, 115, 115,  32,  91,  51,  48,
+     55,  54,  93,  13,  10,  73,  78,  70,  79,  58,  32,  32,
+     32,  32,  32,  87,  97, 105, 116, 105, 110, 103,  32, 102,
+    111, 114,  32,  97, 112, 112, 108, 105,  99,  97, 116, 105,
+    111, 110,  32, 115, 116,  97, 114, 116, 117, 112,  46,  13,
+     10
+  ]
+}
+10:16:50:124 stderr {
+  type: 'Buffer',
+  data: [
+     73,  78,  70,  79,  58,  32,  32,  32,  32,  32,  65, 112,
+    112, 108, 105,  99,  97, 116, 105, 111, 110,  32, 115, 116,
+     97, 114, 116, 117, 112,  32,  99, 111, 109, 112, 108, 101,
+    116, 101,  46,  13,  10,  73,  78,  70,  79,  58,  32,  32,
+     32,  32,  32,  85, 118, 105,  99, 111, 114, 110,  32, 114,
+    117, 110, 110, 105, 110, 103,  32, 111, 110,  32, 104, 116,
+    116, 112,  58,  47,  47,  49,  50,  55,  46,  48,  46,  48,
+     46,  49,  58,  56,  48,  48,  48,  32,  40,  80, 114, 101,
+    115, 115,  32,  67,
+    ... 16 more items
+  ]
+}
+10:16:55:898 stdout {
+  type: 'Buffer',
+  data: [
+     84, 104, 105, 115,  32, 105, 115,  32, 109,  97, 105, 110,
+     50,  46, 112, 121,  13,  10,  73,  78,  70,  79,  58,  32,
+     32,  32,  32,  32,  49,  50,  55,  46,  48,  46,  48,  46,
+     49,  58,  53,  51,  49,  53,  50,  32,  45,  32,  34,  71,
+     69,  84,  32,  47, 115, 104, 111, 119,  71, 114, 105, 100,
+    115,  32,  72,  84,  84,  80,  47,  49,  46,  49,  34,  32,
+     51,  48,  55,  32,  84, 101, 109, 112, 111, 114,  97, 114,
+    121,  32,  82, 101, 100, 105, 114, 101,  99, 116,  13,  10
+  ]
+}
+10:16:55:906 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78, 70,  79,  58,  32,  32, 32, 32, 32,  49,  50,
+     55,  46, 48,  46,  48,  46,  49, 58, 53, 51,  49,  53,
+     50,  32, 45,  32,  34,  71,  69, 84, 32, 47, 115, 104,
+    111, 119, 71, 114, 105, 100, 115, 47, 32, 72,  84,  84,
+     80,  47, 49,  46,  49,  34,  32, 50, 48, 48,  32,  79,
+     75,  13, 10
+  ]
+}
+10:17:00:721 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78,  70,  79,  58,  32,  32, 32, 32,  32,  49,  50,
+     55,  46,  48,  46,  48,  46,  49, 58, 53,  51,  49,  53,
+     53,  32,  45,  32,  34,  71,  69, 84, 32,  47, 115, 104,
+    111, 119,  71, 114, 105, 100, 115, 32, 72,  84,  84,  80,
+     47,  49,  46,  49,  34,  32,  51, 48, 55,  32,  84, 101,
+    109, 112, 111, 114,  97, 114, 121, 32, 82, 101, 100, 105,
+    114, 101,  99, 116,  13,  10
+  ]
+}
+10:17:00:728 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78, 70,  79,  58,  32,  32, 32, 32, 32,  49,  50,
+     55,  46, 48,  46,  48,  46,  49, 58, 53, 51,  49,  53,
+     53,  32, 45,  32,  34,  71,  69, 84, 32, 47, 115, 104,
+    111, 119, 71, 114, 105, 100, 115, 47, 32, 72,  84,  84,
+     80,  47, 49,  46,  49,  34,  32, 50, 48, 48,  32,  79,
+     75,  13, 10
+  ]
+}
+10:17:18:144 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78,  70,  79,  58,  32,  32, 32, 32,  32,  49,  50,
+     55,  46,  48,  46,  48,  46,  49, 58, 53,  51,  49,  55,
+     51,  32,  45,  32,  34,  71,  69, 84, 32,  47, 115, 104,
+    111, 119,  71, 114, 105, 100, 115, 32, 72,  84,  84,  80,
+     47,  49,  46,  49,  34,  32,  51, 48, 55,  32,  84, 101,
+    109, 112, 111, 114,  97, 114, 121, 32, 82, 101, 100, 105,
+    114, 101,  99, 116,  13,  10
+  ]
+}
+10:17:18:151 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78, 70,  79,  58,  32,  32, 32, 32, 32,  49,  50,
+     55,  46, 48,  46,  48,  46,  49, 58, 53, 51,  49,  55,
+     51,  32, 45,  32,  34,  71,  69, 84, 32, 47, 115, 104,
+    111, 119, 71, 114, 105, 100, 115, 47, 32, 72,  84,  84,
+     80,  47, 49,  46,  49,  34,  32, 50, 48, 48,  32,  79,
+     75,  13, 10
+  ]
+}
+10:17:26:868 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78,  70,  79,  58,  32,  32, 32, 32,  32,  49,  50,
+     55,  46,  48,  46,  48,  46,  49, 58, 53,  51,  49,  56,
+     50,  32,  45,  32,  34,  71,  69, 84, 32,  47, 115, 104,
+    111, 119,  71, 114, 105, 100, 115, 32, 72,  84,  84,  80,
+     47,  49,  46,  49,  34,  32,  51, 48, 55,  32,  84, 101,
+    109, 112, 111, 114,  97, 114, 121, 32, 82, 101, 100, 105,
+    114, 101,  99, 116,  13,  10
+  ]
+}
+10:17:26:874 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78, 70,  79,  58,  32,  32, 32, 32, 32,  49,  50,
+     55,  46, 48,  46,  48,  46,  49, 58, 53, 51,  49,  56,
+     50,  32, 45,  32,  34,  71,  69, 84, 32, 47, 115, 104,
+    111, 119, 71, 114, 105, 100, 115, 47, 32, 72,  84,  84,
+     80,  47, 49,  46,  49,  34,  32, 50, 48, 48,  32,  79,
+     75,  13, 10
+  ]
+}
+10:17:27:045 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78,  70,  79,  58,  32,  32, 32, 32,  32,  49,  50,
+     55,  46,  48,  46,  48,  46,  49, 58, 53,  51,  49,  56,
+     50,  32,  45,  32,  34,  71,  69, 84, 32,  47, 115, 104,
+    111, 119,  71, 114, 105, 100, 115, 32, 72,  84,  84,  80,
+     47,  49,  46,  49,  34,  32,  51, 48, 55,  32,  84, 101,
+    109, 112, 111, 114,  97, 114, 121, 32, 82, 101, 100, 105,
+    114, 101,  99, 116,  13,  10
+  ]
+}
+10:17:27:051 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78, 70,  79,  58,  32,  32, 32, 32, 32,  49,  50,
+     55,  46, 48,  46,  48,  46,  49, 58, 53, 51,  49,  56,
+     50,  32, 45,  32,  34,  71,  69, 84, 32, 47, 115, 104,
+    111, 119, 71, 114, 105, 100, 115, 47, 32, 72,  84,  84,
+     80,  47, 49,  46,  49,  34,  32, 50, 48, 48,  32,  79,
+     75,  13, 10
+  ]
+}
+10:17:27:212 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78,  70,  79,  58,  32,  32, 32, 32,  32,  49,  50,
+     55,  46,  48,  46,  48,  46,  49, 58, 53,  51,  49,  56,
+     50,  32,  45,  32,  34,  71,  69, 84, 32,  47, 115, 104,
+    111, 119,  71, 114, 105, 100, 115, 32, 72,  84,  84,  80,
+     47,  49,  46,  49,  34,  32,  51, 48, 55,  32,  84, 101,
+    109, 112, 111, 114,  97, 114, 121, 32, 82, 101, 100, 105,
+    114, 101,  99, 116,  13,  10
+  ]
+}
+10:17:27:218 stdout {
+  type: 'Buffer',
+  data: [
+     73,  78, 70,  79,  58,  32,  32, 32, 32, 32,  49,  50,
+     55,  46, 48,  46,  48,  46,  49, 58, 53, 51,  49,  56,
+     50,  32, 45,  32,  34,  71,  69, 84, 32, 47, 115, 104,
+    111, 119, 71, 114, 105, 100, 115, 47, 32, 72,  84,  84,
+     80,  47, 49,  46,  49,  34,  32, 50, 48, 48,  32,  79,
+     75,  13, 10
+  ]
+}

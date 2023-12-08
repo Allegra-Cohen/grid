@@ -1,0 +1,90 @@
+.container {
+  text-align: center;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #F7F7FA;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3498db;
+}
+
+.loading {
+  width: 15px;
+  height: 15px;
+  margin-right: 20px;
+  border: 5px solid #ccc;
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.text-container {
+  text-align: left;
+  margin-left: 20px;
+}
+
+.text-container h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.image-container img {
+  width: 50%;
+  height: auto;
+  max-width: 100%;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center; /* Centralizar o título */
+}
+
+.button-appear {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: buttonFadeIn 1s forwards;
+}
+
+@keyframes buttonFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.access-button {
+  background-color: #5CB85C;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.access-button:hover {
+  background-color: #449D44;
+}

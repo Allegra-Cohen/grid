@@ -1,0 +1,14 @@
+.styled-header {
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
+  min-height: 40px;
+  max-height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c2c2c;
+}

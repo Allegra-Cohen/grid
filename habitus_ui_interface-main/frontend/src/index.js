@@ -1,25 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import { Link } from "react-router-dom";
-import Gallery from './Gallery';
-import CreatePage from './CreatePage';
-import ChangeCorpus from './ChangeCorpus';
-import App from './App';
+import { Route, Routes, HashRouter } from "react-router-dom";
+import { Gallery, ChangeCorpus, CreateCorpus, GridPage, TrainingPage } from './pages';
+import 'index.css';
+import SplashScreen from 'SplashScreen';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-  <BrowserRouter>
-  <Routes>
-    <Route path="/" element={<Gallery apiurl="." />}/>
-    <Route path="/create" element={<CreatePage apiurl="." />}/>
-    <Route path="/changeCorpus" element={<ChangeCorpus apiurl="." />}/>
-    <Route path="/grid" element={<App apiurl="."/>}/>
-  </Routes>
-  </BrowserRouter>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<SplashScreen apiurl="http://127.0.0.1:8000" />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/create" element={<CreateCorpus />} />
+        <Route path="/changeCorpus" element={<ChangeCorpus />} />
+        <Route path="/grid" element={<GridPage />} />
+        <Route path="/tutorial/training1" element={<TrainingPage step={1} />} />
+        <Route path="/tutorial/training2" element={<TrainingPage step={2} />} />
+        <Route path="/tutorial/training3" element={<TrainingPage step={3} />} />
+        <Route path="/tutorial/training4" element={<TrainingPage step={4} />} />
+      </Routes>
+    </HashRouter>
   </React.StrictMode>
 );

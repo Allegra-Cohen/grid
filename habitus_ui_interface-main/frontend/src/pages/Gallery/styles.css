@@ -1,0 +1,72 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 20px;
+}
+
+.go-corner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  background-color: #283B62;
+  border-radius: 0 4px 0 32px;
+}
+
+.go-arrow {
+  margin-top: -8px;
+  margin-right: -4px;
+  color: white;
+  font-family: courier, sans;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 32px 24px;
+  margin: 15px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  width: 150px;
+  height: 30px;
+  color: #2c2c2c;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  transition: all 0.3s ease-out;
+}
+
+.card:hover {
+  color: #fff; /* Altera a cor do texto para branco (#fff) quando o mouse está sobre o elemento */
+}
+
+
+.card:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -16px;
+  right: -16px;
+  background: #283B62;
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 0.25s ease-out;
+}
+
+.card:hover:before {
+  transform: scale(21);
+}

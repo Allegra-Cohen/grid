@@ -1,0 +1,55 @@
+.row-name {
+  padding-right: 10px;
+  font-weight: 500;
+  text-align: right;
+  cursor: default;
+}
+
+.footer{
+  padding: 10px;
+  border: 1px solid #B5B5B5;
+  border-radius: 5px;
+  color: #2c2c2c;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  text-overflow: ellipsis;
+}
+
+.li-corpus {
+  list-style-type: none;
+  background-color: #fff;
+  cursor: pointer;
+  margin: 10px 0;
+  border-radius: 15px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease; /* Adiciona uma transição suave */
+  font-size: 14px;
+  &:hover{
+    background-color: #eee; /* Muda a cor de fundo no hover */
+
+  }
+}
+
+.legend {
+  font-family: "InaiMathi";
+}
+
+.footer::placeholder {
+  color: var(--placeholder-color);
+  font-family: "InaiMathi";
+  font-size: 12pt;
+  width: max-content;
+}
+
+.context-card {
+  list-style-type: none;
+  background-color: #fff;
+  margin: 15px 0;
+  border-radius: 15px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #eee;
+  font-size: 14px;
+}

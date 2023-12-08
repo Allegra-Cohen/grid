@@ -1,0 +1,318 @@
+11:34:16:761 {
+  _events: {},
+  _eventsCount: 0,
+  _closesNeeded: 3,
+  _closesGot: 0,
+  connected: false,
+  signalCode: null,
+  exitCode: null,
+  killed: false,
+  spawnfile: 'python3',
+  _handle: {
+    onexit: '[function] (exitCode, signalCode) => {\n' +
+      '    if (signalCode) {\n' +
+      '      this.signalCode = signalCode;\n' +
+      '    } else {\n' +
+      '      this.exitCode = exitCode;\n' +
+      '    }\n' +
+      '\n' +
+      '    if (this.stdin) {\n' +
+      '      this.stdin.destroy();\n' +
+      '    }\n' +
+      '\n' +
+      '    this._handle.close();\n' +
+      '    this._handle = null;\n' +
+      '\n' +
+      '    if (exitCode < 0) {\n' +
+      "      const syscall = this.spawnfile ? 'spawn ' + this.spawnfile : 'spawn';\n" +
+      '      const err = errnoException(exitCode, syscall);\n' +
+      '\n' +
+      '      if (this.spawnfile)\n' +
+      '        err.path = this.spawnfile;\n' +
+      '\n' +
+      '      err.spawnargs = ArrayPrototypeSlice(this.spawnargs, 1);\n' +
+      "      this.emit('error', err);\n" +
+      '    } else {\n' +
+      "      this.emit('exit', this.exitCode, this.signalCode);\n" +
+      '    }\n' +
+      '\n' +
+      '    // If any of the stdio streams have not been touched,\n' +
+      '    // then pull all the data through so that it can get the\n' +
+      "    // eof and emit a 'close' event.\n" +
+      '    // Do it on nextTick so that the user has one last chance\n' +
+      '    // to consume the output, if for example they only want to\n' +
+      '    // start reading the data once the process exits.\n' +
+      '    process.nextTick(flushStdio, this);\n' +
+      '\n' +
+      '    maybeClose(this);\n' +
+      '  }',
+    pid: 25552
+  },
+  spawnargs: [ 'python3', 'main2.py', 'chamar' ],
+  pid: 25552,
+  stdin: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: true,
+      endEmitted: true,
+      reading: false,
+      constructed: true,
+      sync: true,
+      needReadable: false,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null,
+      readable: false
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}'
+    },
+    _eventsCount: 1,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stdout: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}',
+      close: '[function] () => {\n          maybeClose(this);\n        }'
+    },
+    _eventsCount: 2,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stderr: {
+    connecting: false,
+    _hadError: false,
+    _parent: null,
+    _host: null,
+    _closeAfterHandlingError: false,
+    _readableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      buffer: { head: null, tail: null, length: 0 },
+      length: 0,
+      pipes: [],
+      flowing: null,
+      ended: false,
+      endEmitted: false,
+      reading: true,
+      constructed: true,
+      sync: false,
+      needReadable: true,
+      emittedReadable: false,
+      readableListening: false,
+      resumeScheduled: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      destroyed: false,
+      errored: null,
+      closed: false,
+      closeEmitted: false,
+      defaultEncoding: 'utf8',
+      awaitDrainWriters: null,
+      multiAwaitDrain: false,
+      readingMore: false,
+      dataEmitted: false,
+      decoder: null,
+      encoding: null
+    },
+    _events: {
+      end: '[function] function onReadableStreamEnd() {\n' +
+        '  if (!this.allowHalfOpen) {\n' +
+        '    this.write = writeAfterFIN;\n' +
+        '  }\n' +
+        '}',
+      close: '[function] () => {\n          maybeClose(this);\n        }'
+    },
+    _eventsCount: 2,
+    _writableState: {
+      objectMode: false,
+      highWaterMark: 16384,
+      finalCalled: false,
+      needDrain: false,
+      ending: false,
+      ended: false,
+      finished: false,
+      destroyed: false,
+      decodeStrings: false,
+      defaultEncoding: 'utf8',
+      length: 0,
+      writing: false,
+      corked: 0,
+      sync: true,
+      bufferProcessing: false,
+      onwrite: '[function] function () { [native code] }',
+      writecb: null,
+      writelen: 0,
+      afterWriteTickInfo: null,
+      buffered: [],
+      bufferedIndex: 0,
+      allBuffers: true,
+      allNoop: true,
+      pendingcb: 0,
+      constructed: true,
+      prefinished: false,
+      errorEmitted: false,
+      emitClose: false,
+      autoDestroy: true,
+      errored: null,
+      closed: false,
+      closeEmitted: false
+    },
+    allowHalfOpen: false,
+    _sockname: null,
+    _pendingData: null,
+    _pendingEncoding: '',
+    server: null,
+    _server: null
+  },
+  stdio: [ null, null, null ]
+}
+11:34:16:948 Erro no servidor backend: python3: can't open file 'C:\\Users\\poles\\Desktop\\Intercambio\\electronTest\\frontend\\main2.py': [Errno 2] No such file or directory
+
+11:34:17:033 Aplicativo Electron iniciado.
