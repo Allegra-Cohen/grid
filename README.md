@@ -94,3 +94,38 @@ The Grid currently runs very slowly for corpora above ~100 documents. This is fo
 - Write better code or switch to a faster language
 - Try a different algorithm (but this is constrained by the clustering algorithm needing to interface with the Grid and its rules about human decisions taking priority)
 - Pre-process corpora such that only meaningful documents get clustered and documents without enough interesting information in them get dumped.
+
+# How to run the application (For developers)
+
+1. `git clone https://github.com/Allegra-Cohen/grid.git`
+2. `git checkout grid-mac`
+3. `cd .\habitus_ui_interface-main\frontend`
+4. `yarn install`
+5. `yarn electron:serve`
+
+## Project Structure
+
+This project leverages React with Electron, a framework that allows for building cross-platform desktop applications using web technologies.
+
+The backend server is initiated through main.js, located in the public directory. This file serves as the main entry point for Electron, handling the creation of application windows and managing Electron-specific processes.
+
+All Python packages used in the project are installed in a virtual environment during the initial project execution. This ensures a clean and isolated Python environment, preventing conflicts with system-wide Python installations.
+
+To create a new version of the application, simply execute the command `yarn electron:build`. This command triggers the Electron Builder, and the resulting executable file will be located in the frontend/dist directory. This executable file is the standalone version of your Electron application.
+
+```plaintext
+.
+├── backend                  # Back end source code written in Python
+│   ├── _init_.py         
+│   ├── ...
+├── frontend                 # Front end source code written in React
+│   ├── public               
+│   │   ├── main.js          # It is responsible for creating an application window, managing operating system events and performing other tasks related to the Electron execution environment.
+│   │   └── ...
+│   ├── src
+        └── ...              
+├── process_files             # Files are saved here when a corpus is created and used for clustering
+│   └── ...
+├── main2.py                  # Connects the front end to the back end
+└── ...
+
