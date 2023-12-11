@@ -3,44 +3,19 @@
 Welcome to the Grid! This is a prototype tool for visualizing and curating qualitative information. The Grid is set up to handle text — we've used it to curate expert knowledge, interview transcripts, abstracts, and emails!
  
 ## Installation
-The Grid's front end is written in JavaScript using React. Right now, it is hosted locally on your machine. The front end code is in `habitus_ui_interface-main/frontend/src`. This is where you would go if you wanted to change the aesthetics of the Grid or improve the user workflow.
- 
-The Grid’s back end is written in Python. Main2.py connects the front end to the back end through [uvicorn](https://www.uvicorn.org). `habitus_ui_interface-main/backend/` contains code for the natural language processing, clustering, and Grid classes. This is where you would go if you wanted to add functionality like new distance measures.
- 
-Here are instructions for installing the libraries and packages you’ll need to run the Grid:
- 
-1. `git clone https://github.com/Allegra-Cohen/grid`
-1. `cd grid`
-1. `sudo apt update`
-1. `node -v` - Check to see that it is installed and version 14+.  If so, the next step is not necessary.
-1. `sudo apt install nodejs` - If the default version  for your operating system is not new enough, additional [preparations](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04) may be needed.
-1. `sudo apt install npm`
-1. `cd habitus_ui_interface-main/frontend`
-1. `npm install` - This will create the `node_modules` directory.
-1. `cd ..`
-1. `python3 --version` - You'll need version 3.9+.  If that's already the case, skip the next step.
-1. `sudo apt install python3.9` - If this is not available, additional [preparations](https://cloudbytes.dev/snippets/upgrade-python-to-latest-version-on-ubuntu-linux) will again be necessary.
-1. `pip3 install uvicorn`
-1. `pip3 install fastapi`
-1. `pip3 install gensim`
-1. `pip3 install pandas`
-1. `pip3 install nltk`
-1. `pip3 install sklearn`
-1. `pip3 install spacy`
-1. `python3 -m spacy download en_core_web_sm`
-1. Go to https://nlp.stanford.edu/projects/glove/ and download glove.6B.zip. Move the file called `glove.6B.300d.txt` to your `grid/process_files/` folder. (For a great introduction to word embeddings, read [Mihai Surdeanu and Marco Valenzuela-Escárcega's book](https://clulab.org/gentlenlp/book/gentlenlp-book-12232022.pdf)).
-1. `cd backend`
-1. `python3 control_panel.py` - Make sure the console version works before continuing with execution of the networked version.
-1. `cd ..`
- 
-## Starting up the Grid
-Open two tabs in terminal, then:
-- In one tab, navigate to `habitus_ui_interface-main` and run `python3 -m uvicorn -–reload main2:app`. This will use port 8000 by default, so to avoid complaints, free up the port before executing the command.
-- In the other tab, navigate to `habitus_ui_interface-main/frontend` and run `npm start`. This will start a web server on port 3000 and open a browser on http://localhost:3000.
- 
-## Using the Grid
-localhost:3000 should display a Gallery page. Right now there is just one Grid in the Gallery: A Grid called "example" that we’ve given you for this tutorial. Click on it.
- 
+1. `Python3 is required - You'll need version 3.9+. If that's already the case, skip the next
+step. * To check your python version, you may open Command Prompt (Windows) or Terminal (MacOS) and type python3 --version`
+
+1. `Install python3`
+[Python](https://www.python.org/downloads/release/python-3106/)
+
+1. `Install The Grid`
+[Windows](https://github.com/Allegra-Cohen/grid/releases/tag/grid-windows-v0.1) or
+[macOS](https://github.com/Allegra-Cohen/grid/releases/tag/grid-macOS-v0.1)
+
+1. `Wait while the required python packages are being installed and the software start the local server`
+
+## Using the Grid 
 Grids are visualizations of corpora, i.e., collections of text. The Grid organizes text from a corpus into two dimensions: Rows, which represent static features of the corpus (like a list of interviewees or a timeline of dates mentioned), and columns, which represent important topics in the corpus. This is a Grid built using some excerpts from Wikipedia.
  
 The color of the squares indicate how much text is in each. Click on a few squares and you’ll find that the right-hand panel shows the sentences inside. Click on the sentences and you can see the surrounding context.
