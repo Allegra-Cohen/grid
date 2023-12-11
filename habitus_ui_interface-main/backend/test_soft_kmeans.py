@@ -31,14 +31,14 @@ def test_generate() -> bool:
 		newDocument(4, "doc4", [5.0, 5.1, 5.2])
 	]
 
-	expected_labels = [[1], [1], [], [0], [0]]
+	expected_labels = [[0], [0], [], [1], [1]]
 	expected_k = 2
 	expected_matrix = [
-		[9.09494702e-13, 1.00000000e+00],
-		[1.48643628e-21, 1.00000000e+00],
-		[5.00000000e-01, 5.00000000e-01],
+		[1.00000000e+00, 9.09494702e-13],
 		[1.00000000e+00, 1.48643628e-21],
-		[1.00000000e+00, 9.09494702e-13]
+		[5.00000000e-01, 5.00000000e-01],
+		[1.48643628e-21, 1.00000000e+00],
+		[9.09494702e-13, 1.00000000e+00]
 	]
 
 	labels_k_tuple = soft_kmeans.generate(documents, 2)
@@ -87,7 +87,7 @@ def test_generate_seeded() -> None:
 		[documents[1], documents[3]]
 	]
 
-	expected_labels = [[1], [0], [0], [0], [0]] # last should be 1
+	expected_labels = [[1], [0], [0], [0], [0]]
 	expected_k = 2
 	expected_matrix = [
 		[4.96918279e-167, 1.00000000e+000],

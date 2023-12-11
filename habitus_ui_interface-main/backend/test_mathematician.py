@@ -1,6 +1,7 @@
 from .mathematician import C_score
 from .mathematician import betweenness
 from .mathematician import check_convergence
+from .mathematician import get_composite
 from .mathematician import withinness
 
 import numpy as np
@@ -22,6 +23,12 @@ clusters = [
 	[documents[2], documents[3], documents[4]]
 ]
 
+def test_composite():
+	for cluster in clusters:
+		result = get_composite(cluster)
+		print("composite", result)
+	return True
+
 def test_withinness() -> float:
 	result = withinness(clusters)
 	print("withinness", result)
@@ -40,11 +47,14 @@ def test_C_score() -> float:
 def test_check_convergence() -> None:
 	centroids = np.array([np.mean([d.vector for d in cluster], axis = 0) for cluster in clusters])
 	last_centroids = centroids
+	centroids = np.array([[0, 0, 0]])
+	last_centroids = np.array([[10, 0, -10]])
 	result = check_convergence(centroids, last_centroids, 5)
 	print(check_convergence, result)
 
 
 if __name__ == "__main__":
+	result = test_composite()
 	result = test_withinness()
 	result = test_betweenness()
 	result = test_C_score()

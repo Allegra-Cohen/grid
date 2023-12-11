@@ -182,8 +182,8 @@ class SoftKMeans2(ClusterGenerator):
 			best_index = scores.index(max(scores))
 			best_clusters = valid_clusters_score_tuples[best_index][0]
 			labels = self._get_label_list(best_clusters, np_documents)
-			self.best_matrix = valid_clusters_score_tuples[best_index][2] # Use this to check answers.
-			return labels, len(best_clusters), valid_clusters_score_tuples[best_index][2] # What should actually get returned here?
+			self.best_matrix = valid_clusters_score_tuples[best_index][2]
+			return labels, len(best_clusters), self.best_matrix
 		else:
 			print("What now?")
 			return None, 0, None
@@ -193,15 +193,22 @@ class SoftKMeans2(ClusterGenerator):
 
 		def calculate_centroid(cluster_index):
 			wk = np_matrix[:, cluster_index]
-			centroid = np.divide(np.sum(np.multiply(wk, np_doc_vecs_T), axis = 1), np.sum(wk))
+			product = np.multiply(wk, np_doc_vecs_T)
+			sum = np.sum(product, axis = 1)
+			wksum = np.sum(wk)
+			centroid = np.divide(sum, wksum)
 			return centroid
 
 		centroids = [calculate_centroid(cluster_index) for cluster_index in range(np_matrix.shape[1])]
 		return np.array(centroids)
 
 	def _calculate_coefficient(self, vector, centroids):
-		norms = np.linalg.norm(np.subtract(vector, centroids + self.perturbance), axis = 1)
-		b = np.sum(np.power(np.divide(1, norms), self.exponent))
+		sums = centroids + self.perturbance
+		diffs = np.subtract(vector, sums)
+		norms = np.linalg.norm(diffs, axis = 1)
+		divs = np.divide(1, norms)
+		pows = np.power(divs, self.exponent)
+		b = np.sum(pows)
 		a = np.power(norms, self.exponent)
 		return np.divide(1, (np.multiply(a, b)))
 
