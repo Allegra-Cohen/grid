@@ -34,11 +34,8 @@ function createMainWindow() {
     const errorMessage = data.toString();
     log.info(`Backend process stderr: ${errorMessage}`);
   });
-
-  backendProcess.on('close', (code) => {
-    log.info(`Backend process exited with code ${code}`);
-    backendProcess.kill();
-  });
+  
+  
 
   // Create the main application window
   const win = new BrowserWindow({
@@ -195,8 +192,19 @@ app.on('ready', () => {
 app.on('window-all-closed', function () {
   // On macOS, quit the app only if explicitly closed with Cmd + Q
   if (process.platform !== 'darwin') {
+    exec('kill Python')
     app.quit();
   }
+});
+
+app.on('before-quit', async (event) => {
+  backendProcess.kill('SIGTERM');
+
+  backendProcess.on('exit', (code) => {
+    log.info(`Exit software ${code}`);
+    exec('killall Python');
+    app.quit();
+  });
 });
 
 // Re-create the main window when the app is activated
