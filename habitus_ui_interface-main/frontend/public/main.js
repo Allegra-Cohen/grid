@@ -35,11 +35,9 @@ function createMainWindow() {
     log.info(`Backend process stderr: ${errorMessage}`);
   });
   
-  
-
   // Create the main application window
   const win = new BrowserWindow({
-    width: 1024,
+    width: 1300,
     height: 800,
     icon: path.join(__dirname, 'grid_logo.png'), // Set the window icon
     webPreferences: {
@@ -48,6 +46,16 @@ function createMainWindow() {
       devTools: true
     }
   });
+
+  win.on('close', (event) => {
+    backendProcess.kill('SIGTERM');
+  });
+
+  win.on('closed', () => {
+    mainWindow = null;
+  });
+
+  mainWindow = win;
 
   // Load the application URL based on the environment
   win.loadURL(
@@ -192,24 +200,13 @@ app.on('ready', () => {
 app.on('window-all-closed', function () {
   // On macOS, quit the app only if explicitly closed with Cmd + Q
   if (process.platform !== 'darwin') {
-    exec('kill Python')
     app.quit();
   }
-});
-
-app.on('before-quit', async (event) => {
-  backendProcess.kill('SIGTERM');
-
-  backendProcess.on('exit', (code) => {
-    log.info(`Exit software ${code}`);
-    exec('killall Python');
-    app.quit();
-  });
 });
 
 // Re-create the main window when the app is activated
-/*app.on('activate', function () {
+app.on('activate', function () {
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
   }
-});*/
+});
