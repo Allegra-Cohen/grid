@@ -18,7 +18,7 @@ class SoftKMeans2(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
 		super().__init__(corpus, linguist) # I don't think we actually need corpus and linguist here
 		self.beta = 1.1 # This is called m in the wikipedia article.
-		self.exponent = np.divide(2, (self.beta - 1))
+		self.exponent = np.divide(2, (self.beta - 1)) # scalar
 		self.threshold = 0.6
 		self.loop_count = 10
 		self.update_count = 100
@@ -37,7 +37,7 @@ class SoftKMeans2(ClusterGenerator):
 		# These are added in place, giving a boost to the documents in the seeded clusters.
 		# Zeros won't affect non-seeded, but seeded will become greater than one and thus will always match the threshold.
 		# If documents were split between several clusters, they might not make the threshold, though.
-		seeded_matrix = np_matrix + np_doc_to_seeded_k
+		seeded_matrix = np_matrix + np_doc_to_seeded_k # This creates a new matrix, because out is not specified.
 		# Alternatively, just remember where they were seeded and keep them there.
 		clusters = list(map(lambda i: np_documents[np.where(seeded_matrix[:, i] >= self.threshold)[0]], range(seeded_matrix.shape[1])))
 		return clusters
