@@ -30,14 +30,11 @@ RUN pip3 install pandas==1.2.3
 RUN pip3 install nltk==3.7
 RUN pip3 install sklearn==0.0
 # See https://github.com/explosion/spaCy/issues/12659
-# RUN pip3 install pydantic==1.10.8
 RUN pip3 install typing_extensions==4.4.0
-# RUN pip3 install -U pydantic spacy==3.4.1
 RUN pip3 install spacy==3.4.1
 
 # Install Python data
 RUN python3 -m spacy download en_core_web_sm
-# RUN python3 -c "import spacy; spacy.load('en_core_web_sm')"
 RUN python3 -c "import nltk; nltk.download('punkt')"
 
 # Install grid and dependencies
