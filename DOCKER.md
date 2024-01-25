@@ -2,7 +2,7 @@
 
 Build the image from this directory using
 ```sh
-docker build . -t grid
+docker build . -t grid-main2
 ```
 
 Start the container from this directory with
