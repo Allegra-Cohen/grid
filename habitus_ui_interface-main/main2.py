@@ -263,7 +263,7 @@ async def setSuperfiles(corpusFilename: str, rowFilename: str):
 @app.get("/loadNewGrid/")
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     print("loadNewGrid", newFilename, newAnchor)
-    print("!!!!!", frontend.backend.set_superfiles(corpusFilename, rowFilename))
+    # print("!!!!!", frontend.backend.set_superfiles(corpusFilename, rowFilename))
     if frontend.backend.set_superfiles(corpusFilename, rowFilename):
         return frontend.load_new_grid(newFilename, newAnchor) # If this is false, it means the anchor didn't work
     else:
