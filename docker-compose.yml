@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  grid:
+    container_name: grid
+    image: grid:latest
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      # See habitus_ui_interface-main/frontend/node_modules/react-scripts/webpack/webpackDevServer.config.js
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+    volumes:
+      - ./process_files/resources:/grid/process_files/resources
+      - ./process_files/results:/grid/process_files/results
+#networks:
+#  default:
+#    external: true
+#    name: keithalcock-network

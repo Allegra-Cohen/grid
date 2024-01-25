@@ -1,0 +1,12 @@
+__pycache__/
+.git/
+.vscode/
+Dockerfile
+docker-compose.yml
+.dockerignore
+.gitignore
+DOCKER.md
+README.md
+
+process_files/resources/
+process_files/results/
