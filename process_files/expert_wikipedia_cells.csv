@@ -1,0 +1,41 @@
+,row,col,frozen_col,readable,seeded_doc
+0,wikipedia_article_1,mycin | medical,False,"0. One of the first examples of an expert system was MYCIN, an application to perform medical diagnosis.",False
+1,wikipedia_article_1,mycin | medical,False,"1. In the MYCIN example, the domain experts were medical doctors and the knowledge represented was their expertise in diagnosis.",False
+2,wikipedia_article_1,mycin | medical,False,"5. Researchers just sat down with domain experts and started programming, often developing the required tools (e.g.",False
+3,wikipedia_article_1,methodology | system,False,2. Expert systems were first developed in artificial intelligence laboratories as an attempt to understand complex human decision making.,False
+4,wikipedia_article_1,methodology | system,False,3. The Stanford heuristic programming projects led by Edward Feigenbaum was one of the leaders in defining and developing the first expert systems.,False
+5,wikipedia_article_1,methodology | system,False,6. As expert systems moved from academic prototypes to deployed business systems it was realized that a methodology was required to bring predictability and control to the process of building the software.,False
+6,wikipedia_article_1,methodology | system,False,"7. There were essentially two approaches that were attempted: Use conventional software development methodologies, and develop special methodologies tuned to the requirements of building expert systems.",False
+7,wikipedia_article_1,methodology | system,False,10. Another issue with using conventional methods to develop expert systems was that due to the unprecedented nature of expert systems they were one of the first applications to adopt rapid application development methods that feature iteration and prototyping as well as or instead of detailed analysis and design.,False
+8,wikipedia_article_1,methodology | system,False,11. The final issue with using conventional methods to develop expert systems was the need for knowledge acquisition.,False
+9,wikipedia_article_1,methodology | system,False,13. These issues led to the second approach to knowledge engineering: development of custom methodologies specifically designed to build expert systems.,False
+10,wikipedia_article_1,methodology | system,False,14. One of the first and most popular of such methodologies custom designed for expert systems was the Knowledge Acquisition and Documentation Structuring (KADS) methodology developed in Europe.,False
+11,wikipedia_article_1,consulting | system,False,8. Many of the early expert systems were developed by large consulting and system integration firms such as Andersen Consulting.,False
+12,wikipedia_article_1,knowledge | subsystem,False,12. Knowledge acquisition refers to the process of gathering expert knowledge and capturing it in the form of rules and ontologies.,False
+13,wikipedia_article_1,system | development,False,4. In the earliest days of expert systems there was little or no formal process for the creation of the software.,False
+14,wikipedia_article_1,system | development,False,9. One trend in early expert systems development was to simply apply these waterfall methods to expert systems development.,False
+15,wikipedia_article_2,methodology | system,False,"16. Expert systems are designed to solve complex problems by reasoning through bodies of knowledge, represented mainly as if then rules rather than through conventional procedural code.",False
+16,wikipedia_article_2,methodology | system,False,18. Expert systems were among the first truly successful forms of artificial intelligence (AI) software.,False
+17,wikipedia_article_2,knowledge | subsystem,False,19. An expert system is divided into two subsystems: the inference engine and the knowledge base.,False
+18,wikipedia_article_2,system | development,False,"15. In artificial intelligence, an expert system is a computer system emulating the decision-making ability of a human expert.",False
+19,wikipedia_article_2,system | development,False,17. The first expert systems were created in the 1970s and then proliferated in the 1980s.,False
+20,all,mycin | medical,False,"0. One of the first examples of an expert system was MYCIN, an application to perform medical diagnosis.",False
+21,all,mycin | medical,False,"1. In the MYCIN example, the domain experts were medical doctors and the knowledge represented was their expertise in diagnosis.",False
+22,all,mycin | medical,False,"5. Researchers just sat down with domain experts and started programming, often developing the required tools (e.g.",False
+23,all,methodology | system,False,2. Expert systems were first developed in artificial intelligence laboratories as an attempt to understand complex human decision making.,False
+24,all,methodology | system,False,3. The Stanford heuristic programming projects led by Edward Feigenbaum was one of the leaders in defining and developing the first expert systems.,False
+25,all,methodology | system,False,6. As expert systems moved from academic prototypes to deployed business systems it was realized that a methodology was required to bring predictability and control to the process of building the software.,False
+26,all,methodology | system,False,"7. There were essentially two approaches that were attempted: Use conventional software development methodologies, and develop special methodologies tuned to the requirements of building expert systems.",False
+27,all,methodology | system,False,10. Another issue with using conventional methods to develop expert systems was that due to the unprecedented nature of expert systems they were one of the first applications to adopt rapid application development methods that feature iteration and prototyping as well as or instead of detailed analysis and design.,False
+28,all,methodology | system,False,11. The final issue with using conventional methods to develop expert systems was the need for knowledge acquisition.,False
+29,all,methodology | system,False,13. These issues led to the second approach to knowledge engineering: development of custom methodologies specifically designed to build expert systems.,False
+30,all,methodology | system,False,14. One of the first and most popular of such methodologies custom designed for expert systems was the Knowledge Acquisition and Documentation Structuring (KADS) methodology developed in Europe.,False
+31,all,methodology | system,False,"16. Expert systems are designed to solve complex problems by reasoning through bodies of knowledge, represented mainly as if then rules rather than through conventional procedural code.",False
+32,all,methodology | system,False,18. Expert systems were among the first truly successful forms of artificial intelligence (AI) software.,False
+33,all,consulting | system,False,8. Many of the early expert systems were developed by large consulting and system integration firms such as Andersen Consulting.,False
+34,all,knowledge | subsystem,False,12. Knowledge acquisition refers to the process of gathering expert knowledge and capturing it in the form of rules and ontologies.,False
+35,all,knowledge | subsystem,False,19. An expert system is divided into two subsystems: the inference engine and the knowledge base.,False
+36,all,system | development,False,4. In the earliest days of expert systems there was little or no formal process for the creation of the software.,False
+37,all,system | development,False,9. One trend in early expert systems development was to simply apply these waterfall methods to expert systems development.,False
+38,all,system | development,False,"15. In artificial intelligence, an expert system is a computer system emulating the decision-making ability of a human expert.",False
+39,all,system | development,False,17. The first expert systems were created in the 1970s and then proliferated in the 1980s.,False
