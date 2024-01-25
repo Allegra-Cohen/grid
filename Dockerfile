@@ -41,6 +41,10 @@ RUN python3 -c "import nltk; nltk.download('punkt')"
 RUN mkdir grid
 ADD . /grid/
 
+# These are for the non-experiment version.
+RUN pip3 install -r grid/habitus_ui_interface-main/requirements.pip
+RUN python3 -c "import nltk; nltk.download('stopwords')"
+
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt -y install nodejs
 WORKDIR /grid/habitus_ui_interface-main/frontend
