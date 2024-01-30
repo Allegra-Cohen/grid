@@ -64,7 +64,7 @@ class NltkParser(Parser):
         postprocessed = self.postprocess_sentences(sentences)
         return postprocessed
 
-def parse_supercorpus(corpus_name, input_dir, output_filepath):
+def parse_supercorpus(corpus_name, input_dir, output_filepath, parse=True):
 
     if os.path.exists(output_filepath):
         if not os.path.isdir(output_filepath):
@@ -94,8 +94,12 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
             print(f" {input_extension} file type not supported.\n")
         else:
             print(f" Input: {input_pathname}")
-            input_text = textract.process(input_pathname, encoding = encoding).decode(encoding)
-            output_lines = parser.parse(input_text)
+            if parse:
+                input_text = textract.process(input_pathname, encoding = encoding).decode(encoding)
+                output_lines = parser.parse(input_text)
+            else:
+                with open(input_pathname, encoding = encoding) as file:
+                    output_lines = file.readlines()
             all_lines += output_lines
             row_labels += [name]*len(output_lines)
 

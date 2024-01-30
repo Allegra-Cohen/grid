@@ -24,18 +24,16 @@ class Backend():
 		else:
 			if not supercorpus_filepath.endswith(os.sep):
 				supercorpus_filepath = supercorpus_filepath + os.sep
-			supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1]
+			supercorpus_name = supercorpus_filepath.rsplit(os.sep, 2)[1]
 			return self.process_supercorpus_directory(supercorpus_filepath, supercorpus_name, parse=True)
 
 	def process_supercorpus_file(self, supercorpus_filepath):
-		# Create a temporary file in which to extract the zip
-		# Pass the directory to regular thing
 		temporary_directory = TemporaryDirectory(prefix=supercorpus_filepath)
 		temporary_directory_name = temporary_directory.name
 		ZipFile(supercorpus_filepath, mode="r").extractall(path=temporary_directory_name)
 		if not temporary_directory_name.endswith(os.sep):
 			temporary_directory_name = temporary_directory_name + os.sep
-		supercorpus_name = supercorpus_filepath.rsplit('/', 1)[1].replace(".", "_")
+		supercorpus_name = supercorpus_filepath.rsplit(os.sep, 1)[1].replace(".", "_")
 		result = self.process_supercorpus_directory(temporary_directory_name, supercorpus_name, parse=False)
 		temporary_directory.cleanup()
 		return result
@@ -52,7 +50,7 @@ class Backend():
 				preexisting = None
 			
 			if os.path.isdir(supercorpus_filepath):
-				corpus_parser.parse_supercorpus(supercorpus_name, supercorpus_filepath, self.path) # Preprocess the corpus
+				corpus_parser.parse_supercorpus(supercorpus_name, supercorpus_filepath, self.path, parse=parse) # Preprocess the corpus
 				
 				if not os.path.isfile(self.path + temporary_clean_supercorpus_filename + '.csv'): # Clean the corpus if you need to
 					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename)
