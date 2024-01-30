@@ -1,4 +1,4 @@
-import os.path
+import os
 import pandas as pd
 
 from . import corpus_parser
@@ -7,6 +7,8 @@ from .corpus import Corpus
 from .grid import Grid
 from .linguist import Linguist
 from .row import Row
+from tempfile import TemporaryDirectory
+from zipfile import ZipFile
 
 class Backend():
 	def __init__(self, path: str):
@@ -17,8 +19,29 @@ class Backend():
 		self.linguist = Linguist()
 
 	def process_supercorpus(self, supercorpus_filepath):
+		if supercorpus_filepath.endswith(".zip"):
+			return self.process_supercorpus_file(supercorpus_filepath)
+		else:
+			if not supercorpus_filepath.endswith(os.sep):
+				supercorpus_filepath = supercorpus_filepath + os.sep
+			supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1]
+			return self.process_supercorpus_directory(supercorpus_filepath, supercorpus_name, parse=True)
+
+	def process_supercorpus_file(self, supercorpus_filepath):
+		# Create a temporary file in which to extract the zip
+		# Pass the directory to regular thing
+		temporary_directory = TemporaryDirectory(prefix=supercorpus_filepath)
+		temporary_directory_name = temporary_directory.name
+		ZipFile(supercorpus_filepath, mode="r").extractall(path=temporary_directory_name)
+		if not temporary_directory_name.endswith(os.sep):
+			temporary_directory_name = temporary_directory_name + os.sep
+		supercorpus_name = supercorpus_filepath.rsplit('/', 1)[1].replace(".", "_")
+		result = self.process_supercorpus_directory(temporary_directory_name, supercorpus_name, parse=False)
+		temporary_directory.cleanup()
+		return result
+
+	def process_supercorpus_directory(self, supercorpus_filepath, supercorpus_name, parse=True):
 		try:
-			supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1] # The folder containing the corpus will become the corpus name
 			temporary_clean_supercorpus_filename = 'cleaned_' + supercorpus_name
 			row_labels_filename = supercorpus_name + '_row_labels.csv'
 			can_update = os.path.isfile(self.path + temporary_clean_supercorpus_filename + '.csv')
@@ -137,23 +160,3 @@ class Backend():
 					machine_clusters.append(cluster)
 
 		return frozen_clusters + seeded_clusters + machine_clusters # Need to be in the right order
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
