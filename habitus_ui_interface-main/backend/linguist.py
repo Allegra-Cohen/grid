@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import re
 import string
 import spacy
@@ -85,6 +86,14 @@ class Linguist():
 			result = [document for document in documents if has_anchor(query, document)]
 			return result
 
+	def record_words(self, scored_words, n):
+		cluster_name = '_'.join([scored_word[1] for scored_word in scored_words[0:n]])
+		file_name = f"cluster_{cluster_name}.csv"
+		data_frame = pd.DataFrame(scored_words)
+		data_frame.columns = ["score", "word"]
+		data_frame = data_frame[["word", "score"]]
+		data_frame.to_csv(file_name, index=False)
+
 	def get_cluster_name(self, n, documents: list[Document], tfidf, anchor_word):
 		word_tfidf = {}
 		for doc in documents:
@@ -98,5 +107,7 @@ class Linguist():
 
 		words = [word for document in documents for word in document.tokens]
 		all_words = list(set(words))
-		top_words = sorted((((np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if word != anchor_word), reverse = True)[0:n]
+		sorted_words = sorted((((np.mean(word_tfidf[word])), word) for i, word in enumerate(all_words) if word != anchor_word), reverse = True)
+		self.record_words(sorted_words, n)
+		top_words = sorted_words[0:n]
 		return top_words
