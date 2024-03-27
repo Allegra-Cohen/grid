@@ -5,11 +5,14 @@ import { Header, Button } from 'components'
 import { fetchDataFromApi } from 'services'
 import { useNavigate } from "react-router-dom"
 import './styles.css'
+import axios from "axios"
 
 function Gallery() {
 
   const navigate = useNavigate()
   const [grids, setGrids] = useState([])
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleGridClick = (gridName) => {
 
@@ -19,10 +22,47 @@ function Gallery() {
   }
 
   useEffect(() => {
+
+    const fetchData = async () => {
+      
+
+      const username = 'arthur';
+      const password = 'mpSDY2FrD8kMSCPVYATw';
+      const url = 'https://elasticsearch.habitus.clulab.org/habitus3/_search';
+
+      fetch(url, {
+        method: 'POST', // ou 'POST', 'PUT', etc., dependendo do tipo de requisição que você precisa fazer
+        headers: {
+          'Authorization': 'Basic ' + btoa(username + ':' + password),
+          'Content-Type': 'application/json', // Se necessário, ajuste o tipo de conteúdo conforme sua necessidade
+        },
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Erro ao fazer requisição');
+          }
+          return response.json(); // ou response.text(), dependendo do tipo de resposta esperada
+        })
+        .then(data => {
+          // Faça algo com os dados retornados
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+        });
+
+    };
+    fetchData();
+  }, []);
+
+  console.log(data)
+
+  useEffect(() => {
     fetchDataFromApi(`/showGrids/`)
       .then(data => {
         setGrids(data.grids.filter(e => e != 'example'))
       })
+
+
   }, [])
 
   return (

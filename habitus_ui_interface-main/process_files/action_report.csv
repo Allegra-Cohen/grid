@@ -1,4 +1,3 @@
 ,actor,action,time,object_type,object_value,other_details
-0,human,load,1702417819.515472,grid,example,
-1,human,click,1702417821.428292,cell,1_2,
-2,human,click,1702417823.117089,sentence,31. The inference engine applies the rules to the known facts to deduce new facts.,
+0,human,load,1710982044.010015,grid,example,
+1,human,load,1711496520.323894,grid,example,
