@@ -73,6 +73,7 @@ function createMainWindow() {
 
 // Initialize the Electron app
 app.on("ready", () => {
+  if (isDev) return;
   // Define the path for the installation flag file
   const installationFlagPath = path.join(
     app.getPath("userData"),
@@ -208,6 +209,7 @@ app.on("ready", () => {
 
 // Quit when all windows are closed
 app.on("window-all-closed", function () {
+  if (isDev) return;
   if (process.platform !== "darwin") {
     app.quit();
   }
@@ -215,6 +217,7 @@ app.on("window-all-closed", function () {
 
 // Re-create the main window when the app is activated
 app.on("activate", function () {
+  if (isDev) return;
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
   }

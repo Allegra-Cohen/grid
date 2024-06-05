@@ -34,29 +34,53 @@ export default function ChangeCorpus() {
     }
   };
 
+  function getFolderPathsGivenSeparator(acceptedFiles, separator) {
+    const folderPaths = acceptedFiles.map((file) => {
+      const parts = file.path.split(separator);
+      const directoryPath = parts.slice(0, -1).join("/") + "/";
+      return directoryPath;
+    });
+
+    return folderPaths;
+  }
+
+  function getSeparator(userAgent) {
+    if (userAgent.includes("Win")) return "\\";
+    else return "/";
+  }
+
+  function getFolderPathsGivenUserAgent(acceptedFiles, userAgent) {
+    const separator = getSeparator(userAgent);
+    const folderPaths = getFolderPathsGivenSeparator(acceptedFiles, separator);
+
+    return folderPaths;
+  }
+
   const onDrop = useCallback((acceptedFiles) => {
+    const folderPaths = getFolderPathsGivenUserAgent(acceptedFiles, navigator.userAgent);
+
+    console.info("useragent is ", navigator.userAgent);
+    acceptedFiles.map((file) => {
+      console.info('accepted files are: ', file);
+    });
     if (navigator.userAgent.includes("Mac")) {
-      const folderPaths = acceptedFiles.map((file) => {
-        const parts = file.path.split("/");
-        const directoryPath = parts.slice(0, -1).join("/");
-        return directoryPath;
-      });
+      const path = folderPaths[0];
 
-      const uniqueFolderPaths = Array.from(new Set(folderPaths));
-
-      const path = uniqueFolderPaths[0] + "/";
-
+      console.info("For Mac setting path to ", path);
       setFilepath(path);
-    } else {
-      const folderPaths = acceptedFiles.map((file) => {
-        const parts = file.path.split("\\");
-        const directoryPath = parts.slice(0, -1).join("/");
-        return directoryPath;
-      });
-
-      const uniqueFolderPaths = Array.from(new Set(folderPaths));
-
-      const path = uniqueFolderPaths[0].slice(2) + "/";
+    }
+    else if (navigator.userAgent.includes("Linux")) {
+      // On Linux with Firefox we only get the /directory/filename.ext without the complete path.
+      // This is insufficient information for the backend.  The files need to be read.
+      const path = folderPaths[0];
+      
+      console.info("For Linux setting path to ", path);
+      setFilepath(path);
+    }
+    else {
+      const path = folderPaths[0].slice(2); // slice(2) might be for c:
+      
+      console.info("For Linux setting path to ", path);
       setFilepath(path);
     }
   }, []);

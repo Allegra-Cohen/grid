@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Installation
+
+Install [node.js](https://nodejs.org/en/download/package-manager).  Afterwards, the `node` and `npm` commands should be available from the command line.
+
+Optionally install [yarn](https://yarnpkg.com/getting-started/install) if you prefer it to `npm`.
+
+From this `frontend` directory, run `npm install` to read the `package.json` file and install all the dependencies.
+
+When `npm start` is used to start the frontend in dev mode, an existing Python process is expected to be running a grid server and listening on port 8000.  Be sure to start that up first with the correct virtual environment.  When in production mode, code in `public/main.js` will attempt to run Python, install dependencies, and start up the server automatically.  See the main [README](../README.md) file for details.
+
 ## Available Scripts
 
 In the project directory, you can run:
